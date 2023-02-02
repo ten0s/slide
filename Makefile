@@ -14,14 +14,17 @@ GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 PREFIX ?= `pwd`
 
-all: $(TYPELIB_FILE)
+all: $(TYPELIB_FILE) main
 
-%.o: %.c %.m
+%.o: %.c %.cpp
 	gcc -c $< $(CFLAGS) -o $@
 
 gi-slide.o: gi-slide.h slide.o
 
 slide.o: slide.h
+
+main: main.cpp slide_file.h slide_file.cpp
+	g++ -g main.cpp slide_file.cpp -o $@
 
 $(LIB_FILE): gi-slide.o slide.o
 	gcc -shared $^ $(CFLAGS) $(LIBS) -o $@
