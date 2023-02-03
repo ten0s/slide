@@ -1,5 +1,6 @@
 #include <cstring> // strncmp
 #include <cstddef> // offsetof
+#include <iomanip>
 #include <sstream>
 #include "slide_file.h"
 
@@ -33,61 +34,121 @@ struct HeaderV2 {
     char test_number[2];   // 0x1234 - LE | BE
 };
 
-short read_short(const uint8_t buf[2], Endian endian);
-int read_int(const uint8_t buf[4], Endian endian);
+template <typename T>
+T read(const uint8_t buf[sizeof(T)], Endian endian) {
+    union { uint8_t in[sizeof(T)]; T out; } x;
+    switch (endian) {
+    case Endian::LE:
+        for (size_t i = 0; i < sizeof(T); ++i) {
+            x.in[i] = buf[i];
+        }
+        break;
+    case Endian::BE:
+        for (size_t i = 0; i < sizeof(T); ++i) {
+            x.in[i] = buf[sizeof(T)-1-i];
+        }
+        break;
+    default:
+        throw runtime_error("Unknown endian");
+    }
+    return x.out;
+}
+
+template <typename T>
+uint8_t high_order_byte(T val, Endian endian) {
+    union { T in; uint8_t out[sizeof(T)]; } x;
+    x.in = val;
+    switch (endian) {
+    case Endian::LE:
+        return x.out[sizeof(T)-1];
+    case Endian::BE:
+        return x.out[0];
+    default:
+        throw runtime_error("Unknown endian");
+    }
+}
+
+template <typename T>
+uint8_t low_order_byte(T val, Endian endian) {
+    union { T in; uint8_t out[sizeof(T)]; } x;
+    x.in = val;
+    switch (endian) {
+    case Endian::LE:
+        return x.out[0];
+    case Endian::BE:
+        return x.out[sizeof(T)-1];
+    default:
+        throw runtime_error("Unknown endian");
+    }
+}
 
 std::pair<SlideFileHeader, size_t>
-parse_slide_file_header(const uint8_t* buf)
+parse_slide_file_header(const uint8_t* buf, size_t size)
 {
     Endian endian = Endian::UNK;
     short high_x_dot;
     short high_y_dot;
-    float aspect_ratio;
+    double aspect_ratio;
     short hardware_fill;
 
-    // ID String
     std::string id_string{"AutoCAD Slide"};
     if (strncmp((char*)buf, id_string.c_str(), 13) != 0 ||
         buf[13] != 0x0d || buf[14] != 0x0a ||
         buf[15] != 0x1a || buf[16] != 0x00) {
-        stringstream ss;
-        ss << "Invalid " << id_string << " File";
+        ostringstream ss;
+        ss << "Invalid slide file header: " << id_string;
         throw std::runtime_error{ss.str()};
     }
 
-    // Type indicator
     char type_indicator = buf[offsetof(HeaderV1, type_indicator)];
-
-    // Level indicator
     char level_indicator = buf[offsetof(HeaderV1, level_indicator)];
 
     switch (level_indicator) {
     case 1: { // Old version
-        // No endian inside the file
-        // Get hint from command line arg
-        throw std::runtime_error("Version 1 not implemented");
+        // Determine endianess by looking at the end of
+        // the buffer inspecting the End of File marker.
+        switch (read<uint16_t>(&buf[size-2], Endian::LE)) {
+        case 0xfc00:
+            endian = Endian::LE;
+            break;
+        case 0x00fc:
+            endian = Endian::BE;
+            break;
+        default:
+            throw new runtime_error("End of File is not found");
+        }
+        high_x_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_x_dot), endian);
+        high_y_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_y_dot), endian);
+
+        aspect_ratio = read<double>(buf+offsetof(HeaderV1, aspect_ratio), endian);
+        hardware_fill = read<uint16_t>(buf+offsetof(HeaderV1, hardware_fill), endian);
+        break;
     }
     case 2: { // New version
-        // Test number (determine endianess)
-        union { char in[2]; short out; } x;
-        x.in[0] = buf[offsetof(HeaderV2, test_number) + 0];
-        x.in[1] = buf[offsetof(HeaderV2, test_number) + 1];
-        endian = (x.out == 0x1234 ? Endian::LE : Endian::BE);
+        {
+            // Determine endianess
+            uint16_t tmp = read<uint16_t>(buf+offsetof(HeaderV2, test_number), Endian::LE);
+            endian = (tmp == 0x1234 ? Endian::LE : Endian::BE);
+        }
 
-        high_x_dot = read_short(&buf[offsetof(HeaderV2, high_x_dot)], endian);
-        high_y_dot = read_short(&buf[offsetof(HeaderV2, high_y_dot)], endian);
+        high_x_dot = read<uint16_t>(buf+offsetof(HeaderV2, high_x_dot), endian);
+        high_y_dot = read<uint16_t>(buf+offsetof(HeaderV2, high_y_dot), endian);
 
-        int tmp = read_int(&buf[offsetof(HeaderV2, aspect_ratio)], Endian::LE);
-        aspect_ratio = tmp / 10'000'000.0;
+        {
+            uint32_t tmp = read<uint32_t>(buf+offsetof(HeaderV2, aspect_ratio), Endian::LE);
+            aspect_ratio = tmp / 10'000'000.0;
+        }
 
-        hardware_fill = read_short(&buf[offsetof(HeaderV2, hardware_fill)], endian);
+        hardware_fill = read<uint16_t>(buf+offsetof(HeaderV2, hardware_fill), endian);
         break;
     }
     default:
-        throw std::runtime_error{"Unknown version"};
+        ostringstream ss;
+        ss << "Unknown slide file version: " << level_indicator;
+        throw std::runtime_error{ss.str()};
     }
 
-    SlideFileHeader header(
+    SlideFileHeader header{
         id_string,
         type_indicator,
         level_indicator,
@@ -95,7 +156,7 @@ parse_slide_file_header(const uint8_t* buf)
         high_y_dot,
         aspect_ratio,
         hardware_fill,
-        endian);
+        endian};
 
     size_t offset = level_indicator == 1 ? sizeof(HeaderV1) : sizeof(HeaderV2);
 
@@ -103,55 +164,58 @@ parse_slide_file_header(const uint8_t* buf)
 }
 
 std::pair<SlideDraw*, size_t>
-parse_slide_draw(const uint8_t* buf)
+parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
 {
     SlideDraw* draw = nullptr;
     size_t offset = 0;
 
-    switch (buf[1]) {
-    case 0xFF: // New color. Bytes: 2
-        draw = new SlideDrawColor(buf[0]);
-        offset = 2;
-        break;
-    case 0xFC: // End of file. Bytes: 2
+    auto head = read<uint16_t>(buf, endian);
+    auto hob = high_order_byte<uint16_t>(head, endian);
+    auto lob = low_order_byte<uint16_t>(head, endian);
+
+    if (hob <= 0x7f) {
+        // Vector. Bytes: 8
+        auto x0 = read<uint16_t>(buf+0*sizeof(uint16_t), endian);
+        auto y0 = read<uint16_t>(buf+1*sizeof(uint16_t), endian);
+        auto x1 = read<uint16_t>(buf+2*sizeof(uint16_t), endian);
+        auto y1 = read<uint16_t>(buf+3*sizeof(uint16_t), endian);
+        draw = new SlideDrawVector(x0, y0, x1, y1);
+        offset = 8;
+    } else if (hob == 0xfb) {
+        // Offset vector. Bytes: 5
+        auto dx0 = lob;
+        auto dy0 = read<int8_t>(buf+2, endian);
+        auto dx1 = read<int8_t>(buf+3, endian);
+        auto dy1 = read<int8_t>(buf+4, endian);
+        draw = new SlideDrawOffsetVector(dx0, dy0, dx1, dy1);
+        offset = 5;
+    } else if (hob == 0xfc) {
+        // End of file. Bytes: 2
         draw = nullptr;
         offset = 2;
-        break;
-    default:
-        stringstream ss;
-        ss << "Unknown draw code: " << hex << buf[1];
+    } else if (hob == 0xfd) {
+        // Solid fill. Bytes: 6
+        throw runtime_error("Solid fill not implemented yet");
+        //offset = 6;
+    } else if (hob == 0xfe) {
+        // Common endpoint vector. Bytes: 3
+        auto x0 = lob;
+        auto y0 = read<int8_t>(buf+2, endian);
+        draw = new SlideDrawCommonEndpoint(x0, y0);
+        offset = 3;
+    } else if (hob == 0xff) {
+         // New color. Bytes: 2
+        auto color = lob;
+        draw = new SlideDrawColor(color);
+        offset = 2;
+    } else {
+        ostringstream ss;
+        ss << "Unknown draw code: 0x"
+           << setfill('0') << setw(2) << hex << int(hob);
         throw std::runtime_error{ss.str()};
     }
 
     return {draw, offset};
-}
-
-short read_short(const uint8_t buf[2], Endian endian) {
-    union { uint8_t in[2]; short out; } x;
-    if (endian == Endian::LE) {
-        x.in[0] = buf[0];
-        x.in[1] = buf[1];
-    } else {
-        x.in[0] = buf[1];
-        x.in[1] = buf[0];
-    }
-    return x.out;
-}
-
-int read_int(const uint8_t buf[4], Endian endian) {
-    union { uint8_t in[4]; int out; } x;
-    if (endian == Endian::LE) {
-        x.in[0] = buf[0];
-        x.in[1] = buf[1];
-        x.in[2] = buf[2];
-        x.in[3] = buf[3];
-    } else {
-        x.in[0] = buf[3];
-        x.in[1] = buf[2];
-        x.in[2] = buf[1];
-        x.in[3] = buf[0];
-    }
-    return x.out;
 }
 
 std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr)
