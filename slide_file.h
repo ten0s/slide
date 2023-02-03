@@ -1,9 +1,11 @@
 #ifndef __SLIDE_FILE_H__
 #define __SLIDE_FILE_H__
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 enum class Endian { UNK, LE, BE };
 
@@ -114,11 +116,47 @@ public:
         std::cout << "COLOR " << _color << "\n";
     }
 
-    int color() const { return _color; }
+    //int color() const { return _color; }
 
 private:
     int _color;
 };
+
+class SlideFile {
+public:
+    explicit SlideFile(const std::string& name,
+                       const SlideFileHeader& header,
+                       const std::vector<SlideDraw*>& draws)
+        : _name{name}, _header{header}, _draws{draws} {}
+
+    SlideFile(SlideFile&& old)
+        : _name{old._name}, _header{old._header}, _draws{old._draws}
+        {
+            old._draws = {};
+        }
+
+    SlideFile(const SlideFile&) = delete;
+    SlideFile& operator=(const SlideFile&) = delete;
+    SlideFile& operator=(SlideFile&&) = delete;
+
+    ~SlideFile() {
+        std::for_each(_draws.begin(), _draws.end(), [](SlideDraw* draw) {
+            delete draw;
+        });
+    }
+
+    const std::string& name() const { return _name; }
+    const SlideFileHeader& header() const { return _header; }
+    const std::vector<SlideDraw*>& records() const { return _draws; }
+
+private:
+    std::string _name;
+    SlideFileHeader _header;
+    std::vector<SlideDraw*> _draws;
+};
+
+std::pair<SlideFile, size_t>
+parse_slide_file(const std::string& name, const uint8_t* buf, size_t size);
 
 std::pair<SlideFileHeader, size_t>
 parse_slide_file_header(const uint8_t* buf, size_t size);
@@ -126,14 +164,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size);
 std::pair<SlideDraw*, size_t>
 parse_slide_draw(const uint8_t* buf, size_t size, Endian endian);
 
-std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header);
-std::ostream& operator<<(std::ostream& os, const SlideDrawColor& draw);
-
-/*
-struct SlideFile {
-    SlideFileHeader header;
-    std::vector<SlideFileData> data;
-};
-*/
+std::ostream& operator<<(std::ostream& os, const SlideFile& header);
+std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr);
 
 #endif // __SLIDE_FILE_H__

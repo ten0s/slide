@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstring> // strncmp
 #include <cstddef> // offsetof
 #include <iomanip>
@@ -49,7 +50,7 @@ T read(const uint8_t buf[sizeof(T)], Endian endian) {
         }
         break;
     default:
-        throw runtime_error("Unknown endian");
+        throw std::runtime_error("Unknown endian");
     }
     return x.out;
 }
@@ -64,7 +65,7 @@ uint8_t high_order_byte(T val, Endian endian) {
     case Endian::BE:
         return x.out[0];
     default:
-        throw runtime_error("Unknown endian");
+        throw std::runtime_error("Unknown endian");
     }
 }
 
@@ -78,9 +79,30 @@ uint8_t low_order_byte(T val, Endian endian) {
     case Endian::BE:
         return x.out[sizeof(T)-1];
     default:
-        throw runtime_error("Unknown endian");
+        throw std::runtime_error("Unknown endian");
     }
 }
+
+std::pair<SlideFile, size_t>
+parse_slide_file(const std::string& name, const uint8_t* buf, size_t size)
+{
+    auto [header, offset] = parse_slide_file_header(buf, size);
+    Endian endian = header.endian();
+
+    std::vector<SlideDraw*> draws;
+    while (offset < size) {
+        auto [draw, delta] = parse_slide_draw(&buf[offset], size-offset, endian);
+        if (draw) {
+            draws.push_back(draw);
+        }
+        offset += delta;
+    }
+
+    SlideFile file{name, header, std::move(draws)};
+
+    return {std::move(file) , offset};
+}
+
 
 std::pair<SlideFileHeader, size_t>
 parse_slide_file_header(const uint8_t* buf, size_t size)
@@ -115,7 +137,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
             endian = Endian::BE;
             break;
         default:
-            throw new runtime_error("End of File is not found");
+            throw new std::runtime_error("End of File is not found");
         }
         high_x_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_x_dot), endian);
         high_y_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_y_dot), endian);
@@ -195,7 +217,7 @@ parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
         offset = 2;
     } else if (hob == 0xfd) {
         // Solid fill. Bytes: 6
-        throw runtime_error("Solid fill not implemented yet");
+        throw std::runtime_error("Solid fill not implemented yet");
         //offset = 6;
     } else if (hob == 0xfe) {
         // Common endpoint vector. Bytes: 3
@@ -218,10 +240,26 @@ parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
     return {draw, offset};
 }
 
+std::ostream& operator<<(std::ostream& os, const SlideFile& file)
+{
+    os << "Slide File: " << file.name() << "\n";
+
+    os << "Header:\n";
+    os << file.header();
+
+    os << "Records:\n";
+
+    auto records = file.records();
+    std::for_each(records.begin(),
+                  records.end(), [](SlideDraw* d) {
+        d->draw();
+    });
+
+    return os;
+}
+
 std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr)
 {
-    using namespace std;
-    os << "Slide File Header\n";
     os << "ID string      : " << hdr.id_string() << "\n";
     os << "Type indicator : " << hdr.type_indicator() << "\n";
     os << "Level indicator: " << hdr.level_indicator() << "\n";
@@ -230,11 +268,5 @@ std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr)
     os << "Aspect ratio   : " << hdr.aspect_ratio() << "\n";
     os << "Hardware fill  : " << hdr.hardware_fill() << "\n";
     os << "Endianess      : " << (hdr.endian() == Endian::LE ? "LE" : "BE") << "\n";
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const SlideDrawColor& draw)
-{
-    os << "COLOR " << draw.color() << "\n";
     return os;
 }
