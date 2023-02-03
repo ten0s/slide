@@ -1,5 +1,6 @@
 #include <cstring> // strncmp
 #include <cstddef> // offsetof
+#include <sstream>
 #include "slide_file.h"
 
 using namespace std;
@@ -32,11 +33,11 @@ struct HeaderV2 {
     char test_number[2];   // 0x1234 - LE | BE
 };
 
-short read_short(const char buf[2], Endian endian);
-int read_int(const char buf[4], Endian endian);
+short read_short(const uint8_t buf[2], Endian endian);
+int read_int(const uint8_t buf[4], Endian endian);
 
 std::pair<SlideFileHeader, size_t>
-parse_slide_file_header(const char *buf)
+parse_slide_file_header(const uint8_t* buf)
 {
     Endian endian = Endian::UNK;
     short high_x_dot;
@@ -46,10 +47,12 @@ parse_slide_file_header(const char *buf)
 
     // ID String
     std::string id_string{"AutoCAD Slide"};
-    if (strncmp(buf, id_string.c_str(), 13) != 0 ||
+    if (strncmp((char*)buf, id_string.c_str(), 13) != 0 ||
         buf[13] != 0x0d || buf[14] != 0x0a ||
         buf[15] != 0x1a || buf[16] != 0x00) {
-        throw std::runtime_error{"Invalid " + id_string + " File"};
+        stringstream ss;
+        ss << "Invalid " << id_string << " File";
+        throw std::runtime_error{ss.str()};
     }
 
     // Type indicator
@@ -81,7 +84,7 @@ parse_slide_file_header(const char *buf)
         break;
     }
     default:
-        throw std::runtime_error("Unknown version");
+        throw std::runtime_error{"Unknown version"};
     }
 
     SlideFileHeader header(
@@ -99,8 +102,32 @@ parse_slide_file_header(const char *buf)
     return {header, offset};
 }
 
-short read_short(const char buf[2], Endian endian) {
-    union { char in[2]; short out; } x;
+std::pair<SlideDraw*, size_t>
+parse_slide_draw(const uint8_t* buf)
+{
+    SlideDraw* draw = nullptr;
+    size_t offset = 0;
+
+    switch (buf[1]) {
+    case 0xFF: // New color. Bytes: 2
+        draw = new SlideDrawColor(buf[0]);
+        offset = 2;
+        break;
+    case 0xFC: // End of file. Bytes: 2
+        draw = nullptr;
+        offset = 2;
+        break;
+    default:
+        stringstream ss;
+        ss << "Unknown draw code: " << hex << buf[1];
+        throw std::runtime_error{ss.str()};
+    }
+
+    return {draw, offset};
+}
+
+short read_short(const uint8_t buf[2], Endian endian) {
+    union { uint8_t in[2]; short out; } x;
     if (endian == Endian::LE) {
         x.in[0] = buf[0];
         x.in[1] = buf[1];
@@ -111,8 +138,8 @@ short read_short(const char buf[2], Endian endian) {
     return x.out;
 }
 
-int read_int(const char buf[4], Endian endian) {
-    union { char in[4]; int out; } x;
+int read_int(const uint8_t buf[4], Endian endian) {
+    union { uint8_t in[4]; int out; } x;
     if (endian == Endian::LE) {
         x.in[0] = buf[0];
         x.in[1] = buf[1];
@@ -139,5 +166,11 @@ std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr)
     os << "Aspect ratio   : " << hdr.aspect_ratio() << "\n";
     os << "Hardware fill  : " << hdr.hardware_fill() << "\n";
     os << "Endianess      : " << (hdr.endian() == Endian::LE ? "LE" : "BE") << "\n";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const SlideDrawColor& draw)
+{
+    os << "COLOR " << draw.color() << "\n";
     return os;
 }

@@ -1,11 +1,13 @@
-//#include <libgen.h>
 #include <string.h> // basename
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 
 #include <exception>
 #include <memory>
+
+#include <vector>
 
 #include "slide_file.h"
 
@@ -27,12 +29,29 @@ int main(int argc, char *argv[])
     if (is.is_open()) {
         // Read the whole file.
         auto size = is.tellg();
-        std::unique_ptr<char[]> buf{new char[size]};
+        std::unique_ptr<uint8_t[]> buf{new uint8_t[size]};
         is.seekg(0);
-        if (is.read(buf.get(), size)) {
+        if (is.read((char*)buf.get(), size)) {
 
             auto [header, offset] = parse_slide_file_header(buf.get());
+
+            std::vector<std::unique_ptr<SlideDraw>> draws;
+
+            while (offset < size) {
+                auto [draw, delta] = parse_slide_draw(&buf[offset]);
+                if (draw) {
+                    draws.push_back(std::unique_ptr<SlideDraw>(draw));
+                }
+                offset += delta;
+                break;
+            }
+
             cout << header;
+            cout << "Operations\n";
+            std::for_each(draws.cbegin(), draws.cend(), [](auto &d) {
+                d->draw();
+            });
+
         } else {
             cerr << "Read failed\n";
         }

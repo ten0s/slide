@@ -1,9 +1,9 @@
 #ifndef __SLIDE_FILE_H__
 #define __SLIDE_FILE_H__
 
-#include <ostream>
+#include <iostream>
+#include <memory>
 #include <string>
-//#include <vector>
 
 enum class Endian { UNK, LE, BE };
 
@@ -47,14 +47,33 @@ private:
     Endian _endian;
 };
 
+class SlideDraw {
+public:
+    virtual ~SlideDraw() {}
+    virtual void draw() = 0;
+};
+
+class SlideDrawColor : public SlideDraw {
+public:
+    explicit SlideDrawColor(int color) : _color{color} {}
+    void draw() override {
+        std::cout << "COLOR " << _color << "\n";
+    }
+
+    int color() const { return _color; }
+
+private:
+    int _color;
+};
+
 std::pair<SlideFileHeader, size_t>
-parse_slide_file_header(const char *buf);
+parse_slide_file_header(const uint8_t* buf);
+
+std::pair<SlideDraw*, size_t>
+parse_slide_draw(const uint8_t* buf);
 
 std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header);
-
-struct SlideFileData {
-
-};
+std::ostream& operator<<(std::ostream& os, const SlideDrawColor& draw);
 
 /*
 struct SlideFile {
