@@ -5,37 +5,27 @@
 #include <string>
 //#include <vector>
 
-// The floating-point aspect ratio value and all 2-byte integers are
-// written in the native format of the CPU that was used to create the file
-// (for 8086-family CPUs, IEEE double-precision, and low-order byte first).
-struct SlideFileHeaderV1 {
-    char id_string[17];    // AutoCAD Slide CR LF ^Z NUL
-    char type_indicator;   // 56
-    char level_indicator;  // 01
-    char high_x_dot[2];    // LE | BE
-    char high_y_dot[2];    // LE | BE
-    char aspect_ratio[8];  // Float LE | BE
-    char hardware_fill[2]; // 0x00 | 0x02 Unused
-};
-
-struct SlideFileHeaderV2 {
-    char id_string[17];    // AutoCAD Slide CR LF ^Z NUL
-    char type_indicator;   // 56
-    char level_indicator;  // 02
-    char high_x_dot[2];    // LE | BE
-    char high_y_dot[2];    // LE | BE
-    char aspect_ratio[4];  // LE always
-    char hardware_fill[2]; // 0x0002 Unused
-    char test_number[2];   // 0x1234 - LE | BE
-};
-
-enum class Endian {
-    LE,
-    BE
-};
+enum class Endian { UNK, LE, BE };
 
 class SlideFileHeader {
 public:
+    explicit SlideFileHeader(
+        const std::string& id_string,
+        char type_indicator,
+        char level_indicator,
+        short high_x_dot,
+        short high_y_dot,
+        float aspect_ration,
+        short hardware_fill,
+        Endian endian) :
+        _id_string{id_string},
+        _type_indicator{type_indicator},
+        _level_indicator{level_indicator},
+        _high_x_dot{high_x_dot},
+        _high_y_dot{high_y_dot},
+        _aspect_ratio{aspect_ration},
+        _hardware_fill{hardware_fill},
+        _endian{endian} {}
 
     std::string id_string() const { return _id_string; }
     int type_indicator() const { return _type_indicator; }
@@ -46,13 +36,7 @@ public:
     short hardware_fill() const { return _hardware_fill; }
     Endian endian() const { return _endian; }
 
-//private:
-public:
-    short read_short(const char buf[2], Endian endian) const;
-    int read_int(const char buf[4], Endian endian) const;
-
-//private:
-public:
+private:
     std::string _id_string;
     char _type_indicator;
     char _level_indicator;
@@ -63,13 +47,14 @@ public:
     Endian _endian;
 };
 
+std::pair<SlideFileHeader, size_t>
+parse_slide_file_header(const char *buf);
+
 std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header);
 
 struct SlideFileData {
 
 };
-
-SlideFileHeader read_slide_file(const char *name);
 
 /*
 struct SlideFile {
