@@ -1,20 +1,20 @@
 #ifndef __SLIDE_VISITOR_HPP__
 #define __SLIDE_VISITOR_HPP__
 
-class SlideDraw;
-class SlideDrawVector;
-class SlideDrawOffsetVector;
-class SlideDrawCommonEndpoint;
-class SlideDrawColor;
+class SlideRecord;
+class SlideRecordVector;
+class SlideRecordOffsetVector;
+class SlideRecordCommonEndpoint;
+class SlideRecordColor;
 
-class SlideDrawVisitor {
+class SlideRecordVisitor {
 public:
-    virtual ~SlideDrawVisitor() {}
+    virtual ~SlideRecordVisitor() {}
 
-    virtual void accept(SlideDrawVector&) = 0;
-    virtual void accept(SlideDrawOffsetVector&) = 0;
-    virtual void accept(SlideDrawCommonEndpoint&) = 0;
-    virtual void accept(SlideDrawColor&) = 0;
+    virtual void accept(SlideRecordVector&) = 0;
+    virtual void accept(SlideRecordOffsetVector&) = 0;
+    virtual void accept(SlideRecordCommonEndpoint&) = 0;
+    virtual void accept(SlideRecordColor&) = 0;
 };
 
 #endif // __SLIDE_VISITOR_HPP__

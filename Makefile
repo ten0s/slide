@@ -26,7 +26,7 @@ slide.o: slide.h
 main: main.cpp slide_file.hpp slide_file.cpp slide_visitor_ostream.hpp
 	g++ -g main.cpp slide_file.cpp -o $@
 
-cairo: cairo.cpp slide_file.hpp slide_file.cpp colors.hpp slide_draw.hpp slide_visitor_cairo.hpp
+cairo: cairo.cpp slide_file.hpp slide_file.cpp colors.hpp slide_record.hpp slide_visitor_cairo.hpp
 	g++ -g cairo.cpp slide_file.cpp `pkg-config --cflags --libs cairo gtk+-3.0` -o $@
 
 $(LIB_FILE): gi-slide.o slide.o

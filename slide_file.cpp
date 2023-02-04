@@ -91,16 +91,16 @@ parse_slide_file(const std::string& name, const uint8_t* buf, size_t size)
     auto [header, offset] = parse_slide_file_header(buf, size);
     Endian endian = header.endian();
 
-    std::vector<SlideDraw*> draws;
+    std::vector<SlideRecord*> records;
     while (offset < size) {
-        auto [draw, delta] = parse_slide_draw(buf+offset, size-offset, endian);
-        if (draw) {
-            draws.push_back(draw);
+        auto [record, delta] = parse_slide_record(buf+offset, size-offset, endian);
+        if (record) {
+            records.push_back(record);
         }
         offset += delta;
     }
 
-    SlideFile file{name, header, std::move(draws)};
+    SlideFile file{name, header, std::move(records)};
 
     return {std::move(file) , offset};
 }
@@ -187,10 +187,10 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
     return {header, offset};
 }
 
-std::pair<SlideDraw*, size_t>
-parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
+std::pair<SlideRecord*, size_t>
+parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
 {
-    SlideDraw* draw = nullptr;
+    SlideRecord* record = nullptr;
     size_t offset = 0;
 
     auto head = read<uint16_t>(buf, endian);
@@ -203,7 +203,7 @@ parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
         auto y0 = read<uint16_t>(buf+1*sizeof(uint16_t), endian);
         auto x1 = read<uint16_t>(buf+2*sizeof(uint16_t), endian);
         auto y1 = read<uint16_t>(buf+3*sizeof(uint16_t), endian);
-        draw = new SlideDrawVector(x0, y0, x1, y1);
+        record = new SlideRecordVector(x0, y0, x1, y1);
         offset = 8;
     } else if (hob == 0xfb) {
         // Offset vector. Bytes: 5
@@ -211,11 +211,11 @@ parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
         auto dy0 = read<int8_t>(buf+2, endian);
         auto dx1 = read<int8_t>(buf+3, endian);
         auto dy1 = read<int8_t>(buf+4, endian);
-        draw = new SlideDrawOffsetVector(dx0, dy0, dx1, dy1);
+        record = new SlideRecordOffsetVector(dx0, dy0, dx1, dy1);
         offset = 5;
     } else if (hob == 0xfc) {
         // End of file. Bytes: 2
-        draw = nullptr;
+        record = nullptr;
         offset = 2;
     } else if (hob == 0xfd) {
         // Solid fill. Bytes: 6
@@ -225,21 +225,21 @@ parse_slide_draw(const uint8_t* buf, size_t /*size*/, Endian endian)
         // Common endpoint vector. Bytes: 3
         auto x0 = lob;
         auto y0 = read<int8_t>(buf+2, endian);
-        draw = new SlideDrawCommonEndpoint(x0, y0);
+        record = new SlideRecordCommonEndpoint(x0, y0);
         offset = 3;
     } else if (hob == 0xff) {
          // New color. Bytes: 2
         auto color = lob;
-        draw = new SlideDrawColor(color);
+        record = new SlideRecordColor(color);
         offset = 2;
     } else {
         ostringstream ss;
-        ss << "Unknown draw code: 0x"
+        ss << "Unknown record code: 0x"
            << setfill('0') << setw(2) << hex << int(hob);
         throw std::runtime_error{ss.str()};
     }
 
-    return {draw, offset};
+    return {record, offset};
 }
 
 std::ostream& operator<<(std::ostream& os, const SlideFile& file)

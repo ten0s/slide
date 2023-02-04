@@ -4,28 +4,28 @@
 #include <iostream>
 #include "slide_visitor.hpp"
 
-class SlideOStreamVisitor : public SlideDrawVisitor {
+class SlideOStreamVisitor : public SlideRecordVisitor {
 public:
     explicit SlideOStreamVisitor(std::ostream& os) : _os{os} {}
 
-    void accept(SlideDrawVector& x) override {
+    void accept(SlideRecordVector& x) override {
         _os << "VECTOR: "
             << "(" << x.x0() << ", " << x.y0() << ")" << " "
             << "(" << x.x1() << ", " << x.y1() << ")" << "\n";
     }
 
-    void accept(SlideDrawOffsetVector& x) override {
+    void accept(SlideRecordOffsetVector& x) override {
         _os << "OFFSET VECTOR: "
             << "(" << x.dx0() << ", " << x.dy0() << ")" << " "
             << "(" << x.dx1() << ", " << x.dy1() << ")" << "\n";
     }
 
-    void accept(SlideDrawCommonEndpoint& x) override {
+    void accept(SlideRecordCommonEndpoint& x) override {
         _os << "COMMON ENDPOINT: "
             << "(" << x.dx0() << ", " << x.dy0() << ")" << "\n";
     }
 
-    void accept(SlideDrawColor& x) override {
+    void accept(SlideRecordColor& x) override {
         _os << "COLOR: " << x.color() << "\n";
     }
 

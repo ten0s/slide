@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "slide_visitor.hpp"
-#include "slide_draw.hpp"
+#include "slide_record.hpp"
 
 enum class Endian { UNK, LE, BE };
 
@@ -55,13 +55,13 @@ class SlideFile {
 public:
     explicit SlideFile(const std::string& name,
                        const SlideFileHeader& header,
-                       const std::vector<SlideDraw*>& draws)
-        : _name{name}, _header{header}, _draws{draws} {}
+                       const std::vector<SlideRecord*>& records)
+        : _name{name}, _header{header}, _records{records} {}
 
     SlideFile(SlideFile&& old)
-        : _name{old._name}, _header{old._header}, _draws{old._draws}
+        : _name{old._name}, _header{old._header}, _records{old._records}
         {
-            old._draws = {};
+            old._records = {};
         }
 
     SlideFile(const SlideFile&) = delete;
@@ -69,24 +69,24 @@ public:
     SlideFile& operator=(SlideFile&&) = delete;
 
     ~SlideFile() {
-        std::for_each(_draws.begin(), _draws.end(), [](SlideDraw* draw) {
-            delete draw;
+        std::for_each(_records.begin(), _records.end(), [](SlideRecord* record) {
+            delete record;
         });
     }
 
     const std::string& name() const { return _name; }
     const SlideFileHeader& header() const { return _header; }
-    void visit_records(SlideDrawVisitor& visitor) const {
+    void visit_records(SlideRecordVisitor& visitor) const {
         std::for_each(
-            _draws.begin(), _draws.end(),
-            [&visitor](SlideDraw* draw) { draw->visit(visitor); }
+            _records.begin(), _records.end(),
+            [&visitor](SlideRecord* record) { record->visit(visitor); }
         );
     }
 
 private:
     std::string _name;
     SlideFileHeader _header;
-    std::vector<SlideDraw*> _draws;
+    std::vector<SlideRecord*> _records;
 };
 
 std::pair<SlideFile, size_t>
@@ -95,8 +95,8 @@ parse_slide_file(const std::string& name, const uint8_t* buf, size_t size);
 std::pair<SlideFileHeader, size_t>
 parse_slide_file_header(const uint8_t* buf, size_t size);
 
-std::pair<SlideDraw*, size_t>
-parse_slide_draw(const uint8_t* buf, size_t size, Endian endian);
+std::pair<SlideRecord*, size_t>
+parse_slide_record(const uint8_t* buf, size_t size, Endian endian);
 
 std::ostream& operator<<(std::ostream& os, const SlideFile& header);
 std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr);
