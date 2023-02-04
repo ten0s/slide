@@ -7,6 +7,9 @@
 #include <string>
 #include <vector>
 
+#include "slide_visitor.h"
+#include "slide_draw.h"
+
 enum class Endian { UNK, LE, BE };
 
 class SlideFileHeader {
@@ -48,80 +51,6 @@ private:
     Endian _endian;
 };
 
-class SlideDraw {
-public:
-    virtual ~SlideDraw() {}
-    virtual void draw() = 0;
-};
-
-class SlideDrawVector : public SlideDraw {
-public:
-    explicit SlideDrawVector(uint16_t x0, uint16_t y0,
-                             uint16_t x1, uint16_t y1)
-        : _x0{x0}, _y0{y0}, _x1{x1}, _y1{y1} {}
-
-    void draw() override {
-        std::cout << "VECTOR "
-                  << "(" <<_x0 << ", " << _y0 << ")" << " "
-                  << "(" <<_x1 << ", " << _y1 << ")" << "\n";
-    }
-
-private:
-    uint16_t _x0;
-    uint16_t _y0;
-    uint16_t _x1;
-    uint16_t _y1;
-};
-
-class SlideDrawOffsetVector : public SlideDraw {
-public:
-    explicit SlideDrawOffsetVector(int8_t dx0, int8_t dy0,
-                                   int8_t dx1, int8_t dy1)
-        : _dx0{dx0}, _dy0{dy0}, _dx1{dx1}, _dy1{dy1} {}
-
-    void draw() override {
-        std::cout << "OFFSET VECTOR "
-                  << "(" << int(_dx0) << ", " << int(_dy0) << ")" << " "
-                  << "(" << int(_dx1) << ", " << int(_dy1) << ")" << "\n";
-    }
-
-private:
-    int8_t _dx0;
-    int8_t _dy0;
-    int8_t _dx1;
-    int8_t _dy1;
-};
-
-class SlideDrawCommonEndpoint : public SlideDraw {
-public:
-    explicit SlideDrawCommonEndpoint(int8_t dx0, int8_t dy0)
-        : _dx0{dx0}, _dy0{dy0} {}
-
-    void draw() override {
-        std::cout << "COMMON ENDPOINT "
-                  << "(" << int(_dx0) << ", " << int(_dy0) << ")" << "\n";
-    }
-
-private:
-    int8_t _dx0;
-    int8_t _dy0;
-};
-
-class SlideDrawColor : public SlideDraw {
-public:
-    explicit SlideDrawColor(uint8_t color) :
-        _color{color} {}
-
-    void draw() override {
-        std::cout << "COLOR " << int(_color) << "\n";
-    }
-
-    uint8_t color() const { return _color; }
-
-private:
-    uint8_t _color;
-};
-
 class SlideFile {
 public:
     explicit SlideFile(const std::string& name,
@@ -147,7 +76,12 @@ public:
 
     const std::string& name() const { return _name; }
     const SlideFileHeader& header() const { return _header; }
-    const std::vector<SlideDraw*>& records() const { return _draws; }
+    void visit_records(SlideDrawVisitor& visitor) const {
+        std::for_each(
+            _draws.begin(), _draws.end(),
+            [&visitor](SlideDraw* draw) { draw->visit(visitor); }
+        );
+    }
 
 private:
     std::string _name;

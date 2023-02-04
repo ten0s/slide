@@ -3,7 +3,9 @@
 #include <cstddef> // offsetof
 #include <iomanip>
 #include <sstream>
+
 #include "slide_file.h"
+#include "slide_ostream_visitor.h"
 
 using namespace std;
 
@@ -248,12 +250,8 @@ std::ostream& operator<<(std::ostream& os, const SlideFile& file)
     os << file.header();
 
     os << "Records:\n";
-
-    auto records = file.records();
-    std::for_each(records.begin(),
-                  records.end(), [](SlideDraw* d) {
-        d->draw();
-    });
+    SlideOStreamVisitor visitor{os};
+    file.visit_records(visitor);
 
     return os;
 }

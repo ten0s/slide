@@ -7,8 +7,8 @@
 #include <gtk/gtk.h>
 #include <cairo.h>
 
-#include "colors.h"
 #include "slide_file.h"
+#include "slide_cairo_visitor.h"
 
 using namespace std;
 
@@ -17,13 +17,12 @@ void usage(const std::string& prog)
     cerr << "Usage: " << prog << " SLIDE" << endl;
 }
 
-gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer data)
+gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 {
     SlideFile* file = static_cast<SlideFile*>(data);
 
-    file->records()[0]->draw();
-    uint8_t acad_color = ((SlideDrawColor*)file->records()[2])->color();
-    RGB rgb = AutoCAD::colors[acad_color];
+    SlideCairoVisitor visitor{cr};
+    file->visit_records(visitor);
 
     guint width = gtk_widget_get_allocated_width(widget);
     guint height = gtk_widget_get_allocated_height(widget);
@@ -34,14 +33,14 @@ gboolean on_draw(GtkWidget *widget, cairo_t *cr, gpointer data)
                MIN (width, height) / 2.0,
                0, 2 * G_PI);
 
-    GdkRGBA color = {rgb.red, rgb.green, rgb.blue, 1};
-    gdk_cairo_set_source_rgba(cr, &color);
+    //GdkRGBA color = {rgb.red, rgb.green, rgb.blue, 1};
+    //gdk_cairo_set_source_rgba(cr, &color);
     cairo_fill(cr);
 
     return FALSE;
 }
 
-int main (int argc, char * argv[]) {
+int main (int argc, char* argv[]) {
     gtk_init(&argc, &argv);
 
     const std::string prog = basename(argv[0]);
