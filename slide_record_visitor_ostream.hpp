@@ -8,10 +8,10 @@ class SlideRecordVisitorOStream : public SlideRecordVisitor {
 public:
     explicit SlideRecordVisitorOStream(std::ostream& os) : _os{os} {}
 
-    void accept(SlideRecordVector& x) override;
-    void accept(SlideRecordOffsetVector& x) override;
-    void accept(SlideRecordCommonEndpoint& x) override;
-    void accept(SlideRecordColor& x) override;
+    void accept(SlideRecordVector& r) override;
+    void accept(SlideRecordOffsetVector& r) override;
+    void accept(SlideRecordCommonEndpoint& r) override;
+    void accept(SlideRecordColor& r) override;
 
 private:
     std::ostream& _os;

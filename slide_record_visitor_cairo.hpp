@@ -10,10 +10,10 @@ public:
         : _cr{cr}, _x0{0}, _y0{0} {}
 
     ~SlideRecordVisitorCairo() override;
-    void accept(SlideRecordVector& x) override;
-    void accept(SlideRecordOffsetVector& x) override;
-    void accept(SlideRecordCommonEndpoint& x) override;
-    void accept(SlideRecordColor& x) override;
+    void accept(SlideRecordVector& r) override;
+    void accept(SlideRecordOffsetVector& r) override;
+    void accept(SlideRecordCommonEndpoint& r) override;
+    void accept(SlideRecordColor& r) override;
 
 private:
     cairo_t* _cr;

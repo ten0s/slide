@@ -7,31 +7,48 @@ SlideRecordVisitorCairo::~SlideRecordVisitorCairo()
     cairo_stroke(_cr);
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordVector& x)
+void SlideRecordVisitorCairo::accept(SlideRecordVector& r)
 {
-    cairo_move_to(_cr, x.x0(), x.y1());
-    cairo_line_to(_cr, x.x1(), x.y1());
-    _x0 = x.x0();
-    _y0 = x.y0();
+    int x0 = r.x0(), y0 = r.y0();
+    int x1 = r.x1(), y1 = r.y1();
+
+    cairo_move_to(_cr, x0, y0);
+    cairo_line_to(_cr, x1, y1);
+
+    // The from point is saved as the last point.
+    _x0 = x0;
+    _y0 = y0;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordOffsetVector& x)
+void SlideRecordVisitorCairo::accept(SlideRecordOffsetVector& r)
 {
-    //cairo_rel_line_to
-    //_os << "OFFSET VECTOR: "
-    //    << "(" << int(x.dx0()) << ", " << int(x.dy0()) << ")" << " "
-    //    << "(" << int(x.dx1()) << ", " << int(x.dy1()) << ")" << "\n";
+    int x0 = _x0 + r.dx0(), y0 = _y0 + r.dy0();
+    int x1 = _x0 + r.dx1(), y1 = _y0 + r.dy1();
+
+    cairo_move_to(_cr, x0, y0);
+    cairo_line_to(_cr, x1, y1);
+
+    // The adjusted from point is saved as the last point.
+    _x0 = x0;
+    _y0 = y0;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& x)
+void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
 {
-    //cairo_rel_move_to
-    //_os << "COMMON ENDPOINT: "
-    //    << "(" << int(x.dx0()) << ", " << int(x.dy0()) << ")" << "\n";
+    // This is a vector starting at the last point.
+    int x0 = _x0,           y0 = _y0;
+    int x1 = _x0 + r.dx0(), y1 = _y0 + r.dy0();
+
+    cairo_move_to(_cr, x0, y0);
+    cairo_line_to(_cr, x1, y1);
+
+    // The adjusted to point is saved as the last point.
+    _x0 = x1;
+    _y0 = y1;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordColor& x)
+void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
 {
-    auto [red, green, blue] = AutoCAD::colors[x.color()];
+    auto [red, green, blue] = AutoCAD::colors[r.color()];
     cairo_set_source_rgb(_cr, red / 255.0, green / 255.0, blue / 255.0);
 }

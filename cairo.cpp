@@ -24,6 +24,8 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     guint width = gtk_widget_get_allocated_width(widget);
     guint height = gtk_widget_get_allocated_height(widget);
 
+    cairo_set_line_width(cr, 1);
+
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);

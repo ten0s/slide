@@ -1,27 +1,27 @@
 #include "slide_record.hpp"
 #include "slide_record_visitor_ostream.hpp"
 
-void SlideRecordVisitorOStream::accept(SlideRecordVector& x)
+void SlideRecordVisitorOStream::accept(SlideRecordVector& r)
 {
     _os << "VECTOR: "
-        << "(" << x.x0() << ", " << x.y0() << ")" << " "
-        << "(" << x.x1() << ", " << x.y1() << ")" << "\n";
+        << "(" << r.x0() << ", " << r.y0() << ")" << " "
+        << "(" << r.x1() << ", " << r.y1() << ")" << "\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordOffsetVector& x)
+void SlideRecordVisitorOStream::accept(SlideRecordOffsetVector& r)
 {
     _os << "OFFSET VECTOR: "
-        << "(" << x.dx0() << ", " << x.dy0() << ")" << " "
-        << "(" << x.dx1() << ", " << x.dy1() << ")" << "\n";
+        << "(" << r.dx0() << ", " << r.dy0() << ")" << " "
+        << "(" << r.dx1() << ", " << r.dy1() << ")" << "\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& x)
+void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& r)
 {
     _os << "COMMON ENDPOINT: "
-        << "(" << x.dx0() << ", " << x.dy0() << ")" << "\n";
+        << "(" << r.dx0() << ", " << r.dy0() << ")" << "\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordColor& x)
+void SlideRecordVisitorOStream::accept(SlideRecordColor& r)
 {
-    _os << "COLOR: " << x.color() << "\n";
+    _os << "COLOR: " << r.color() << "\n";
 }
