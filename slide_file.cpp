@@ -91,7 +91,7 @@ parse_slide_file(const std::string& name, const uint8_t* buf, size_t size)
 
     std::vector<SlideDraw*> draws;
     while (offset < size) {
-        auto [draw, delta] = parse_slide_draw(&buf[offset], size-offset, endian);
+        auto [draw, delta] = parse_slide_draw(buf+offset, size-offset, endian);
         if (draw) {
             draws.push_back(draw);
         }
@@ -129,7 +129,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
     case 1: { // Old version
         // Determine endianess by looking at the end of
         // the buffer inspecting the End of File marker.
-        switch (read<uint16_t>(&buf[size-2], Endian::LE)) {
+        switch (read<uint16_t>(buf+size-2, Endian::LE)) {
         case 0xfc00:
             endian = Endian::LE;
             break;
@@ -267,6 +267,6 @@ std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr)
     os << "High Y dot     : " << hdr.high_y_dot() << "\n";
     os << "Aspect ratio   : " << hdr.aspect_ratio() << "\n";
     os << "Hardware fill  : " << hdr.hardware_fill() << "\n";
-    os << "Endianess      : " << (hdr.endian() == Endian::LE ? "LE" : "BE") << "\n";
+    os << "Endianess      : " << (hdr.endian() == Endian::LE ? "Little-endian" : "Big-endian") << "\n";
     return os;
 }
