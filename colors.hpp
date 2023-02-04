@@ -1,5 +1,5 @@
-#ifndef __COLORS_H__
-#define __COLORS_H__
+#ifndef __COLORS_HPP__
+#define __COLORS_HPP__
 
 struct RGB {
     uint8_t red;
@@ -273,4 +273,4 @@ RGB colors[] = {
 
 } // namespace AutoCAD
 
-#endif // __COLORS_H__
+#endif // __COLORS_HPP__

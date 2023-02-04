@@ -1,5 +1,5 @@
-#ifndef __SLIDE_DRAW_H__
-#define __SLIDE_DRAW_H__
+#ifndef __SLIDE_DRAW_HPP__
+#define __SLIDE_DRAW_HPP__
 
 class SlideDraw {
 public:
@@ -13,10 +13,10 @@ public:
                              uint16_t x1, uint16_t y1)
         : _x0{x0}, _y0{y0}, _x1{x1}, _y1{y1} {}
 
-    uint16_t x0() const { return _x0; }
-    uint16_t y0() const { return _y0; }
-    uint16_t x1() const { return _x1; }
-    uint16_t y1() const { return _y1; }
+    unsigned x0() const { return _x0; }
+    unsigned y0() const { return _y0; }
+    unsigned x1() const { return _x1; }
+    unsigned y1() const { return _y1; }
 
     void visit(SlideDrawVisitor& visitor) override {
         visitor.accept(*this);
@@ -35,10 +35,10 @@ public:
                                    int8_t dx1, int8_t dy1)
         : _dx0{dx0}, _dy0{dy0}, _dx1{dx1}, _dy1{dy1} {}
 
-    uint16_t dx0() const { return _dx0; }
-    uint16_t dy0() const { return _dy0; }
-    uint16_t dx1() const { return _dx1; }
-    uint16_t dy1() const { return _dy1; }
+    int dx0() const { return _dx0; }
+    int dy0() const { return _dy0; }
+    int dx1() const { return _dx1; }
+    int dy1() const { return _dy1; }
 
     void visit(SlideDrawVisitor& visitor) override {
         visitor.accept(*this);
@@ -56,8 +56,8 @@ public:
     explicit SlideDrawCommonEndpoint(int8_t dx0, int8_t dy0)
         : _dx0{dx0}, _dy0{dy0} {}
 
-    uint16_t dx0() const { return _dx0; }
-    uint16_t dy0() const { return _dy0; }
+    int dx0() const { return _dx0; }
+    int dy0() const { return _dy0; }
 
     void visit(SlideDrawVisitor& visitor) override {
         visitor.accept(*this);
@@ -73,7 +73,7 @@ public:
     explicit SlideDrawColor(uint8_t color) :
         _color{color} {}
 
-    uint8_t color() const { return _color; }
+    unsigned char color() const { return _color; }
 
     void visit(SlideDrawVisitor& visitor) override {
         visitor.accept(*this);
@@ -83,4 +83,4 @@ private:
     uint8_t _color;
 };
 
-#endif // __SLIDE_DRAW_H__
+#endif // __SLIDE_DRAW_HPP__

@@ -4,8 +4,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include "slide_file.h"
-#include "slide_ostream_visitor.h"
+#include "slide_file.hpp"
+#include "slide_visitor_ostream.hpp"
 
 using namespace std;
 

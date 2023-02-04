@@ -7,8 +7,8 @@
 #include <gtk/gtk.h>
 #include <cairo.h>
 
-#include "slide_file.h"
-#include "slide_cairo_visitor.h"
+#include "slide_file.hpp"
+#include "slide_visitor_cairo.hpp"
 
 using namespace std;
 
@@ -21,21 +21,15 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 {
     SlideFile* file = static_cast<SlideFile*>(data);
 
-    SlideCairoVisitor visitor{cr};
-    file->visit_records(visitor);
-
     guint width = gtk_widget_get_allocated_width(widget);
     guint height = gtk_widget_get_allocated_height(widget);
 
-    //cairo_move_to(cr, 10, 20);
-    cairo_arc (cr,
-               width / 2.0, height / 2.0,
-               MIN (width, height) / 2.0,
-               0, 2 * G_PI);
-
-    //GdkRGBA color = {rgb.red, rgb.green, rgb.blue, 1};
-    //gdk_cairo_set_source_rgba(cr, &color);
+    cairo_set_source_rgb(cr, 0, 0, 0);
+    cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);
+
+    SlideCairoVisitor visitor{cr};
+    file->visit_records(visitor);
 
     return FALSE;
 }
@@ -61,12 +55,16 @@ int main (int argc, char* argv[]) {
             auto [file, offset] = parse_slide_file(name, buf.get(), size);
             cout << file;
 
+            const char* title = file.name().c_str();
+            const size_t width = file.header().high_x_dot();
+            const size_t height = file.header().high_y_dot();
+
             GtkWindow* window;
             {
                 window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-                gtk_window_set_default_size(window, 300, 200);
+                gtk_window_set_default_size(window, width, height);
                 gtk_window_set_position    (window, GTK_WIN_POS_CENTER);
-                gtk_window_set_title       (window, "Drawing");
+                gtk_window_set_title       (window, title);
 
                 g_signal_connect(window, "destroy", gtk_main_quit, NULL);
             }

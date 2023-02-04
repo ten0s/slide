@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "slide_file.h"
+#include "slide_file.hpp"
 
 using namespace std;
 

@@ -1,5 +1,5 @@
-#ifndef __SLIDE_VISITOR_H__
-#define __SLIDE_VISITOR_H__
+#ifndef __SLIDE_VISITOR_HPP__
+#define __SLIDE_VISITOR_HPP__
 
 class SlideDraw;
 class SlideDrawVector;
@@ -9,11 +9,12 @@ class SlideDrawColor;
 
 class SlideDrawVisitor {
 public:
-    virtual void accept(SlideDraw&) = 0;
+    virtual ~SlideDrawVisitor() {}
+
     virtual void accept(SlideDrawVector&) = 0;
     virtual void accept(SlideDrawOffsetVector&) = 0;
     virtual void accept(SlideDrawCommonEndpoint&) = 0;
     virtual void accept(SlideDrawColor&) = 0;
 };
 
-#endif // __SLIDE_VISITOR_H__
+#endif // __SLIDE_VISITOR_HPP__

@@ -1,5 +1,5 @@
-#ifndef __SLIDE_FILE_H__
-#define __SLIDE_FILE_H__
+#ifndef __SLIDE_FILE_HPP__
+#define __SLIDE_FILE_HPP__
 
 #include <algorithm>
 #include <iostream>
@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "slide_visitor.h"
-#include "slide_draw.h"
+#include "slide_visitor.hpp"
+#include "slide_draw.hpp"
 
 enum class Endian { UNK, LE, BE };
 
@@ -101,4 +101,4 @@ parse_slide_draw(const uint8_t* buf, size_t size, Endian endian);
 std::ostream& operator<<(std::ostream& os, const SlideFile& header);
 std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr);
 
-#endif // __SLIDE_FILE_H__
+#endif // __SLIDE_FILE_HPP__
