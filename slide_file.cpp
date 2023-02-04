@@ -5,9 +5,8 @@
 #include <sstream>
 
 #include "slide_file.hpp"
-#include "slide_visitor_ostream.hpp"
-
-using namespace std;
+#include "slide_record.hpp"
+#include "slide_record_visitor_ostream.hpp"
 
 // The floating-point aspect ratio value and all 2-byte integers are
 // written in the native format of the CPU that was used to create the file
@@ -85,6 +84,27 @@ uint8_t low_order_byte(T val, Endian endian) {
     }
 }
 
+SlideFile::~SlideFile()
+{
+    std::for_each(
+        _records.begin(),
+        _records.end(), [](SlideRecord* record) {
+            delete record;
+        }
+    );
+}
+
+void SlideFile::visit_records(SlideRecordVisitor& visitor) const
+{
+    std::for_each(
+        _records.begin(),
+        _records.end(),
+        [&visitor](SlideRecord* record) {
+            record->visit(visitor);
+        }
+    );
+}
+
 std::pair<SlideFile, size_t>
 parse_slide_file(const std::string& name, const uint8_t* buf, size_t size)
 {
@@ -119,7 +139,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
     if (strncmp((char*)buf, id_string.c_str(), 13) != 0 ||
         buf[13] != 0x0d || buf[14] != 0x0a ||
         buf[15] != 0x1a || buf[16] != 0x00) {
-        ostringstream ss;
+        std::ostringstream ss;
         ss << "Invalid slide file header: " << id_string;
         throw std::runtime_error{ss.str()};
     }
@@ -167,7 +187,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
         break;
     }
     default:
-        ostringstream ss;
+        std::ostringstream ss;
         ss << "Unknown slide file version: " << level_indicator;
         throw std::runtime_error{ss.str()};
     }
@@ -233,9 +253,9 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         record = new SlideRecordColor(color);
         offset = 2;
     } else {
-        ostringstream ss;
+        std::ostringstream ss;
         ss << "Unknown record code: 0x"
-           << setfill('0') << setw(2) << hex << int(hob);
+           << std::setfill('0') << std::setw(2) << std::hex << int(hob);
         throw std::runtime_error{ss.str()};
     }
 
@@ -250,7 +270,7 @@ std::ostream& operator<<(std::ostream& os, const SlideFile& file)
     os << file.header();
 
     os << "Records:\n";
-    SlideOStreamVisitor visitor{os};
+    SlideRecordVisitorOStream visitor{os};
     file.visit_records(visitor);
 
     return os;

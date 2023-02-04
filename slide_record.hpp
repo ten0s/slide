@@ -1,6 +1,9 @@
 #ifndef __SLIDE_RECORD_HPP__
 #define __SLIDE_RECORD_HPP__
 
+#include <cstdint>
+#include "slide_record_visitor.hpp"
+
 class SlideRecord {
 public:
     virtual ~SlideRecord() {}

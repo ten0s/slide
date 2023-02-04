@@ -8,7 +8,7 @@
 #include <cairo.h>
 
 #include "slide_file.hpp"
-#include "slide_visitor_cairo.hpp"
+#include "slide_record_visitor_cairo.hpp"
 
 using namespace std;
 
@@ -28,7 +28,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);
 
-    SlideCairoVisitor visitor{cr};
+    SlideRecordVisitorCairo visitor{cr};
     file->visit_records(visitor);
 
     return FALSE;

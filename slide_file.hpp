@@ -1,16 +1,10 @@
 #ifndef __SLIDE_FILE_HPP__
 #define __SLIDE_FILE_HPP__
 
-#include <algorithm>
-#include <iostream>
-#include <memory>
 #include <string>
 #include <vector>
 
-#include "slide_visitor.hpp"
-#include "slide_record.hpp"
-
-enum class Endian { UNK, LE, BE };
+#include "slide_endian.hpp"
 
 class SlideFileHeader {
 public:
@@ -51,6 +45,9 @@ private:
     Endian _endian;
 };
 
+class SlideRecord;
+class SlideRecordVisitor;
+
 class SlideFile {
 public:
     explicit SlideFile(const std::string& name,
@@ -68,20 +65,11 @@ public:
     SlideFile& operator=(const SlideFile&) = delete;
     SlideFile& operator=(SlideFile&&) = delete;
 
-    ~SlideFile() {
-        std::for_each(_records.begin(), _records.end(), [](SlideRecord* record) {
-            delete record;
-        });
-    }
+    ~SlideFile();
 
     const std::string& name() const { return _name; }
     const SlideFileHeader& header() const { return _header; }
-    void visit_records(SlideRecordVisitor& visitor) const {
-        std::for_each(
-            _records.begin(), _records.end(),
-            [&visitor](SlideRecord* record) { record->visit(visitor); }
-        );
-    }
+    void visit_records(SlideRecordVisitor& visitor) const;
 
 private:
     std::string _name;
