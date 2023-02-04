@@ -1,5 +1,6 @@
 #include "slide_record.hpp"
 #include "slide_record_visitor_ostream.hpp"
+#include "autocad_colors.hpp"
 
 void SlideRecordVisitorOStream::accept(SlideRecordVector& r)
 {
@@ -23,5 +24,9 @@ void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& r)
 
 void SlideRecordVisitorOStream::accept(SlideRecordColor& r)
 {
-    _os << "COLOR: " << r.color() << "\n";
+    RGB rgb = AutoCAD::colors[r.color()];
+    _os << "COLOR: " << r.color() << " "
+        << "("
+        << int(rgb.red) << ", " << int(rgb.green) << ", " << int(rgb.blue)
+        << ")" << "\n";
 }

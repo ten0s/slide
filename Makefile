@@ -24,10 +24,10 @@ gi-slide.o: gi-slide.h slide.o
 slide.o: slide.h
 
 main: main.cpp slide_file.hpp slide_file.cpp slide_record_visitor_ostream.cpp
-	g++ -g main.cpp slide_file.cpp slide_record_visitor_ostream.cpp -o $@
+	g++ -g main.cpp slide_file.cpp autocad_colors.cpp slide_record_visitor_ostream.cpp -o $@
 
-cairo: cairo.cpp slide_file.hpp slide_file.cpp autocad_colors.hpp slide_record.hpp slide_record_visitor_cairo.cpp
-	g++ -g cairo.cpp slide_file.cpp slide_record_visitor_ostream.cpp slide_record_visitor_cairo.cpp `pkg-config --cflags --libs cairo gtk+-3.0` -o $@
+cairo: cairo.cpp slide_file.hpp slide_file.cpp autocad_colors.cpp slide_record.hpp slide_record_visitor_ostream.cpp slide_record_visitor_cairo.cpp
+	g++ -g cairo.cpp slide_file.cpp autocad_colors.cpp slide_record_visitor_ostream.cpp slide_record_visitor_cairo.cpp `pkg-config --cflags --libs cairo gtk+-3.0` -o $@
 
 $(LIB_FILE): gi-slide.o slide.o
 	gcc -shared $^ $(CFLAGS) $(LIBS) -o $@

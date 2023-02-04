@@ -9,7 +9,6 @@ public:
     explicit SlideRecordVisitorCairo(cairo_t* cr)
         : _cr{cr}, _x0{0}, _y0{0} {}
 
-    ~SlideRecordVisitorCairo() override;
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;

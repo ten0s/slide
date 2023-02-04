@@ -2,11 +2,6 @@
 #include "slide_record_visitor_cairo.hpp"
 #include "autocad_colors.hpp"
 
-SlideRecordVisitorCairo::~SlideRecordVisitorCairo()
-{
-    cairo_stroke(_cr);
-}
-
 void SlideRecordVisitorCairo::accept(SlideRecordVector& r)
 {
     int x0 = r.x0(), y0 = r.y0();
@@ -14,6 +9,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordVector& r)
 
     cairo_move_to(_cr, x0, y0);
     cairo_line_to(_cr, x1, y1);
+    cairo_stroke(_cr);
 
     // The from point is saved as the last point.
     _x0 = x0;
@@ -27,6 +23,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordOffsetVector& r)
 
     cairo_move_to(_cr, x0, y0);
     cairo_line_to(_cr, x1, y1);
+    cairo_stroke(_cr);
 
     // The adjusted from point is saved as the last point.
     _x0 = x0;
@@ -41,6 +38,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
 
     cairo_move_to(_cr, x0, y0);
     cairo_line_to(_cr, x1, y1);
+    cairo_stroke(_cr);
 
     // The adjusted to point is saved as the last point.
     _x0 = x1;
@@ -49,6 +47,6 @@ void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
 
 void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
 {
-    auto [red, green, blue] = AutoCAD::colors[r.color()];
-    cairo_set_source_rgb(_cr, red / 255.0, green / 255.0, blue / 255.0);
+    RGB rgb = AutoCAD::colors[r.color()];
+    cairo_set_source_rgb(_cr, rgb.red / 255, rgb.green / 255, rgb.blue / 255);
 }
