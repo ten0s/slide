@@ -1,6 +1,6 @@
 #include "slide_record.hpp"
 #include "slide_record_visitor_cairo.hpp"
-#include "colors.hpp"
+#include "autocad_colors.hpp"
 
 SlideRecordVisitorCairo::~SlideRecordVisitorCairo()
 {
