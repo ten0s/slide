@@ -109,17 +109,17 @@ private:
 
 class SlideDrawColor : public SlideDraw {
 public:
-    explicit SlideDrawColor(int color) :
+    explicit SlideDrawColor(uint8_t color) :
         _color{color} {}
 
     void draw() override {
-        std::cout << "COLOR " << _color << "\n";
+        std::cout << "COLOR " << int(_color) << "\n";
     }
 
-    //int color() const { return _color; }
+    uint8_t color() const { return _color; }
 
 private:
-    int _color;
+    uint8_t _color;
 };
 
 class SlideFile {

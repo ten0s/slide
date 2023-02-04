@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <exception>
 #include <memory>
 
 #include "slide_file.h"

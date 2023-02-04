@@ -1,5 +1,5 @@
 CFLAGS=-Wall -g `pkg-config --cflags glib-2.0 cairo`
-LIBS=`pkg-config --libs glib-2.0 cairo`
+LIBS=`pkg-config --libs glib-2.0 cairo gtk+-3.0`
 
 NAMESPACE=Slide
 NSVERSION=1.0
@@ -14,7 +14,7 @@ GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 PREFIX ?= `pwd`
 
-all: $(TYPELIB_FILE) main
+all: $(TYPELIB_FILE) main cairo
 
 %.o: %.c %.cpp
 	gcc -c $< $(CFLAGS) -o $@
@@ -25,6 +25,9 @@ slide.o: slide.h
 
 main: main.cpp slide_file.h slide_file.cpp
 	g++ -g main.cpp slide_file.cpp -o $@
+
+cairo: cairo.cpp slide_file.h slide_file.cpp colors.h
+	g++ -g cairo.cpp slide_file.cpp `pkg-config --cflags --libs cairo gtk+-3.0` -o $@
 
 $(LIB_FILE): gi-slide.o slide.o
 	gcc -shared $^ $(CFLAGS) $(LIBS) -o $@
