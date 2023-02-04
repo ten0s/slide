@@ -2,13 +2,30 @@
 #include "slide_record_visitor_cairo.hpp"
 #include "autocad_colors.hpp"
 
+const int HORIZ_PADDING = 1;
+const int VERT_PADDING = 0;
+
+double SlideRecordVisitorCairo::scalex(unsigned x) const {
+    // Scale
+    x = 1.0 * x * _dst_width / _src_width;
+    // Add left padding
+    return x + HORIZ_PADDING;
+}
+
+double SlideRecordVisitorCairo::scaley(unsigned y) const {
+    // Scale
+    y = 1.0 * y * _dst_height / _src_height;
+    // (0, 0) is bottom-left corner
+    return _dst_height - y;
+}
+
 void SlideRecordVisitorCairo::accept(SlideRecordVector& r)
 {
     int x0 = r.x0(), y0 = r.y0();
     int x1 = r.x1(), y1 = r.y1();
 
-    cairo_move_to(_cr, x0, _height - y0);
-    cairo_line_to(_cr, x1, _height - y1);
+    cairo_move_to(_cr, scalex(x0), scaley(y0));
+    cairo_line_to(_cr, scalex(x1), scaley(y1));
     cairo_stroke(_cr);
 
     // The from point is saved as the last point.
@@ -21,8 +38,8 @@ void SlideRecordVisitorCairo::accept(SlideRecordOffsetVector& r)
     int x0 = _x0 + r.dx0(), y0 = _y0 + r.dy0();
     int x1 = _x0 + r.dx1(), y1 = _y0 + r.dy1();
 
-    cairo_move_to(_cr, x0, _height - y0);
-    cairo_line_to(_cr, x1, _height - y1);
+    cairo_move_to(_cr, scalex(x0), scaley(y0));
+    cairo_line_to(_cr, scalex(x1), scaley(y1));
     cairo_stroke(_cr);
 
     // The adjusted from point is saved as the last point.
@@ -36,8 +53,8 @@ void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
     int x0 = _x0,           y0 = _y0;
     int x1 = _x0 + r.dx0(), y1 = _y0 + r.dy0();
 
-    cairo_move_to(_cr, x0, _height - y0);
-    cairo_line_to(_cr, x1, _height - y1);
+    cairo_move_to(_cr, scalex(x0), scaley(y0));
+    cairo_line_to(_cr, scalex(x1), scaley(y1));
     cairo_stroke(_cr);
 
     // The adjusted to point is saved as the last point.

@@ -21,16 +21,25 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 {
     SlideFile* file = static_cast<SlideFile*>(data);
 
-    guint width = gtk_widget_get_allocated_width(widget);
-    guint height = gtk_widget_get_allocated_height(widget);
+    unsigned src_width = file->header().high_x_dot();
+    unsigned src_height = file->header().high_y_dot();
+    double aspect = file->header().aspect_ratio();
+
+    guint dst_width = gtk_widget_get_allocated_width(widget);
+    guint dst_height = gtk_widget_get_allocated_height(widget);
 
     cairo_set_line_width(cr, 1);
 
     cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_rectangle(cr, 0, 0, width, height);
+    cairo_rectangle(cr, 0, 0, dst_width, dst_height);
     cairo_fill(cr);
 
-    SlideRecordVisitorCairo visitor{cr, width, height};
+    SlideRecordVisitorCairo visitor{
+        cr,
+        src_width, src_height,
+        dst_width, dst_height,
+        aspect
+    };
     file->visit_records(visitor);
 
     return FALSE;
@@ -64,7 +73,7 @@ int main (int argc, char* argv[]) {
             GtkWindow* window;
             {
                 window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-                gtk_window_set_default_size(window, width, height);
+                gtk_window_set_default_size(window, 300, 200);
                 gtk_window_set_position    (window, GTK_WIN_POS_CENTER);
                 gtk_window_set_title       (window, title);
 
@@ -73,7 +82,7 @@ int main (int argc, char* argv[]) {
 
             GtkDrawingArea* drawingArea;
             {
-                drawingArea = (GtkDrawingArea*) gtk_drawing_area_new();
+                drawingArea = (GtkDrawingArea*)gtk_drawing_area_new();
                 gtk_container_add(GTK_CONTAINER(window), (GtkWidget*)drawingArea);
 
                 g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), &file);
