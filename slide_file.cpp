@@ -276,15 +276,15 @@ std::ostream& operator<<(std::ostream& os, const SlideFile& file)
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr)
+std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header)
 {
-    os << "ID string      : " << hdr.id_string() << "\n";
-    os << "Type indicator : " << hdr.type_indicator() << "\n";
-    os << "Level indicator: " << hdr.level_indicator() << "\n";
-    os << "High X dot     : " << hdr.high_x_dot() << "\n";
-    os << "High Y dot     : " << hdr.high_y_dot() << "\n";
-    os << "Aspect ratio   : " << hdr.aspect_ratio() << "\n";
-    os << "Hardware fill  : " << hdr.hardware_fill() << "\n";
-    os << "Endianess      : " << (hdr.endian() == Endian::LE ? "Little-endian" : "Big-endian") << "\n";
+    os << "ID string      : " << header.id_string() << "\n";
+    os << "Type indicator : " << header.type_indicator() << "\n";
+    os << "Level indicator: " << header.level_indicator() << "\n";
+    os << "High X dot     : " << header.high_x_dot() << "\n";
+    os << "High Y dot     : " << header.high_y_dot() << "\n";
+    os << "Aspect ratio   : " << header.aspect_ratio() << "\n";
+    os << "Hardware fill  : " << header.hardware_fill() << "\n";
+    os << "Endianess      : " << (header.endian() == Endian::LE ? "Little-endian" : "Big-endian") << "\n";
     return os;
 }

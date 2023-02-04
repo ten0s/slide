@@ -86,7 +86,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size);
 std::pair<SlideRecord*, size_t>
 parse_slide_record(const uint8_t* buf, size_t size, Endian endian);
 
-std::ostream& operator<<(std::ostream& os, const SlideFile& header);
-std::ostream& operator<<(std::ostream& os, const SlideFileHeader& hdr);
+std::ostream& operator<<(std::ostream& os, const SlideFile& file);
+std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header);
 
 #endif // __SLIDE_FILE_HPP__
