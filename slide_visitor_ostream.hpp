@@ -9,7 +9,7 @@ public:
     explicit SlideOStreamVisitor(std::ostream& os) : _os{os} {}
 
     void accept(SlideDrawVector& x) override {
-        _os << "VECTOR "
+        _os << "VECTOR: "
             << "(" << x.x0() << ", " << x.y0() << ")" << " "
             << "(" << x.x1() << ", " << x.y1() << ")" << "\n";
     }

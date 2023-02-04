@@ -73,7 +73,7 @@ public:
     explicit SlideDrawColor(uint8_t color) :
         _color{color} {}
 
-    unsigned char color() const { return _color; }
+    unsigned color() const { return _color; }
 
     void visit(SlideDrawVisitor& visitor) override {
         visitor.accept(*this);
