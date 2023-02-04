@@ -6,8 +6,8 @@
 
 class SlideRecordVisitorCairo : public SlideRecordVisitor {
 public:
-    explicit SlideRecordVisitorCairo(cairo_t* cr)
-        : _cr{cr}, _x0{0}, _y0{0} {}
+    explicit SlideRecordVisitorCairo(cairo_t* cr, unsigned width, unsigned height)
+        : _cr{cr}, _width{width}, _height{height}, _x0{0}, _y0{0} {}
 
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
@@ -16,8 +16,10 @@ public:
 
 private:
     cairo_t* _cr;
-    uint16_t _x0;
-    uint16_t _y0;
+    unsigned _width;
+    unsigned _height;
+    unsigned _x0;
+    unsigned _y0;
 };
 
 #endif // __SLIDE_VISITOR_CAIRO_HPP__

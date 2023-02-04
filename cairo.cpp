@@ -30,7 +30,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);
 
-    SlideRecordVisitorCairo visitor{cr};
+    SlideRecordVisitorCairo visitor{cr, width, height};
     file->visit_records(visitor);
 
     return FALSE;
