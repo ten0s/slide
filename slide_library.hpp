@@ -19,7 +19,7 @@ public:
     const std::string& filename() const { return _filename; }
     const std::string& name() const { return _name; }
     const SlideLibraryHeader& header() const { return _header; }
-    const std::vector<SlideDirectory*> dirs() const { return _dirs; }
+    const std::vector<SlideDirectory*>& dirs() const { return _dirs; }
 
 private:
     SlideLibrary(const std::string& filename,

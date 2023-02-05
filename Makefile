@@ -1,5 +1,11 @@
-CXXFLAGS=-g -Wall -Werror
-LDFLAGS=-static-libstdc++ -static-libgcc
+DEBUG_CXXFLAGS=-g -O0 -Wall -Werror
+DEBUG_LDFLAGS=
+
+RELEASE_CXXFLAGS=-g -Wall -Werror
+RELEASE_LDFLAGS=-static-libstdc++ -static-libgcc
+
+CXXFLAGS=$(DEBUG_CXXFLAGS)
+LDFLAGS=$(DEBUG_LDFLAGS)
 
 LIBSLIDE=-L`pwd` -lslide -Wl,-rpath='$$ORIGIN'
 LIBCAIRO=`pkg-config --cflags --libs cairo`
