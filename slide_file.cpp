@@ -285,6 +285,8 @@ std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header)
     os << "High Y dot     : " << header.high_y_dot() << "\n";
     os << "Aspect ratio   : " << header.aspect_ratio() << "\n";
     os << "Hardware fill  : " << header.hardware_fill() << "\n";
-    os << "Endianess      : " << (header.endian() == Endian::LE ? "Little-endian" : "Big-endian") << "\n";
+    os << "Byte order     : " << (header.endian() == Endian::LE ?
+                                  "Little-endian" :
+                                  "Big-endian") << "\n";
     return os;
 }
