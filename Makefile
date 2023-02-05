@@ -13,10 +13,14 @@ SLIDE_FILES=\
 	slide_colors.cpp \
 	slide_file.hpp \
 	slide_file.cpp \
+	slide_file_parser.cpp \
 	slide_file_header.hpp \
 	slide_file_header.cpp \
+	slide_file_header_parser.cpp \
 	slide_parser.hpp \
-	slide_parser.cpp \
+	slide_parser_lib.hpp \
+	slide_record.hpp \
+	slide_record_parser.cpp \
 	slide_record_visitor_ostream.hpp \
 	slide_record_visitor_ostream.cpp \
 	slide_record_visitor_cairo.hpp \
