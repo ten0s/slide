@@ -5,7 +5,12 @@
 
 G_BEGIN_DECLS
 
-int gslide_draw(void *cr, int x, int y, int width, int height, const char *sldname);
+int gslide_draw(void *cr,
+                unsigned x,
+                unsigned y,
+                unsigned width,
+                unsigned height,
+                const char *sldname);
 
 G_END_DECLS
 

@@ -3,7 +3,12 @@
 #include "slide_file.hpp"
 #include "slide_record_visitor_cairo.hpp"
 
-int slide_draw(cairo_t *cr, int x, int y, int width, int height, const char *sldname)
+int slide_draw(cairo_t *cr,
+               unsigned x,
+               unsigned y,
+               unsigned width,
+               unsigned height,
+               const char *sldname)
 {
     std::cout << "+draw "
               << x << " " << y << " "
@@ -12,7 +17,7 @@ int slide_draw(cairo_t *cr, int x, int y, int width, int height, const char *sld
 
     // Draw black background
     cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_rectangle(cr, 0, 0, width, height);
+    cairo_rectangle(cr, x, y, width, height);
     cairo_fill(cr);
 
     // Set line width
@@ -24,20 +29,14 @@ int slide_draw(cairo_t *cr, int x, int y, int width, int height, const char *sld
 
         unsigned sld_width = file.header().high_x_dot();
         unsigned sld_height = file.header().high_y_dot();
-        double aspect = file.header().aspect_ratio();
-
-        unsigned dst_width = width;
-        unsigned dst_height = height;
-
-        // TODO: pass x, y
 
         // Draw slide
         SlideRecordVisitorCairo visitor{
             cr,
-                sld_width, sld_height,
-                dst_width, dst_height,
-                aspect
-                };
+            sld_width, sld_height,
+            x, y,
+            width, height
+        };
         file.visit_records(visitor);
     } catch (...) {
         // TODO:

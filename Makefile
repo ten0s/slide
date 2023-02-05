@@ -7,12 +7,19 @@ LIBGTK3=`pkg-config --cflags --libs gtk+-3.0`
 LIBGLIB2=`pkg-config --cflags --libs glib-2.0`
 
 SLIDE_FILES=\
+	slide.h \
 	slide.cpp \
+	slide_colors.hpp \
 	slide_colors.cpp \
+	slide_file.hpp \
 	slide_file.cpp \
+	slide_file_header.hpp \
 	slide_file_header.cpp \
+	slide_parser.hpp \
 	slide_parser.cpp \
+	slide_record_visitor_ostream.hpp \
 	slide_record_visitor_ostream.cpp \
+	slide_record_visitor_cairo.hpp \
 	slide_record_visitor_cairo.cpp
 
 NAMESPACE=Slide

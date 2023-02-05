@@ -7,20 +7,12 @@
 class SlideRecordVisitorCairo : public SlideRecordVisitor {
 public:
     explicit SlideRecordVisitorCairo(cairo_t* cr,
-                                     unsigned src_width,
-                                     unsigned src_height,
-                                     unsigned dst_width,
-                                     unsigned dst_height,
-                                     double aspect)
-        : _cr{cr},
-          _src_width{src_width},
-          _src_height{src_height},
-          _dst_width{dst_width},
-          _dst_height{dst_height},
-          _aspect{aspect},
-          _x0{0},
-          _y0{0}
-        {}
+                                     unsigned src_width,   // slide width
+                                     unsigned src_height,  // slide height
+                                     unsigned dst_x,       // draw offset x
+                                     unsigned dst_y,       // draw offset y
+                                     unsigned dst_width,   // draw width
+                                     unsigned dst_height); // draw height
 
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
@@ -28,18 +20,21 @@ public:
     void accept(SlideRecordColor& r) override;
 
 private:
-    double scalex(unsigned x) const;
-    double scaley(unsigned y) const;
+    double adjust_x(unsigned x) const;
+    double adjust_y(unsigned y) const;
 
 private:
     cairo_t* _cr;
     unsigned _src_width;
     unsigned _src_height;
+    unsigned _dst_x;
+    unsigned _dst_y;
     unsigned _dst_width;
     unsigned _dst_height;
-    double _aspect;
-    unsigned _x0;
-    unsigned _y0;
+    unsigned _last_x;
+    unsigned _last_y;
+    double _scale_x;
+    double _scale_y;
 };
 
 #endif // __SLIDE_VISITOR_CAIRO_HPP__
