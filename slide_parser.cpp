@@ -35,7 +35,7 @@ struct HeaderV2 {
     char test_number[2];   // 0x1234 - LE | BE
 };
 
-template <typename T>
+template<typename T>
 T read(const uint8_t buf[sizeof(T)], Endian endian) {
     union { uint8_t in[sizeof(T)]; T out; } x;
     switch (endian) {
@@ -55,7 +55,7 @@ T read(const uint8_t buf[sizeof(T)], Endian endian) {
     return x.out;
 }
 
-template <typename T>
+template<typename T>
 uint8_t high_order_byte(T val, Endian endian) {
     union { T in; uint8_t out[sizeof(T)]; } x;
     x.in = val;
@@ -69,7 +69,7 @@ uint8_t high_order_byte(T val, Endian endian) {
     }
 }
 
-template <typename T>
+template<typename T>
 uint8_t low_order_byte(T val, Endian endian) {
     union { T in; uint8_t out[sizeof(T)]; } x;
     x.in = val;
@@ -221,7 +221,7 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         record = new SlideRecordCommonEndpoint{x0, y0};
         offset = 3;
     } else if (hob == 0xff) {
-         // New color. Bytes: 2
+        // New color. Bytes: 2
         auto color = lob;
         record = new SlideRecordColor{color};
         offset = 2;
