@@ -14,7 +14,9 @@ class SlideRecordVector : public SlideRecord {
 public:
     explicit SlideRecordVector(uint16_t x0, uint16_t y0,
                                uint16_t x1, uint16_t y1)
-        : _x0{x0}, _y0{y0}, _x1{x1}, _y1{y1} {}
+        : _x0{x0}, _y0{y0},
+          _x1{x1}, _y1{y1}
+        {}
 
     unsigned x0() const { return _x0; }
     unsigned y0() const { return _y0; }
@@ -36,7 +38,9 @@ class SlideRecordOffsetVector : public SlideRecord {
 public:
     explicit SlideRecordOffsetVector(int8_t dx0, int8_t dy0,
                                      int8_t dx1, int8_t dy1)
-        : _dx0{dx0}, _dy0{dy0}, _dx1{dx1}, _dy1{dy1} {}
+        : _dx0{dx0}, _dy0{dy0},
+          _dx1{dx1}, _dy1{dy1}
+        {}
 
     int dx0() const { return _dx0; }
     int dy0() const { return _dy0; }
@@ -57,7 +61,8 @@ private:
 class SlideRecordCommonEndpoint : public SlideRecord {
 public:
     explicit SlideRecordCommonEndpoint(int8_t dx0, int8_t dy0)
-        : _dx0{dx0}, _dy0{dy0} {}
+        : _dx0{dx0}, _dy0{dy0}
+        {}
 
     int dx0() const { return _dx0; }
     int dy0() const { return _dy0; }
@@ -73,8 +78,9 @@ private:
 
 class SlideRecordColor : public SlideRecord {
 public:
-    explicit SlideRecordColor(uint8_t color) :
-        _color{color} {}
+    explicit SlideRecordColor(uint8_t color)
+        : _color{color}
+        {}
 
     unsigned color() const { return _color; }
 

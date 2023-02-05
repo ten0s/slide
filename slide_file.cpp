@@ -41,9 +41,9 @@ SlideFile SlideFile::from_buf(const std::string& filename,
 SlideFile::SlideFile(const std::string& filename,
                      const SlideFileHeader& header,
                      const std::vector<SlideRecord*>& records)
-        : _filename{filename},
-          _header{header},
-          _records{records}
+    : _filename{filename},
+      _header{header},
+      _records{records}
 {
     // Make name without path and extension
     std::string base = basename(_filename.c_str());

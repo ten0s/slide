@@ -105,7 +105,8 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
         high_y_dot,
         aspect_ratio,
         hardware_fill,
-        endian};
+        endian
+    };
 
     size_t offset = level_indicator == 1 ? sizeof(HeaderV1) : sizeof(HeaderV2);
 

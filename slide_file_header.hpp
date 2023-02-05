@@ -13,15 +13,16 @@ public:
                              short high_y_dot,
                              double aspect_ration,
                              short hardware_fill,
-                             Endian endian) :
-        _id_string{id_string},
-        _type_indicator{type_indicator},
-        _level_indicator{level_indicator},
-        _high_x_dot{high_x_dot},
-        _high_y_dot{high_y_dot},
-        _aspect_ratio{aspect_ration},
-        _hardware_fill{hardware_fill},
-        _endian{endian} {}
+                             Endian endian)
+        : _id_string{id_string},
+          _type_indicator{type_indicator},
+          _level_indicator{level_indicator},
+          _high_x_dot{high_x_dot},
+          _high_y_dot{high_y_dot},
+          _aspect_ratio{aspect_ration},
+          _hardware_fill{hardware_fill},
+          _endian{endian}
+        {}
 
     std::string id_string() const { return _id_string; }
     int type_indicator() const { return _type_indicator; }

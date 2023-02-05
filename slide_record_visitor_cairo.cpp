@@ -12,15 +12,15 @@ SlideRecordVisitorCairo::SlideRecordVisitorCairo(cairo_t* cr,
                                                  unsigned dst_y,
                                                  unsigned dst_width,
                                                  unsigned dst_height)
-        : _cr{cr},
-          _src_width{src_width},
-          _src_height{src_height},
-          _dst_x{dst_x},
-          _dst_y{dst_y},
-          _dst_width{dst_width},
-          _dst_height{dst_height},
-          _last_x{0},
-          _last_y{0}
+    : _cr{cr},
+      _src_width{src_width},
+      _src_height{src_height},
+      _dst_x{dst_x},
+      _dst_y{dst_y},
+      _dst_width{dst_width},
+      _dst_height{dst_height},
+      _last_x{0},
+      _last_y{0}
 {
     _scale_x = 1.0 * _dst_width  / _src_width;
     _scale_y = 1.0 * _dst_height / _src_height;
