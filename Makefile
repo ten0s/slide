@@ -11,12 +11,21 @@ SLIDE_FILES=\
 	slide.cpp \
 	slide_colors.hpp \
 	slide_colors.cpp \
+	slide_directory.hpp \
+	slide_directory.cpp \
+	slide_directory_parser.cpp \
 	slide_file.hpp \
 	slide_file.cpp \
 	slide_file_parser.cpp \
 	slide_file_header.hpp \
 	slide_file_header.cpp \
 	slide_file_header_parser.cpp \
+	slide_library.hpp \
+	slide_library.cpp \
+	slide_library_parser.cpp \
+	slide_library_header.hpp \
+	slide_library_header.cpp \
+	slide_library_header_parser.cpp \
 	slide_parser.hpp \
 	slide_parser_lib.hpp \
 	slide_record.hpp \

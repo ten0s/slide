@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring> // basename
+#include <string>
 #include "slide_file.hpp"
+#include "slide_library.hpp"
 
 void usage(const std::string& prog)
 {
@@ -15,8 +17,18 @@ int main(int argc, char *argv[])
     }
 
     try {
-        SlideFile file = SlideFile::from_file(argv[1]);
-        std::cout << file;
+        std::string filename = argv[1];
+        std::string ext = filename.substr(filename.rfind("."));
+
+        if (ext == ".sld") {
+            SlideFile file = SlideFile::from_file(filename);
+            std::cout << file;
+        } else if (ext == ".slb") {
+            SlideLibrary library = SlideLibrary::from_file(filename);
+            std::cout << library;
+        } else {
+            throw std::runtime_error("Unknown extention: " + ext);
+        }
     } catch (...) {
         // TODO:
         throw;
