@@ -18,7 +18,7 @@ SlideFile SlideFile::from_file(const std::string& filename)
         is.seekg(0);
         // Read the whole file.
         if (is.read((char*)buf.get(), size)) {
-            return from_buf(filename, (char*)buf.get(), size);
+            return from_buf(filename, buf.get(), size);
         } else {
             std::stringstream ss;
             ss << "File read failed: " << filename << "\n";
@@ -32,9 +32,9 @@ SlideFile SlideFile::from_file(const std::string& filename)
 }
 
 SlideFile SlideFile::from_buf(const std::string& filename,
-                              const char* buf, size_t size)
+                              const uint8_t* buf, size_t size)
 {
-    auto [header, records, _] = parse_slide_file((uint8_t*)buf, size);
+    auto [header, records, _] = parse_slide_file(buf, size);
     return SlideFile{filename, std::move(header), std::move(records)};
 }
 

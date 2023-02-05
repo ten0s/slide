@@ -41,10 +41,11 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
     double aspect_ratio;
     short hardware_fill;
 
-    std::string id_string{"AutoCAD Slide"};
-    if (strncmp((char*)buf, id_string.c_str(), 13) != 0 ||
-        buf[13] != 0x0d || buf[14] != 0x0a ||
-        buf[15] != 0x1a || buf[16] != 0x00) {
+    std::string id_str{"AutoCAD Slide"};
+    size_t id_str_sz = id_str.size();
+    if (strncmp((char*)buf, id_str.c_str(), id_str_sz) != 0 ||
+        buf[id_str_sz+0] != 0x0d || buf[id_str_sz+1] != 0x0a ||
+        buf[id_str_sz+2] != 0x1a || buf[id_str_sz+3] != 0x00) {
         throw std::runtime_error{"Invalid slide file header"};
     }
 
@@ -98,7 +99,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
     }
 
     SlideFileHeader header{
-        id_string,
+        id_str,
         type_indicator,
         level_indicator,
         high_x_dot,

@@ -11,7 +11,7 @@ class SlideRecordVisitor;
 class SlideFile {
 public:
     static SlideFile from_file(const std::string& filename);
-    static SlideFile from_buf(const std::string& name, const char* buf, size_t size);
+    static SlideFile from_buf(const std::string& name, const uint8_t* buf, size_t size);
 
     SlideFile(SlideFile&&);
     ~SlideFile();
