@@ -1,7 +1,6 @@
 #ifndef __SLIDE_RECORD_VISITOR_HPP__
 #define __SLIDE_RECORD_VISITOR_HPP__
 
-class SlideRecord;
 class SlideRecordVector;
 class SlideRecordOffsetVector;
 class SlideRecordCommonEndpoint;

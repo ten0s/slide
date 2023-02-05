@@ -101,7 +101,6 @@ parse_slide_file(const uint8_t* buf, size_t size)
     return {std::move(header), std::move(records), offset};
 }
 
-
 std::pair<SlideFileHeader, size_t>
 parse_slide_file_header(const uint8_t* buf, size_t size)
 {

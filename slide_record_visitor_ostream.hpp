@@ -1,7 +1,7 @@
 #ifndef __SLIDE_RECORD_VISITOR_OSTREAM_HPP__
 #define __SLIDE_RECORD_VISITOR_OSTREAM_HPP__
 
-#include <iostream>
+#include <ostream>
 #include "slide_record_visitor.hpp"
 
 class SlideRecordVisitorOStream : public SlideRecordVisitor {
