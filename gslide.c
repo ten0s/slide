@@ -1,8 +1,8 @@
-#include "gi-slide.h"
+#include "gslide.h"
 #include "slide.h"
 
 /**
- * gi_slide_draw:
+ * gslide_draw:
  * @cr: (transfer none) (not nullable): Cairo context
  * @x: X-offset from the upper-left corner of the tile, in pixels. Must be a positive value.
  * @y: Y-offset from the upper-left corner of the tile, in pixels. Must be a positive value.
@@ -12,8 +12,8 @@
  *
  * Draws on the slide on Cairo context.
  */
-void
-gi_slide_draw(void *cr, int x, int y, int width, int height, const char *sldname)
+int
+gslide_draw(void *cr, int x, int y, int width, int height, const char *sldname)
 {
-    slide_draw((cairo_t *)cr, x, y, width, height, sldname);
+    return slide_draw((cairo_t *)cr, x, y, width, height, sldname);
 }

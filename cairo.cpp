@@ -1,20 +1,13 @@
-#include <string.h> // basename
-
+#include <cstring> // basename
 #include <iostream>
-#include <fstream>
-#include <memory>
-
 #include <gtk/gtk.h>
 #include <cairo.h>
-
 #include "slide_file.hpp"
 #include "slide_record_visitor_cairo.hpp"
 
-using namespace std;
-
 void usage(const std::string& prog)
 {
-    cerr << "Usage: " << prog << " SLIDE" << endl;
+    std::cerr << "Usage: " << prog << " SLIDE\n";
 }
 
 gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
@@ -48,56 +41,41 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 int main (int argc, char* argv[]) {
     gtk_init(&argc, &argv);
 
-    const std::string prog = basename(argv[0]);
     if (argc < 2) {
-        usage(prog);
+        usage(basename(argv[0]));
         return 1;
     }
 
-    const std::string name = argv[1];
-    ifstream is{name, std::ios::binary | std::ios::ate};
-    if (is.is_open()) {
-        // Read the whole file.
-        size_t size = is.tellg();
-        std::unique_ptr<uint8_t[]> buf{new uint8_t[size]};
-        is.seekg(0);
-        if (is.read((char*)buf.get(), size)) {
+    try {
+        SlideFile file = SlideFile::from_file(argv[1]);
+        std::cout << file;
 
-            auto [file, offset] = parse_slide_file(name, buf.get(), size);
-            cout << file;
+        const char* title = file.name().c_str();
 
-            const char* title = file.name().c_str();
-            const size_t width = file.header().high_x_dot();
-            const size_t height = file.header().high_y_dot();
+        GtkWindow* window;
+        {
+            window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+            gtk_window_set_default_size(window, 300, 200);
+            gtk_window_set_position    (window, GTK_WIN_POS_CENTER);
+            gtk_window_set_title       (window, title);
 
-            GtkWindow* window;
-            {
-                window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-                gtk_window_set_default_size(window, 300, 200);
-                gtk_window_set_position    (window, GTK_WIN_POS_CENTER);
-                gtk_window_set_title       (window, title);
-
-                g_signal_connect(window, "destroy", gtk_main_quit, NULL);
-            }
-
-            GtkDrawingArea* drawingArea;
-            {
-                drawingArea = (GtkDrawingArea*)gtk_drawing_area_new();
-                gtk_container_add(GTK_CONTAINER(window), (GtkWidget*)drawingArea);
-
-                g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), &file);
-            }
-
-            gtk_widget_show_all((GtkWidget*)window);
-            gtk_main();
-
-        } else {
-            cerr << "Read failed\n";
+            g_signal_connect(window, "destroy", gtk_main_quit, NULL);
         }
 
-    } else {
-        // TODO: use `perror` or analog
-        cerr << "File not found\n";
+        GtkDrawingArea* drawingArea;
+        {
+            drawingArea = (GtkDrawingArea*)gtk_drawing_area_new();
+            gtk_container_add(GTK_CONTAINER(window), (GtkWidget*)drawingArea);
+
+            g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), &file);
+        }
+
+        gtk_widget_show_all((GtkWidget*)window);
+        gtk_main();
+    } catch (...) {
+        // TODO:
+        throw;
+        //return 1;
     }
 
     return 0;

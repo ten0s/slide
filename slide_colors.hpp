@@ -1,5 +1,5 @@
-#ifndef __AUTOCAD_COLORS_HPP__
-#define __AUTOCAD_COLORS_HPP__
+#ifndef __SLIDE_COLORS_HPP__
+#define __SLIDE_COLORS_HPP__
 
 #include <cstdint>
 
@@ -17,4 +17,4 @@ extern RGB colors[];
 
 } // namespace AutoCAD
 
-#endif // __AUTOCAD_COLORS_HPP__
+#endif // __SLIDE_COLORS_HPP__

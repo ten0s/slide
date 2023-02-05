@@ -1,270 +1,82 @@
-#include <algorithm>
-#include <cstring> // strncmp
-#include <cstddef> // offsetof
-#include <iomanip>
+#include <algorithm> // std::for_each
+#include <cstring>   // basename
+#include <memory>    // std::unique_ptr
+#include <fstream>
 #include <sstream>
-
 #include "slide_file.hpp"
+#include "slide_parser.hpp"
 #include "slide_record.hpp"
 #include "slide_record_visitor_ostream.hpp"
 
-// The floating-point aspect ratio value and all 2-byte integers are
-// written in the native format of the CPU that was used to create the file
-// (for 8086-family CPUs, IEEE double-precision, and low-order byte first).
-struct HeaderV1 {
-    // Generic Part
-    char id_string[17];    // AutoCAD Slide CR LF ^Z NUL
-    char type_indicator;   // 56
-    char level_indicator;  // 01
-    char high_x_dot[2];    // LE | BE
-    char high_y_dot[2];    // LE | BE
-    // Specific
-    char aspect_ratio[8];  // Float LE | BE
-    char hardware_fill[2]; // 0x00 | 0x02 Unused
-};
-
-struct HeaderV2 {
-    // Generic Part
-    char id_string[17];    // AutoCAD Slide CR LF ^Z NUL
-    char type_indicator;   // 56
-    char level_indicator;  // 02
-    char high_x_dot[2];    // LE | BE
-    char high_y_dot[2];    // LE | BE
-    // Specific Part
-    char aspect_ratio[4];  // LE always
-    char hardware_fill[2]; // 0x0002 Unused
-    char test_number[2];   // 0x1234 - LE | BE
-};
-
-template <typename T>
-T read(const uint8_t buf[sizeof(T)], Endian endian) {
-    union { uint8_t in[sizeof(T)]; T out; } x;
-    switch (endian) {
-    case Endian::LE:
-        for (size_t i = 0; i < sizeof(T); ++i) {
-            x.in[i] = buf[i];
+SlideFile SlideFile::from_file(const std::string& filename)
+{
+    std::ifstream is{filename, std::ios::binary | std::ios::ate};
+    if (is.is_open()) {
+        // Determine file size.
+        size_t size = is.tellg();
+        std::unique_ptr<uint8_t[]> buf{new uint8_t[size]};
+        is.seekg(0);
+        // Read the whole file.
+        if (is.read((char*)buf.get(), size)) {
+            return from_buf(filename, (char*)buf.get(), size);
+        } else {
+            std::stringstream ss;
+            ss << "File read failed: " << filename << "\n";
+            throw std::runtime_error(ss.str());
         }
-        break;
-    case Endian::BE:
-        for (size_t i = 0; i < sizeof(T); ++i) {
-            x.in[i] = buf[sizeof(T)-1-i];
-        }
-        break;
-    default:
-        throw std::runtime_error("Unknown endian");
-    }
-    return x.out;
-}
-
-template <typename T>
-uint8_t high_order_byte(T val, Endian endian) {
-    union { T in; uint8_t out[sizeof(T)]; } x;
-    x.in = val;
-    switch (endian) {
-    case Endian::LE:
-        return x.out[sizeof(T)-1];
-    case Endian::BE:
-        return x.out[0];
-    default:
-        throw std::runtime_error("Unknown endian");
+    } else {
+        std::stringstream ss;
+        ss << "File open failed: " << filename << "\n";
+        throw std::runtime_error(ss.str());
     }
 }
 
-template <typename T>
-uint8_t low_order_byte(T val, Endian endian) {
-    union { T in; uint8_t out[sizeof(T)]; } x;
-    x.in = val;
-    switch (endian) {
-    case Endian::LE:
-        return x.out[0];
-    case Endian::BE:
-        return x.out[sizeof(T)-1];
-    default:
-        throw std::runtime_error("Unknown endian");
-    }
+SlideFile SlideFile::from_buf(const std::string& filename,
+                              const char* buf, size_t size)
+{
+    auto [header, records, _] = parse_slide_file((uint8_t*)buf, size);
+    return SlideFile{filename, std::move(header), std::move(records)};
+}
+
+SlideFile::SlideFile(const std::string& filename,
+                     const SlideFileHeader& header,
+                     const std::vector<SlideRecord*>& records)
+        : _filename{filename},
+          _header{header},
+          _records{records}
+{
+    // Make name without path and extension
+    std::string base = basename(_filename.c_str());
+    _name = base.substr(0, base.rfind("."));
+}
+
+SlideFile::SlideFile(SlideFile&& old)
+    : _filename{old._filename},
+      _name{old._name},
+      _header{old._header},
+      _records{old._records}
+{
+    old._records = {};
 }
 
 SlideFile::~SlideFile()
 {
-    std::for_each(
-        _records.begin(),
-        _records.end(), [](SlideRecord* record) {
-            delete record;
-        }
+    std::for_each(_records.begin(), _records.end(),
+        [](SlideRecord* record) { delete record; }
     );
 }
 
 void SlideFile::visit_records(SlideRecordVisitor& visitor) const
 {
-    std::for_each(
-        _records.begin(),
-        _records.end(),
-        [&visitor](SlideRecord* record) {
-            record->visit(visitor);
-        }
+    std::for_each(_records.begin(), _records.end(),
+        [&visitor](SlideRecord* record) { record->visit(visitor); }
     );
-}
-
-std::pair<SlideFile, size_t>
-parse_slide_file(const std::string& name, const uint8_t* buf, size_t size)
-{
-    auto [header, offset] = parse_slide_file_header(buf, size);
-    Endian endian = header.endian();
-
-    std::vector<SlideRecord*> records;
-    while (offset < size) {
-        auto [record, delta] = parse_slide_record(buf+offset, size-offset, endian);
-        if (record) {
-            records.push_back(record);
-        }
-        offset += delta;
-    }
-
-    SlideFile file{name, header, std::move(records)};
-
-    return {std::move(file) , offset};
-}
-
-
-std::pair<SlideFileHeader, size_t>
-parse_slide_file_header(const uint8_t* buf, size_t size)
-{
-    Endian endian = Endian::UNK;
-    short high_x_dot;
-    short high_y_dot;
-    double aspect_ratio;
-    short hardware_fill;
-
-    std::string id_string{"AutoCAD Slide"};
-    if (strncmp((char*)buf, id_string.c_str(), 13) != 0 ||
-        buf[13] != 0x0d || buf[14] != 0x0a ||
-        buf[15] != 0x1a || buf[16] != 0x00) {
-        std::ostringstream ss;
-        ss << "Invalid slide file header: " << id_string;
-        throw std::runtime_error{ss.str()};
-    }
-
-    char type_indicator = buf[offsetof(HeaderV1, type_indicator)];
-    char level_indicator = buf[offsetof(HeaderV1, level_indicator)];
-
-    switch (level_indicator) {
-    case 1: { // Old version
-        // Determine endianess by looking at the end of
-        // the buffer inspecting the End of File marker.
-        switch (read<uint16_t>(buf+size-2, Endian::LE)) {
-        case 0xfc00:
-            endian = Endian::LE;
-            break;
-        case 0x00fc:
-            endian = Endian::BE;
-            break;
-        default:
-            throw new std::runtime_error("End of File is not found");
-        }
-        high_x_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_x_dot), endian);
-        high_y_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_y_dot), endian);
-
-        aspect_ratio = read<double>(buf+offsetof(HeaderV1, aspect_ratio), endian);
-        hardware_fill = read<uint16_t>(buf+offsetof(HeaderV1, hardware_fill), endian);
-        break;
-    }
-    case 2: { // New version
-        {
-            // Determine endianess
-            uint16_t tmp = read<uint16_t>(buf+offsetof(HeaderV2, test_number), Endian::LE);
-            endian = (tmp == 0x1234 ? Endian::LE : Endian::BE);
-        }
-
-        high_x_dot = read<uint16_t>(buf+offsetof(HeaderV2, high_x_dot), endian);
-        high_y_dot = read<uint16_t>(buf+offsetof(HeaderV2, high_y_dot), endian);
-
-        {
-            uint32_t tmp = read<uint32_t>(buf+offsetof(HeaderV2, aspect_ratio), Endian::LE);
-            aspect_ratio = tmp / 10'000'000.0;
-        }
-
-        hardware_fill = read<uint16_t>(buf+offsetof(HeaderV2, hardware_fill), endian);
-        break;
-    }
-    default:
-        std::ostringstream ss;
-        ss << "Unknown slide file version: " << level_indicator;
-        throw std::runtime_error{ss.str()};
-    }
-
-    SlideFileHeader header{
-        id_string,
-        type_indicator,
-        level_indicator,
-        high_x_dot,
-        high_y_dot,
-        aspect_ratio,
-        hardware_fill,
-        endian};
-
-    size_t offset = level_indicator == 1 ? sizeof(HeaderV1) : sizeof(HeaderV2);
-
-    return {header, offset};
-}
-
-std::pair<SlideRecord*, size_t>
-parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
-{
-    SlideRecord* record = nullptr;
-    size_t offset = 0;
-
-    auto head = read<uint16_t>(buf, endian);
-    auto hob = high_order_byte<uint16_t>(head, endian);
-    auto lob = low_order_byte<uint16_t>(head, endian);
-
-    if (hob <= 0x7f) {
-        // Vector. Bytes: 8
-        auto x0 = read<uint16_t>(buf+0*sizeof(uint16_t), endian);
-        auto y0 = read<uint16_t>(buf+1*sizeof(uint16_t), endian);
-        auto x1 = read<uint16_t>(buf+2*sizeof(uint16_t), endian);
-        auto y1 = read<uint16_t>(buf+3*sizeof(uint16_t), endian);
-        record = new SlideRecordVector(x0, y0, x1, y1);
-        offset = 8;
-    } else if (hob == 0xfb) {
-        // Offset vector. Bytes: 5
-        auto dx0 = lob;
-        auto dy0 = read<int8_t>(buf+2, endian);
-        auto dx1 = read<int8_t>(buf+3, endian);
-        auto dy1 = read<int8_t>(buf+4, endian);
-        record = new SlideRecordOffsetVector(dx0, dy0, dx1, dy1);
-        offset = 5;
-    } else if (hob == 0xfc) {
-        // End of file. Bytes: 2
-        record = nullptr;
-        offset = 2;
-    } else if (hob == 0xfd) {
-        // Solid fill. Bytes: 6
-        throw std::runtime_error("Solid fill not implemented yet");
-        //offset = 6;
-    } else if (hob == 0xfe) {
-        // Common endpoint vector. Bytes: 3
-        auto x0 = lob;
-        auto y0 = read<int8_t>(buf+2, endian);
-        record = new SlideRecordCommonEndpoint(x0, y0);
-        offset = 3;
-    } else if (hob == 0xff) {
-         // New color. Bytes: 2
-        auto color = lob;
-        record = new SlideRecordColor(color);
-        offset = 2;
-    } else {
-        std::ostringstream ss;
-        ss << "Unknown record code: 0x"
-           << std::setfill('0') << std::setw(2) << std::hex << int(hob);
-        throw std::runtime_error{ss.str()};
-    }
-
-    return {record, offset};
 }
 
 std::ostream& operator<<(std::ostream& os, const SlideFile& file)
 {
-    os << "Slide File: " << file.name() << "\n";
+    os << "Slide File: " << file.filename() << "\n";
+    os << "Slide Name: " << file.name() << "\n";
 
     os << "Header:\n";
     os << file.header();
@@ -273,20 +85,5 @@ std::ostream& operator<<(std::ostream& os, const SlideFile& file)
     SlideRecordVisitorOStream visitor{os};
     file.visit_records(visitor);
 
-    return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header)
-{
-    os << "ID string      : " << header.id_string() << "\n";
-    os << "Type indicator : " << header.type_indicator() << "\n";
-    os << "Level indicator: " << header.level_indicator() << "\n";
-    os << "High X dot     : " << header.high_x_dot() << "\n";
-    os << "High Y dot     : " << header.high_y_dot() << "\n";
-    os << "Aspect ratio   : " << header.aspect_ratio() << "\n";
-    os << "Hardware fill  : " << header.hardware_fill() << "\n";
-    os << "Byte order     : " << (header.endian() == Endian::LE ?
-                                  "Little-endian" :
-                                  "Big-endian") << "\n";
     return os;
 }

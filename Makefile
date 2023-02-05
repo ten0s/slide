@@ -1,10 +1,24 @@
-CFLAGS=-Wall -g `pkg-config --cflags glib-2.0 cairo`
-LIBS=`pkg-config --libs glib-2.0 cairo gtk+-3.0`
+CXXFLAGS=-g -Wall -Werror
+LDFLAGS=-static-libstdc++ -static-libgcc
+
+LIBSLIDE=-L`pwd` -lslide -Wl,-rpath='$$ORIGIN'
+LIBCAIRO=`pkg-config --cflags --libs cairo`
+LIBGTK3=`pkg-config --cflags --libs gtk+-3.0`
+LIBGLIB2=`pkg-config --cflags --libs glib-2.0`
+
+SLIDE_FILES=\
+	slide.cpp \
+	slide_colors.cpp \
+	slide_file.cpp \
+	slide_file_header.cpp \
+	slide_parser.cpp \
+	slide_record_visitor_ostream.cpp \
+	slide_record_visitor_cairo.cpp
 
 NAMESPACE=Slide
 NSVERSION=1.0
-LIB_NAME=gislide
-SYM_PREFIX=gi_slide
+LIB_NAME=gslide
+SYM_PREFIX=gslide
 LIB_FILE=lib$(LIB_NAME).so
 GIR_FILE=$(NAMESPACE)-$(NSVERSION).gir
 TYPELIB_FILE=$(NAMESPACE)-$(NSVERSION).typelib
@@ -14,26 +28,22 @@ GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 PREFIX ?= `pwd`
 
-all: $(TYPELIB_FILE) main cairo
+all: libslide.so main cairo $(TYPELIB_FILE)
 
-%.o: %.c %.cpp
-	gcc -c $< $(CFLAGS) -o $@
+libslide.so: $(SLIDE_FILES)
+	g++ -shared -fPIC $^ $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
 
-gi-slide.o: gi-slide.h slide.o
+main: main.cpp libslide.so
+	g++ main.cpp $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
 
-slide.o: slide.h
+cairo: cairo.cpp libslide.so
+	g++ cairo.cpp $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
 
-main: main.cpp slide_file.hpp slide_file.cpp slide_record_visitor_ostream.cpp
-	g++ -g main.cpp slide_file.cpp autocad_colors.cpp slide_record_visitor_ostream.cpp -o $@
-
-cairo: cairo.cpp slide_file.hpp slide_file.cpp autocad_colors.cpp slide_record.hpp slide_record_visitor_ostream.cpp slide_record_visitor_cairo.cpp
-	g++ -g cairo.cpp slide_file.cpp autocad_colors.cpp slide_record_visitor_ostream.cpp slide_record_visitor_cairo.cpp `pkg-config --cflags --libs cairo gtk+-3.0` -o $@
-
-$(LIB_FILE): gi-slide.o slide.o
-	gcc -shared $^ $(CFLAGS) $(LIBS) -o $@
+$(LIB_FILE): gslide.c libslide.so
+	g++ -shared -fPIC gslide.c $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
 $(GIR_FILE): $(LIB_FILE)
-	g-ir-scanner gi-slide.[ch]           \
+	g-ir-scanner gslide.[ch]             \
 		--warn-all                       \
 		--library-path=`pwd`             \
 		--library=$(LIB_NAME)            \

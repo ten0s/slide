@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-void slide_draw(cairo_t *cr, int x, int y, int width, int height, const char *sldname);
+int slide_draw(cairo_t *cr, int x, int y, int width, int height, const char *sldname);
 
 #ifdef __cplusplus
 }

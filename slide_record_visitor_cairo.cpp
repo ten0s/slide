@@ -1,6 +1,6 @@
+#include "slide_colors.hpp"
 #include "slide_record.hpp"
 #include "slide_record_visitor_cairo.hpp"
-#include "autocad_colors.hpp"
 
 const int HORIZ_PADDING = 1;
 const int VERT_PADDING = 0;
