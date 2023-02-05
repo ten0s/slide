@@ -22,12 +22,12 @@ SlideFile SlideFile::from_file(const std::string& filename)
         } else {
             std::stringstream ss;
             ss << "File read failed: " << filename << "\n";
-            throw std::runtime_error(ss.str());
+            throw std::runtime_error{ss.str()};
         }
     } else {
         std::stringstream ss;
         ss << "File open failed: " << filename << "\n";
-        throw std::runtime_error(ss.str());
+        throw std::runtime_error{ss.str()};
     }
 }
 

@@ -50,7 +50,7 @@ T read(const uint8_t buf[sizeof(T)], Endian endian) {
         }
         break;
     default:
-        throw std::runtime_error("Unknown endian");
+        throw std::runtime_error{"Unknown endian"};
     }
     return x.out;
 }
@@ -65,7 +65,7 @@ uint8_t high_order_byte(T val, Endian endian) {
     case Endian::BE:
         return x.out[0];
     default:
-        throw std::runtime_error("Unknown endian");
+        throw std::runtime_error{"Unknown endian"};
     }
 }
 
@@ -79,7 +79,7 @@ uint8_t low_order_byte(T val, Endian endian) {
     case Endian::BE:
         return x.out[sizeof(T)-1];
     default:
-        throw std::runtime_error("Unknown endian");
+        throw std::runtime_error{"Unknown endian"};
     }
 }
 
@@ -114,9 +114,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
     if (strncmp((char*)buf, id_string.c_str(), 13) != 0 ||
         buf[13] != 0x0d || buf[14] != 0x0a ||
         buf[15] != 0x1a || buf[16] != 0x00) {
-        std::ostringstream ss;
-        ss << "Invalid slide file header: " << id_string;
-        throw std::runtime_error{ss.str()};
+        throw std::runtime_error{"Invalid slide file header"};
     }
 
     char type_indicator = buf[offsetof(HeaderV1, type_indicator)];
@@ -134,7 +132,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
             endian = Endian::BE;
             break;
         default:
-            throw new std::runtime_error("End of File is not found");
+            throw new std::runtime_error{"End of File is not found"};
         }
         high_x_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_x_dot), endian);
         high_y_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_y_dot), endian);
@@ -198,15 +196,15 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         auto y0 = read<uint16_t>(buf+1*sizeof(uint16_t), endian);
         auto x1 = read<uint16_t>(buf+2*sizeof(uint16_t), endian);
         auto y1 = read<uint16_t>(buf+3*sizeof(uint16_t), endian);
-        record = new SlideRecordVector(x0, y0, x1, y1);
+        record = new SlideRecordVector{x0, y0, x1, y1};
         offset = 8;
     } else if (hob == 0xfb) {
         // Offset vector. Bytes: 5
-        auto dx0 = lob;
+        auto dx0 = static_cast<int8_t>(lob);
         auto dy0 = read<int8_t>(buf+2, endian);
         auto dx1 = read<int8_t>(buf+3, endian);
         auto dy1 = read<int8_t>(buf+4, endian);
-        record = new SlideRecordOffsetVector(dx0, dy0, dx1, dy1);
+        record = new SlideRecordOffsetVector{dx0, dy0, dx1, dy1};
         offset = 5;
     } else if (hob == 0xfc) {
         // End of file. Bytes: 2
@@ -214,18 +212,18 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         offset = 2;
     } else if (hob == 0xfd) {
         // Solid fill. Bytes: 6
-        throw std::runtime_error("Solid fill not implemented yet");
+        throw std::runtime_error{"Solid fill not implemented yet"};
         //offset = 6;
     } else if (hob == 0xfe) {
         // Common endpoint vector. Bytes: 3
-        auto x0 = lob;
+        auto x0 = static_cast<int8_t>(lob);
         auto y0 = read<int8_t>(buf+2, endian);
-        record = new SlideRecordCommonEndpoint(x0, y0);
+        record = new SlideRecordCommonEndpoint{x0, y0};
         offset = 3;
     } else if (hob == 0xff) {
          // New color. Bytes: 2
         auto color = lob;
-        record = new SlideRecordColor(color);
+        record = new SlideRecordColor{color};
         offset = 2;
     } else {
         std::ostringstream ss;
