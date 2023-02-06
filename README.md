@@ -1,6 +1,8 @@
-AutoCAD Slide (s) via GObject Introspection
+AutoCAD Slide(s) Library
 
-* ...
+Features:
+
+* GObject Introspection interface
 
 ## Build
 
