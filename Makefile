@@ -60,13 +60,13 @@ libslide.so: $(SLIDE_FILES)
 	g++ -shared -fPIC $^ $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
 
 main: main.cpp libslide.so
-	g++ main.cpp $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
+	g++ $< $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
 
 cairo: cairo.cpp libslide.so
-	g++ cairo.cpp $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
+	g++ $< $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
 
 $(LIB_FILE): gslide.c libslide.so
-	g++ -shared -fPIC gslide.c $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
+	g++ -shared -fPIC $< $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
 $(GIR_FILE): $(LIB_FILE)
 	g-ir-scanner gslide.[ch]             \
