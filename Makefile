@@ -39,7 +39,9 @@ SLIDE_FILES=\
 	slide_record_visitor_ostream.hpp \
 	slide_record_visitor_ostream.cpp \
 	slide_record_visitor_cairo.hpp \
-	slide_record_visitor_cairo.cpp
+	slide_record_visitor_cairo.cpp \
+	slide_util.hpp \
+	slide_util.cpp
 
 NAMESPACE=Slide
 NSVERSION=1.0

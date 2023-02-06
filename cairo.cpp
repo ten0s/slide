@@ -1,9 +1,9 @@
-#include <cstring> // basename
 #include <iostream>
 #include <gtk/gtk.h>
 #include <cairo.h>
 #include "slide_file.hpp"
 #include "slide_record_visitor_cairo.hpp"
+#include "slide_util.hpp"
 
 void usage(const std::string& prog)
 {

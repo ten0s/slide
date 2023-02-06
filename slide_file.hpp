@@ -13,27 +13,27 @@ public:
     static SlideFile from_file(const std::string& filename);
     static SlideFile from_buf(const std::string& name, const uint8_t* buf, size_t size);
 
+    SlideFile(const std::string& name,
+              const SlideFileHeader& header,
+              const std::vector<SlideRecord*>& records,
+              size_t size);
     SlideFile(SlideFile&&);
     ~SlideFile();
 
-    const std::string& filename() const { return _filename; }
-    const std::string& name() const { return _name; }
-    const SlideFileHeader& header() const { return _header; }
-    void visit_records(SlideRecordVisitor& visitor) const;
-
-private:
-    SlideFile(const std::string& filename,
-              const SlideFileHeader& header,
-              const std::vector<SlideRecord*>& records);
     SlideFile(const SlideFile&) = delete;
     SlideFile& operator=(const SlideFile&) = delete;
     SlideFile& operator=(SlideFile&&) = delete;
 
+    const std::string& name() const { return _name; }
+    const SlideFileHeader& header() const { return _header; }
+    void visit_records(SlideRecordVisitor& visitor) const;
+    size_t size() const { return _size; }
+
 private:
-    std::string _filename;
     std::string _name;
     SlideFileHeader _header;
     std::vector<SlideRecord*> _records;
+    size_t _size;
 };
 
 std::ostream& operator<<(std::ostream& os, const SlideFile& file);

@@ -6,12 +6,15 @@
 #include <vector>
 #include "slide_endian.hpp"
 
+class SlideFile;
 class SlideFileHeader;
 class SlideRecord;
 class SlideLibraryHeader;
 class SlideDirectory;
 
-std::tuple<SlideFileHeader, std::vector<SlideRecord*>, size_t>
+std::tuple<SlideFileHeader,
+           std::vector<SlideRecord*>,
+           size_t>
 parse_slide_file(const uint8_t* buf, size_t size);
 
 std::pair<SlideFileHeader, size_t>
@@ -20,7 +23,10 @@ parse_slide_file_header(const uint8_t* buf, size_t size);
 std::pair<SlideRecord*, size_t>
 parse_slide_record(const uint8_t* buf, size_t size, Endian endian);
 
-std::tuple<SlideLibraryHeader, std::vector<SlideDirectory*>, size_t>
+std::tuple<SlideLibraryHeader,
+           std::vector<SlideDirectory*>,
+           std::vector<SlideFile*>,
+           size_t>
 parse_slide_library(const uint8_t* buf, size_t size);
 
 std::pair<SlideLibraryHeader, size_t>

@@ -1,8 +1,8 @@
 #include <iostream>
-#include <cstring> // basename
 #include <string>
 #include "slide_file.hpp"
 #include "slide_library.hpp"
+#include "slide_util.hpp"
 
 void usage(const std::string& prog)
 {
@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
     try {
         std::string filename = argv[1];
-        std::string ext = filename.substr(filename.rfind("."));
+        std::string ext = get_ext(filename);
 
         if (ext == ".sld") {
             SlideFile file = SlideFile::from_file(filename);
