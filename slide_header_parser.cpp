@@ -1,8 +1,8 @@
 #include <cstring> // strncmp
 #include <cstddef> // offsetof
 #include <sstream>
-#include "slide_file_header.hpp"
-#include "slide_parser_lib.hpp"
+#include "slide_header.hpp"
+#include "slide_parser_util.hpp"
 
 // The floating-point aspect ratio value and all 2-byte integers are
 // written in the native format of the CPU that was used to create the file
@@ -32,8 +32,8 @@ struct HeaderV2 {
     char test_number[2];   // 0x1234 - LE | BE
 };
 
-std::pair<SlideFileHeader, size_t>
-parse_slide_file_header(const uint8_t* buf, size_t size)
+std::pair<SlideHeader, size_t>
+parse_slide_header(const uint8_t* buf, size_t size)
 {
     Endian endian = Endian::UNK;
     short high_x_dot;
@@ -98,7 +98,7 @@ parse_slide_file_header(const uint8_t* buf, size_t size)
         throw std::runtime_error{ss.str()};
     }
 
-    SlideFileHeader header{
+    SlideHeader header{
         id_str,
         type_indicator,
         level_indicator,

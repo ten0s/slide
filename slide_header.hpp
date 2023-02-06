@@ -1,19 +1,19 @@
-#ifndef __SLIDE_FILE_HEADER_HPP__
-#define __SLIDE_FILE_HEADER_HPP__
+#ifndef __SLIDE_HEADER_HPP__
+#define __SLIDE_HEADER_HPP__
 
 #include <string>
 #include "slide_endian.hpp"
 
-class SlideFileHeader {
+class SlideHeader {
 public:
-    explicit SlideFileHeader(const std::string& id_string,
-                             char type_indicator,
-                             char level_indicator,
-                             short high_x_dot,
-                             short high_y_dot,
-                             double aspect_ration,
-                             short hardware_fill,
-                             Endian endian)
+    explicit SlideHeader(const std::string& id_string,
+                         char type_indicator,
+                         char level_indicator,
+                         short high_x_dot,
+                         short high_y_dot,
+                         double aspect_ration,
+                         short hardware_fill,
+                         Endian endian)
         : _id_string{id_string},
           _type_indicator{type_indicator},
           _level_indicator{level_indicator},
@@ -44,6 +44,6 @@ private:
     Endian _endian;
 };
 
-std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header);
+std::ostream& operator<<(std::ostream& os, const SlideHeader& header);
 
-#endif // __SLIDE_FILE_HEADER_HPP__
+#endif // __SLIDE_HEADER_HPP__

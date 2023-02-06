@@ -6,8 +6,8 @@
 
 #include "slide_library_header.hpp"
 
-class SlideDirectory;
-class SlideFile;
+class Slide;
+class SlideLibraryDirectory;
 
 class SlideLibrary {
 public:
@@ -16,8 +16,8 @@ public:
 
     SlideLibrary(const std::string& name,
                  const SlideLibraryHeader& header,
-                 const std::vector<SlideDirectory*>& dirs,
-                 const std::vector<SlideFile*>& files,
+                 const std::vector<SlideLibraryDirectory*>& dirs,
+                 const std::vector<Slide*>& slides,
                  size_t size);
     SlideLibrary(SlideLibrary&&);
     ~SlideLibrary();
@@ -28,18 +28,18 @@ public:
 
     const std::string& name() const { return _name; }
     const SlideLibraryHeader& header() const { return _header; }
-    const std::vector<SlideDirectory*>& dirs() const { return _dirs; }
-    const std::vector<SlideFile*>& files() const { return _files; }
+    const std::vector<SlideLibraryDirectory*>& dirs() const { return _dirs; }
+    const std::vector<Slide*>& slides() const { return _slides; }
     size_t size() const { return _size; }
 
 private:
     std::string _name;
     SlideLibraryHeader _header;
-    std::vector<SlideDirectory*> _dirs;
-    std::vector<SlideFile*> _files;
+    std::vector<SlideLibraryDirectory*> _dirs;
+    std::vector<Slide*> _slides;
     size_t _size;
 };
 
-std::ostream& operator<<(std::ostream& os, const SlideLibrary& file);
+std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib);
 
 #endif // __SLIDE_LIBRARY_HPP__

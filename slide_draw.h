@@ -1,5 +1,5 @@
-#ifndef __SLIDE_H__
-#define __SLIDE_H__
+#ifndef __SLIDE_DRAW_H__
+#define __SLIDE_DRAW_H__
 
 #include <cairo.h>
 
@@ -18,4 +18,4 @@ int slide_draw(cairo_t *cr,
 }
 #endif
 
-#endif // __SLIDE_H__
+#endif // __SLIDE_DRAW_H__

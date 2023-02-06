@@ -1,6 +1,6 @@
-#include "slide_directory.hpp"
+#include "slide_library_directory.hpp"
 
-std::ostream& operator<<(std::ostream& os, const SlideDirectory& dir)
+std::ostream& operator<<(std::ostream& os, const SlideLibraryDirectory& dir)
 {
     os << "Slide Name: " << dir.name() << "\n";
     os << "Slide Addr: " << dir.addr() << "\n";

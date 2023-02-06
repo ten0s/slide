@@ -1,7 +1,7 @@
 #include <cstddef> // offsetof
 #include <cstring> // strncpy
-#include "slide_directory.hpp"
-#include "slide_parser_lib.hpp"
+#include "slide_library_directory.hpp"
+#include "slide_parser_util.hpp"
 
 struct Directory {
     // Slide name (NUL terminated) (32 bytes)
@@ -10,10 +10,10 @@ struct Directory {
     uint32_t addr;
 };
 
-std::pair<SlideDirectory*, size_t>
-parse_slide_directory(const uint8_t* buf, size_t /*size*/)
+std::pair<SlideLibraryDirectory*, size_t>
+parse_slide_library_directory(const uint8_t* buf, size_t /*size*/)
 {
-    SlideDirectory* dir = nullptr;
+    SlideLibraryDirectory* dir = nullptr;
     size_t offset = sizeof(Directory);
 
     constexpr size_t len = offsetof(Directory, addr);
@@ -26,7 +26,7 @@ parse_slide_directory(const uint8_t* buf, size_t /*size*/)
         // The slide address is always written with the low-order byte first.
         uint32_t addr = read<uint32_t>(buf+offsetof(Directory, addr), Endian::LE);
 
-        dir = new SlideDirectory{
+        dir = new SlideLibraryDirectory{
             std::string{name},
             addr
         };

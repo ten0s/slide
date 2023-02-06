@@ -1,5 +1,5 @@
-#ifndef __SLIDE_PARSER_LIB_HPP__
-#define __SLIDE_PARSER_LIB_HPP__
+#ifndef __SLIDE_PARSER_UTIL_HPP__
+#define __SLIDE_PARSER_UTIL_HPP__
 
 #include <cstdint>
 #include <stdexcept>
@@ -53,4 +53,4 @@ uint8_t low_order_byte(T val, Endian endian) {
     }
 }
 
-#endif // __SLIDE_PARSER_LIB_HPP__
+#endif // __SLIDE_PARSER_UTIL_HPP__

@@ -1,5 +1,5 @@
 #include "gslide.h"
-#include "slide.h"
+#include "slide_draw.h"
 
 /**
  * gslide_draw:

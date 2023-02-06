@@ -1,7 +1,7 @@
 #include <ostream>
-#include "slide_file_header.hpp"
+#include "slide_header.hpp"
 
-std::ostream& operator<<(std::ostream& os, const SlideFileHeader& header)
+std::ostream& operator<<(std::ostream& os, const SlideHeader& header)
 {
     os << "ID string      : " << header.id_string() << "\n";
     os << "Type indicator : " << header.type_indicator() << "\n";

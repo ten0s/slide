@@ -1,7 +1,7 @@
 #include <iostream>
 #include <gtk/gtk.h>
 #include <cairo.h>
-#include "slide_file.hpp"
+#include "slide.hpp"
 #include "slide_record_visitor_cairo.hpp"
 #include "slide_util.hpp"
 
@@ -12,10 +12,10 @@ void usage(const std::string& prog)
 
 gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 {
-    SlideFile* file = static_cast<SlideFile*>(data);
+    Slide* slide = static_cast<Slide*>(data);
 
-    unsigned src_width = file->header().high_x_dot();
-    unsigned src_height = file->header().high_y_dot();
+    unsigned src_width = slide->header().high_x_dot();
+    unsigned src_height = slide->header().high_y_dot();
 
     guint dst_width = gtk_widget_get_allocated_width(widget);
     guint dst_height = gtk_widget_get_allocated_height(widget);
@@ -32,7 +32,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
         0, 0,
         dst_width, dst_height,
     };
-    file->visit_records(visitor);
+    slide->visit_records(visitor);
 
     return FALSE;
 }
@@ -46,10 +46,10 @@ int main (int argc, char* argv[]) {
     }
 
     try {
-        SlideFile file = SlideFile::from_file(argv[1]);
-        std::cout << file;
+        Slide slide = Slide::from_file(argv[1]);
+        std::cout << slide;
 
-        const char* title = file.name().c_str();
+        const char* title = slide.name().c_str();
 
         GtkWindow* window;
         {
@@ -66,7 +66,7 @@ int main (int argc, char* argv[]) {
             drawingArea = (GtkDrawingArea*)gtk_drawing_area_new();
             gtk_container_add(GTK_CONTAINER(window), (GtkWidget*)drawingArea);
 
-            g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), &file);
+            g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), &slide);
         }
 
         gtk_widget_show_all((GtkWidget*)window);

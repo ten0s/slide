@@ -2,10 +2,10 @@
 #include <memory>    // std::unique_ptr
 #include <fstream>
 #include <sstream>
+#include "slide.hpp"
 #include "slide_library.hpp"
+#include "slide_library_directory.hpp"
 #include "slide_parser.hpp"
-#include "slide_directory.hpp"
-#include "slide_file.hpp"
 #include "slide_util.hpp"
 
 SlideLibrary SlideLibrary::from_file(const std::string& filename)
@@ -48,13 +48,13 @@ SlideLibrary SlideLibrary::from_buf(const std::string& name,
 
 SlideLibrary::SlideLibrary(const std::string& name,
                            const SlideLibraryHeader& header,
-                           const std::vector<SlideDirectory*>& dirs,
-                           const std::vector<SlideFile*>& files,
+                           const std::vector<SlideLibraryDirectory*>& dirs,
+                           const std::vector<Slide*>& slides,
                            size_t size)
         : _name{name},
           _header{header},
           _dirs{dirs},
-          _files{files},
+          _slides{slides},
           _size{size}
        {}
 
@@ -62,26 +62,26 @@ SlideLibrary::SlideLibrary(SlideLibrary&& old)
     : _name{old._name},
       _header{old._header},
       _dirs{old._dirs},
-      _files{old._files},
+      _slides{old._slides},
       _size{old._size}
 {
     old._dirs = {};
-    old._files = {};
+    old._slides = {};
 }
 
 SlideLibrary::~SlideLibrary()
 {
     std::for_each(
         _dirs.begin(), _dirs.end(),
-        [](SlideDirectory* dir) { delete dir; }
+        [](auto* dir) { delete dir; }
     );
     _dirs = {};
 
     std::for_each(
-        _files.begin(), _files.end(),
-        [](SlideFile* file) { delete file; }
+        _slides.begin(), _slides.end(),
+        [](auto* slide) { delete slide; }
     );
-    _files = {};
+    _slides = {};
 }
 
 std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib)
@@ -89,22 +89,22 @@ std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib)
     os << "Slide Library Name: " << lib.name() << "\n";
     os << "Slide Library Size: " << lib.size() << "\n";
 
-    os << "Header:\n";
+    os << "Slide Library Header:\n";
     os << lib.header();
 
-    os << "Directories:\n";
+    os << "Slide Library Dirs:\n";
     std::for_each(
         lib.dirs().cbegin(), lib.dirs().cend(),
-        [&os](const SlideDirectory* dir) {
+        [&os](auto* dir) {
             os << *dir;
         }
     );
 
-    os << "Slides:\n";
+    os << "Slide Library Slides:\n";
     std::for_each(
-        lib.files().cbegin(), lib.files().cend(),
-        [&os](const SlideFile* file) {
-            os << *file;
+        lib.slides().cbegin(), lib.slides().cend(),
+        [&os](auto* slide) {
+            os << *slide;
         }
     );
 
