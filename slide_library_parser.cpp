@@ -1,9 +1,11 @@
 #include <tuple>
 #include <vector>
 #include "slide.hpp"
-#include "slide_library_header.hpp"
-#include "slide_library_directory.hpp"
 #include "slide_parser.hpp"
+#include "slide_library_header.hpp"
+#include "slide_library_header_parser.hpp"
+#include "slide_library_directory.hpp"
+#include "slide_library_directory_parser.hpp"
 
 std::tuple<SlideLibraryHeader,
            std::vector<SlideLibraryDirectory*>,

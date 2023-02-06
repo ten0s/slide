@@ -1,13 +1,14 @@
 #include <cstring> // strncmp
 #include <stdexcept>
 #include "slide_library_header.hpp"
+#include "slide_library_header_parser.hpp"
 
 struct Header {
     // "AutoCAD Slide Library 1.0" CR LF ^Z NUL NUL NUL NUL  Header (32 bytes)
     uint8_t id_str[32];
 };
 
-std::pair<SlideLibraryHeader, size_t>
+std::tuple<SlideLibraryHeader, size_t>
 parse_slide_library_header(const uint8_t* buf, size_t size)
 {
     std::string id_str{"AutoCAD Slide Library 1.0"};

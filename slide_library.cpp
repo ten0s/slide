@@ -3,9 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include "slide.hpp"
-#include "slide_library.hpp"
-#include "slide_library_directory.hpp"
 #include "slide_parser.hpp"
+#include "slide_library.hpp"
+#include "slide_library_parser.hpp"
+#include "slide_library_directory.hpp"
 #include "slide_util.hpp"
 
 SlideLibrary SlideLibrary::from_file(const std::string& filename)

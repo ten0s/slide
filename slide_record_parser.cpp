@@ -3,7 +3,7 @@
 #include "slide_record.hpp"
 #include "slide_parser_util.hpp"
 
-std::pair<SlideRecord*, size_t>
+std::tuple<SlideRecord*, size_t>
 parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
 {
     SlideRecord* record = nullptr;

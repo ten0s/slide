@@ -2,6 +2,7 @@
 #include <cstddef> // offsetof
 #include <sstream>
 #include "slide_header.hpp"
+#include "slide_header_parser.hpp"
 #include "slide_parser_util.hpp"
 
 // The floating-point aspect ratio value and all 2-byte integers are
@@ -32,7 +33,7 @@ struct HeaderV2 {
     char test_number[2];   // 0x1234 - LE | BE
 };
 
-std::pair<SlideHeader, size_t>
+std::tuple<SlideHeader, size_t>
 parse_slide_header(const uint8_t* buf, size_t size)
 {
     Endian endian = Endian::UNK;

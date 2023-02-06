@@ -1,6 +1,7 @@
 #include <cstddef> // offsetof
 #include <cstring> // strncpy
 #include "slide_library_directory.hpp"
+#include "slide_library_directory_parser.hpp"
 #include "slide_parser_util.hpp"
 
 struct Directory {
@@ -10,7 +11,7 @@ struct Directory {
     uint32_t addr;
 };
 
-std::pair<SlideLibraryDirectory*, size_t>
+std::tuple<SlideLibraryDirectory*, size_t>
 parse_slide_library_directory(const uint8_t* buf, size_t /*size*/)
 {
     SlideLibraryDirectory* dir = nullptr;

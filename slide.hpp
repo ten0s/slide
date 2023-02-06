@@ -16,7 +16,7 @@ public:
     Slide(const std::string& name,
           const SlideHeader& header,
           const std::vector<SlideRecord*>& records,
-              size_t size);
+          size_t size);
     Slide(Slide&&);
     ~Slide();
 
