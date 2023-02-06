@@ -32,6 +32,9 @@ public:
     const std::vector<Slide*>& slides() const { return _slides; }
     size_t size() const { return _size; }
 
+    const Slide* find(const std::string& name) const;
+    const Slide* find(size_t idx) const;
+
 private:
     std::string _name;
     SlideLibraryHeader _header;

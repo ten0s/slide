@@ -1,4 +1,4 @@
-#include <algorithm> // std::for_each
+#include <algorithm> // std::for_each, std::find_if
 #include <memory>    // std::unique_ptr
 #include <fstream>
 #include <sstream>
@@ -83,6 +83,30 @@ SlideLibrary::~SlideLibrary()
         [](auto* slide) { delete slide; }
     );
     _slides = {};
+}
+
+const Slide* SlideLibrary::find(const std::string& name) const
+{
+    std::string upper = to_upper(name);
+    auto pos = std::find_if(
+        _dirs.cbegin(), _dirs.cend(),
+        [&](auto* dir) { return dir->name() == upper; }
+    );
+
+    if (pos != _dirs.cend()) {
+        size_t idx = std::distance(_dirs.cbegin(), pos);
+        return find(idx);
+    } else {
+        return nullptr;
+    }
+}
+
+const Slide* SlideLibrary::find(size_t idx) const
+{
+    if (idx >= 0 && idx < _slides.size()) {
+        return _slides.at(idx);
+    }
+    return nullptr;
 }
 
 std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib)
