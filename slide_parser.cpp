@@ -13,11 +13,12 @@ parse_slide(const uint8_t* buf, size_t size)
 
     std::vector<SlideRecord*> records;
     while (offset < size) {
-        auto [record, delta] = parse_slide_record(buf+offset, size-offset, endian);
+        auto [record, delta, stop] = parse_slide_record(buf+offset, size-offset, endian);
         offset += delta;
         if (record) {
             records.push_back(record);
-        } else {
+        }
+        if (stop) {
             break;
         }
     }

@@ -8,7 +8,7 @@
 
 class SlideRecord;
 
-std::tuple<SlideRecord*, size_t>
+std::tuple<SlideRecord*, size_t, bool>
 parse_slide_record(const uint8_t* buf, size_t size, Endian endian);
 
 #endif // __SLIDE_RECORD_PARSER_HPP__

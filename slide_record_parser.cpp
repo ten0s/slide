@@ -3,11 +3,12 @@
 #include "slide_record.hpp"
 #include "slide_parser_util.hpp"
 
-std::tuple<SlideRecord*, size_t>
+std::tuple<SlideRecord*, size_t, bool>
 parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
 {
     SlideRecord* record = nullptr;
     size_t offset = 0;
+    bool stop = false;
 
     auto head = read<uint16_t>(buf, endian);
     auto hob = high_order_byte<uint16_t>(head, endian);
@@ -33,6 +34,7 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         // End of file. Bytes: 2
         record = new SlideRecordEndOfFile{};
         offset = 2;
+        stop = true;
     } else if (hob == 0xfd) {
         // Solid fill. Bytes: 6
         throw std::runtime_error{"Solid fill not implemented yet"};
@@ -55,5 +57,5 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         throw std::runtime_error{ss.str()};
     }
 
-    return {record, offset};
+    return {record, offset, stop};
 }
