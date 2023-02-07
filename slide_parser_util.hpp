@@ -26,31 +26,17 @@ T read(const uint8_t buf[sizeof(T)], Endian endian) {
 }
 
 template<typename T>
-uint8_t high_order_byte(T val, Endian endian) {
+uint8_t high_order_byte(T val) {
     union { T in; uint8_t out[sizeof(T)]; } x;
     x.in = val;
-    switch (endian) {
-    case Endian::LE:
-        return x.out[sizeof(T)-1];
-    case Endian::BE:
-        return x.out[0];
-    default:
-        throw std::runtime_error{"Unknown endian"};
-    }
+    return x.out[sizeof(T)-1];
 }
 
 template<typename T>
-uint8_t low_order_byte(T val, Endian endian) {
+uint8_t low_order_byte(T val) {
     union { T in; uint8_t out[sizeof(T)]; } x;
     x.in = val;
-    switch (endian) {
-    case Endian::LE:
-        return x.out[0];
-    case Endian::BE:
-        return x.out[sizeof(T)-1];
-    default:
-        throw std::runtime_error{"Unknown endian"};
-    }
+    return x.out[0];
 }
 
 #endif // __SLIDE_PARSER_UTIL_HPP__
