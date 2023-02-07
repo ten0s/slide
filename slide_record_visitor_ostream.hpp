@@ -12,6 +12,7 @@ public:
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;
     void accept(SlideRecordColor& r) override;
+    void accept(SlideRecordEndOfFile& r) override;
 
 private:
     std::ostream& _os;

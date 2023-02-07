@@ -5,6 +5,7 @@ class SlideRecordVector;
 class SlideRecordOffsetVector;
 class SlideRecordCommonEndpoint;
 class SlideRecordColor;
+class SlideRecordEndOfFile;
 
 class SlideRecordVisitor {
 public:
@@ -13,6 +14,7 @@ public:
     virtual void accept(SlideRecordOffsetVector&) = 0;
     virtual void accept(SlideRecordCommonEndpoint&) = 0;
     virtual void accept(SlideRecordColor&) = 0;
+    virtual void accept(SlideRecordEndOfFile&) = 0;
 };
 
 #endif // __SLIDE_RECORD_VISITOR_HPP__

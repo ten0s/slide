@@ -18,6 +18,7 @@ public:
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;
     void accept(SlideRecordColor& r) override;
+    void accept(SlideRecordEndOfFile&) override;
 
 private:
     double adjust_x(unsigned x) const;

@@ -90,3 +90,8 @@ void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
                          rgb.green / 255,
                          rgb.blue  / 255);
 }
+
+void SlideRecordVisitorCairo::accept(SlideRecordEndOfFile&)
+{
+
+}

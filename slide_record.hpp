@@ -92,4 +92,13 @@ private:
     uint8_t _color;
 };
 
+class SlideRecordEndOfFile : public SlideRecord {
+public:
+    explicit SlideRecordEndOfFile() {}
+
+    void visit(SlideRecordVisitor& visitor) override {
+        visitor.accept(*this);
+    }
+};
+
 #endif // __SLIDE_RECORD_HPP__

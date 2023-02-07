@@ -31,7 +31,7 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         offset = 5;
     } else if (hob == 0xfc) {
         // End of file. Bytes: 2
-        record = nullptr;
+        record = new SlideRecordEndOfFile{};
         offset = 2;
     } else if (hob == 0xfd) {
         // Solid fill. Bytes: 6
