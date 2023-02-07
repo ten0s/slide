@@ -18,7 +18,7 @@ parse_slide_library(const uint8_t* buf, size_t size)
 
     std::vector<SlideLibraryDirectory*> dirs;
     std::vector<Slide*> slides;
-    while (offset < size) {
+    for (;;) {
         auto [dir, dirsize] = parse_slide_library_directory(buf+offset, size-offset);
         offset += dirsize;
         totaloffset += dirsize;

@@ -21,12 +21,11 @@ parse_slide_library_directory(const uint8_t* buf, size_t /*size*/)
     char name[len];
     strncpy(name, (char*)buf, len);
 
-    // If name is null, then return dir = null, but increase the offset
-    // to point to the first Slide File
+    // If name is null, then return dir = null, increased
+    //  offset should point to the first Slide.
     if (strlen(name) > 0) {
         // The slide address is always written with the low-order byte first.
         uint32_t addr = read<uint32_t>(buf+offsetof(Directory, addr), Endian::LE);
-
         dir = new SlideLibraryDirectory{
             std::string{name},
             addr
