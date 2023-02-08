@@ -107,9 +107,9 @@ void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
 {
     RGB rgb = AutoCAD::colors[r.color()];
     cairo_set_source_rgb(_cr,
-                         rgb.red   / 255,
-                         rgb.green / 255,
-                         rgb.blue  / 255);
+                         rgb.red   / 255.0,
+                         rgb.green / 255.0,
+                         rgb.blue  / 255.0);
 }
 
 void SlideRecordVisitorCairo::accept(SlideRecordEndOfFile&)
