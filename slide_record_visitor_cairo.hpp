@@ -17,6 +17,7 @@ public:
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;
+    void accept(SlideRecordSolidFillPolygon&) override;
     void accept(SlideRecordColor& r) override;
     void accept(SlideRecordEndOfFile&) override;
 

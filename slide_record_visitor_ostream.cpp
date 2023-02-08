@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "slide_colors.hpp"
 #include "slide_record.hpp"
 #include "slide_record_visitor_ostream.hpp"
@@ -28,6 +29,20 @@ void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& r)
         << " " << r.dx0()
         << " " << r.dy0()
         << ")\n";
+}
+
+void SlideRecordVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
+{
+    _os << "(SOLID_FILL_POLYGON";
+    auto vs = r.vertices();
+    std::for_each(
+        vs.cbegin(), vs.cend(),
+        [this](const auto& pt) {
+            auto [x, y] = pt;
+            _os << " " << x << " " << y;
+        }
+    );
+    _os << ")\n";
 }
 
 void SlideRecordVisitorOStream::accept(SlideRecordColor& r)

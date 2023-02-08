@@ -2,6 +2,7 @@
 #define __SLIDE_RECORD_HPP__
 
 #include <cstdint>
+#include <vector>
 #include "slide_record_visitor.hpp"
 
 class SlideRecord {
@@ -74,6 +75,24 @@ public:
 private:
     int8_t _dx0;
     int8_t _dy0;
+};
+
+class SlideRecordSolidFillPolygon : public SlideRecord {
+public:
+    using vertices_t = std::vector<std::pair<int16_t, int16_t>>;
+
+    explicit SlideRecordSolidFillPolygon(const vertices_t& vertices)
+        : _vertices{vertices}
+        {}
+
+    const vertices_t vertices() const { return _vertices; }
+
+    void visit(SlideRecordVisitor& visitor) override {
+        visitor.accept(*this);
+    }
+
+private:
+    vertices_t _vertices;
 };
 
 class SlideRecordColor : public SlideRecord {

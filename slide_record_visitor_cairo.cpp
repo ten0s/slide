@@ -34,7 +34,7 @@ double SlideRecordVisitorCairo::adjust_x(unsigned x) const {
 
 inline
 double SlideRecordVisitorCairo::adjust_y(unsigned y) const {
-    // Slide's (0, 0) is bottom-left corner
+    // Point (0,0) is located at the lower-left corner.
     // Scale & Move
     return _dst_height - y * _scale_y + _dst_y - PADDING_Y;
 }
@@ -80,6 +80,28 @@ void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
     // The adjusted to point is saved as the last point.
     _last_x = x1;
     _last_y = y1;
+}
+
+void SlideRecordVisitorCairo::accept(SlideRecordSolidFillPolygon& r)
+{
+    auto& vs = r.vertices();
+    if (vs.size() > 0) {
+        auto it = vs.cbegin();
+        auto end = vs.cend();
+
+        auto [x0, y0] = *it;
+        cairo_move_to(_cr, adjust_x(x0), adjust_y(y0));
+        ++it;
+
+        for (; it != end; ++it) {
+            auto [x, y] = *it;
+            cairo_line_to(_cr, adjust_x(x), adjust_y(y));
+        }
+
+        cairo_close_path(_cr);
+        cairo_stroke_preserve(_cr);
+        cairo_fill(_cr);
+    }
 }
 
 void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
