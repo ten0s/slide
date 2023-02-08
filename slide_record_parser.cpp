@@ -1,5 +1,6 @@
-#include <iomanip>
-#include <sstream>
+#include <cassert>
+#include <iomanip> // std::setfill, std::setw, std::hex
+#include <sstream> // std::ostringstream
 #include "slide_record.hpp"
 #include "slide_parser_util.hpp"
 
