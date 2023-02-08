@@ -99,7 +99,6 @@ void SlideRecordVisitorCairo::accept(SlideRecordSolidFillPolygon& r)
         }
 
         cairo_close_path(_cr);
-        cairo_stroke_preserve(_cr);
         cairo_fill(_cr);
     }
 }
