@@ -15,11 +15,6 @@ int slide_draw(cairo_t *cr,
               << width << " " << height << " "
               << sldname << "\n";
 
-    // Draw black background
-    cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_rectangle(cr, x, y, width, height);
-    cairo_fill(cr);
-
     // Set line width
     cairo_set_line_width(cr, 1);
 
