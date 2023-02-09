@@ -15,9 +15,6 @@ int slide_draw(cairo_t *cr,
               << width << " " << height << " "
               << sldname << "\n";
 
-    // Set line width
-    cairo_set_line_width(cr, 1);
-
     try {
         // TODO: slide file or slide lib
         Slide slide = Slide::from_file(sldname);

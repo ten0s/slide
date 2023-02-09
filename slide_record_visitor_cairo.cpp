@@ -40,6 +40,9 @@ SlideRecordVisitorCairo::SlideRecordVisitorCairo(cairo_t* cr,
 
     _scale_x = 1.0 * new_width  / src_width;
     _scale_y = 1.0 * new_height / src_height;
+
+    // Set line width
+    cairo_set_line_width(_cr, 1);
 }
 
 inline

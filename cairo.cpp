@@ -22,12 +22,12 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     guint dst_width = gtk_widget_get_allocated_width(widget);
     guint dst_height = gtk_widget_get_allocated_height(widget);
 
-    cairo_set_line_width(cr, 1);
-
+    // Draw black background
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_rectangle(cr, 0, 0, dst_width, dst_height);
     cairo_fill(cr);
 
+    // Draw slide
     SlideRecordVisitorCairo visitor{
         cr,
         src_width, src_height,
