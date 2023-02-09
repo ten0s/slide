@@ -9,6 +9,7 @@ public:
     explicit SlideRecordVisitorCairo(cairo_t* cr,
                                      unsigned src_width,   // slide width
                                      unsigned src_height,  // slide height
+                                     double   src_ratio,   // slide aspect ratio
                                      unsigned dst_x,       // draw offset x
                                      unsigned dst_y,       // draw offset y
                                      unsigned dst_width,   // draw width
@@ -27,11 +28,8 @@ private:
 
 private:
     cairo_t* _cr;
-    unsigned _src_width;
-    unsigned _src_height;
     unsigned _dst_x;
     unsigned _dst_y;
-    unsigned _dst_width;
     unsigned _dst_height;
     unsigned _last_x;
     unsigned _last_y;

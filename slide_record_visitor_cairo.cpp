@@ -8,22 +8,38 @@ static const unsigned PADDING_Y = 1;
 SlideRecordVisitorCairo::SlideRecordVisitorCairo(cairo_t* cr,
                                                  unsigned src_width,
                                                  unsigned src_height,
+                                                 double   src_ratio,
                                                  unsigned dst_x,
                                                  unsigned dst_y,
                                                  unsigned dst_width,
                                                  unsigned dst_height)
     : _cr{cr},
-      _src_width{src_width},
-      _src_height{src_height},
       _dst_x{dst_x},
       _dst_y{dst_y},
-      _dst_width{dst_width},
       _dst_height{dst_height},
       _last_x{0},
       _last_y{0}
 {
-    _scale_x = 1.0 * _dst_width  / _src_width;
-    _scale_y = 1.0 * _dst_height / _src_height;
+    //
+    // Calculate new_width and new_height taking
+    // into account source aspect ratio.
+    //
+    // https://math.stackexchange.com/questions/1620366/
+    // how-to-keep-aspect-ratio-and-position-of-rectangle-inside-another-rectangle
+    //
+    double dst_ratio = 1.0 * dst_width / dst_height;
+
+    unsigned new_width = dst_width;
+    unsigned new_height = dst_height;
+
+    if (src_ratio > dst_ratio) {
+        new_height = dst_width / src_ratio;
+    } else if (src_ratio < dst_ratio) {
+        new_width = dst_height * src_ratio;
+    }
+
+    _scale_x = 1.0 * new_width  / src_width;
+    _scale_y = 1.0 * new_height / src_height;
 }
 
 inline

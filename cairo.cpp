@@ -17,6 +17,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 
     unsigned src_width = slide->header().high_x_dot();
     unsigned src_height = slide->header().high_y_dot();
+    double   src_aspect_ratio = slide->header().aspect_ratio();
 
     guint dst_width = gtk_widget_get_allocated_width(widget);
     guint dst_height = gtk_widget_get_allocated_height(widget);
@@ -30,6 +31,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     SlideRecordVisitorCairo visitor{
         cr,
         src_width, src_height,
+        src_aspect_ratio,
         0, 0,
         dst_width, dst_height,
     };
