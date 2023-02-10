@@ -8,7 +8,7 @@
  * @y: Y-offset from the upper-left corner of the tile, in pixels. Must be a positive value.
  * @width: Width of the image, in pixels.
  * @height: Height of the image, in pixels.
- * @sldname: (transfer none) (not nullable): Slide identifier.
+ * @slide_uri: (transfer none) (not nullable): Slide identifier.
  *
  * Draws on the slide on Cairo context.
  */
@@ -18,7 +18,7 @@ gslide_draw(void *cr,
             unsigned y,
             unsigned width,
             unsigned height,
-            const char *sldname)
+            const char *slide_uri)
 {
-    return slide_draw((cairo_t *)cr, x, y, width, height, sldname);
+    return slide_draw((cairo_t *)cr, x, y, width, height, slide_uri);
 }

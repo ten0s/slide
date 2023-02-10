@@ -10,7 +10,7 @@ int gslide_draw(void *cr,
                 unsigned y,
                 unsigned width,
                 unsigned height,
-                const char *sldname);
+                const char *slide_uri);
 
 G_END_DECLS
 

@@ -15,6 +15,8 @@ LIBGLIB2=`pkg-config --cflags --libs glib-2.0`
 SLIDE_FILES=\
 	slide.cpp \
 	slide.hpp \
+	slide_cache.cpp \
+	slide_cache.hpp \
 	slide_parser.cpp \
 	slide_parser.hpp \
 	slide_header.cpp \
