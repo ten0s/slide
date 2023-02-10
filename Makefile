@@ -1,4 +1,4 @@
-DEBUG_CXXFLAGS=-g -O0 -Wall -Werror
+DEBUG_CXXFLAGS=-g -O0 -Wall
 DEBUG_LDFLAGS=
 
 RELEASE_CXXFLAGS=-g -Wall -Werror
