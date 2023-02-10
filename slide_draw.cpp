@@ -41,10 +41,10 @@ int slide_draw(cairo_t *cr,
                unsigned height,
                const char *slide_uri)
 {
-    std::cout << "+slide_draw "
-              << x << " " << y << " "
-              << width << " " << height << " "
-              << slide_uri << "\n";
+    //std::cout << "+slide_draw "
+    //          << x << " " << y << " "
+    //          << width << " " << height << " "
+    //          << slide_uri << "\n";
 
     try {
         auto parsed_uri = parse_slide_uri(slide_uri);
@@ -131,7 +131,7 @@ int slide_draw(cairo_t *cr,
         return -1;
     }
 
-    std::cout << "-slide_draw\n";
+    //std::cout << "-slide_draw\n";
     return 0;
 }
 

@@ -6,7 +6,7 @@
 
 void usage(const std::string& prog)
 {
-    std::cerr << "Usage: " << prog << " <SLIDE.sld | SLIDELIB.slb SLIDE>\n";
+    std::cerr << "Usage: " << prog << " <SLIDE.sld | SLIDELIB.slb NAME>\n";
 }
 
 gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
