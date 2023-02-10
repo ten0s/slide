@@ -102,7 +102,7 @@ int slide_draw(cairo_t *cr,
             }, parsed_uri);
         }
 
-        // Try slides cache again
+        // Try slides cache again.
         slide_ptr = cache.find(normal_uri);
 
         if (!slide_ptr) {
@@ -115,7 +115,7 @@ int slide_draw(cairo_t *cr,
         unsigned sld_height = slide_ptr->header().high_y_dot();
         double   sld_aspect_ratio = slide_ptr->header().aspect_ratio();
 
-        // Draw slide
+        // Draw slide.
         SlideRecordVisitorCairo visitor{
             cr,
             sld_width, sld_height,
