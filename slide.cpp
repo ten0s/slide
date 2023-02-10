@@ -1,4 +1,3 @@
-#include <algorithm> // std::for_each
 #include <cstring>   // basename
 #include <memory>    // std::unique_ptr
 #include <fstream>
@@ -61,21 +60,17 @@ Slide::Slide(Slide&& old)
 
 Slide::~Slide()
 {
-    std::for_each(
-        _records.begin(), _records.end(),
-        [](auto* record) { delete record; }
-    );
+    for (auto& record : _records) {
+        delete record;
+    }
     _records = {};
 }
 
 void Slide::visit_records(SlideRecordVisitor& visitor) const
 {
-    std::for_each(
-        _records.begin(), _records.end(),
-        [&visitor](auto* record) {
-            record->visit(visitor);
-        }
-    );
+    for (auto& record : _records) {
+        record->visit(visitor);
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const Slide& slide)

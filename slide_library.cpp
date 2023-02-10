@@ -1,4 +1,4 @@
-#include <algorithm> // std::for_each, std::find_if
+#include <algorithm> // std::find_if
 #include <memory>    // std::unique_ptr
 #include <fstream>
 #include <sstream>
@@ -72,16 +72,14 @@ SlideLibrary::SlideLibrary(SlideLibrary&& old)
 
 SlideLibrary::~SlideLibrary()
 {
-    std::for_each(
-        _dirs.begin(), _dirs.end(),
-        [](auto* dir) { delete dir; }
-    );
+    for (auto& dir : _dirs) {
+        delete dir;
+    }
     _dirs = {};
 
-    std::for_each(
-        _slides.begin(), _slides.end(),
-        [](auto* slide) { delete slide; }
-    );
+    for (auto& slide : _slides) {
+        delete slide;
+    };
     _slides = {};
 }
 
@@ -118,20 +116,14 @@ std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib)
     os << lib.header();
 
     os << "Slide Library Dirs:\n";
-    std::for_each(
-        lib.dirs().cbegin(), lib.dirs().cend(),
-        [&os](auto* dir) {
-            os << *dir;
-        }
-    );
+    for (auto& dir : lib.dirs()) {
+        os << *dir;
+    };
 
     os << "Slide Library Slides:\n";
-    std::for_each(
-        lib.slides().cbegin(), lib.slides().cend(),
-        [&os](auto* slide) {
-            os << *slide;
-        }
-    );
+    for (auto& slide : lib.slides()) {
+        os << *slide;
+    };
 
     return os;
 }
