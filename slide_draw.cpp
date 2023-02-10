@@ -67,7 +67,8 @@ int slide_draw(cairo_t *cr,
                     Slide* moved_slide = new Slide{std::move(slide)};
 
                     // Store moved slide to cache.
-                    cache.store(arg, moved_slide);
+                    auto normal_uri = normalize_slide_file(arg);
+                    cache.store(normal_uri, moved_slide);
 
                 } else {
                     auto [file, name] = arg;
