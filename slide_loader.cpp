@@ -114,7 +114,8 @@ cache_slide_lib(const std::string& file)
     }
 }
 
-const Slide* slide_from_uri(const std::string& slide_uri)
+const Slide*
+slide_from_uri(const std::string& slide_uri)
 {
     auto parsed_uri = parse_slide_uri(slide_uri);
     auto normal_uri = join_slide_uri(parsed_uri);
