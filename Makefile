@@ -12,43 +12,24 @@ LIBCAIRO=`pkg-config --cflags --libs cairo`
 LIBGTK3=`pkg-config --cflags --libs gtk+-3.0`
 LIBGLIB2=`pkg-config --cflags --libs glib-2.0`
 
-SLIDE_FILES=\
-	slide.cpp \
-	slide.hpp \
-	slide_cache.cpp \
-	slide_cache.hpp \
-	slide_parser.cpp \
-	slide_parser.hpp \
-	slide_header.cpp \
-	slide_header.hpp \
-	slide_header_parser.cpp \
-	slide_header_parser.hpp \
-	slide_colors.cpp \
-	slide_colors.hpp \
-	slide_draw.cpp \
-	slide_draw.h \
-	slide_library.cpp \
-	slide_library.hpp \
-	slide_library_parser.cpp \
-	slide_library_parser.hpp \
-	slide_library_header.cpp \
-	slide_library_header.hpp \
-	slide_library_header_parser.cpp \
-	slide_library_header_parser.hpp \
-	slide_library_directory.cpp \
-	slide_library_directory.hpp \
-	slide_library_directory_parser.cpp \
-	slide_library_directory_parser.hpp \
-	slide_parser_util.hpp \
-	slide_record.hpp \
-	slide_record_parser.cpp \
-	slide_record_parser.hpp \
-	slide_record_visitor_ostream.cpp \
-	slide_record_visitor_ostream.hpp \
-	slide_record_visitor_cairo.cpp \
-	slide_record_visitor_cairo.hpp \
-	slide_util.cpp \
-	slide_util.hpp
+LIBSLIDE_OBJS=\
+	slide.o \
+	slide_cache.o \
+	slide_parser.o \
+	slide_header.o \
+	slide_header_parser.o \
+	slide_colors.o \
+	slide_draw.o \
+	slide_library.o \
+	slide_library_parser.o \
+	slide_library_header.o \
+	slide_library_header_parser.o \
+	slide_library_directory.o \
+	slide_library_directory_parser.o \
+	slide_record_parser.o \
+	slide_record_visitor_ostream.o \
+	slide_record_visitor_cairo.o \
+	slide_util.o
 
 NAMESPACE=Slide
 NSVERSION=1.0
@@ -65,8 +46,17 @@ PREFIX ?= `pwd`
 
 all: libslide.so main cairo $(TYPELIB_FILE)
 
-libslide.so: $(SLIDE_FILES)
-	g++ -shared -fPIC $^ $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
+%.o: %.cpp %.hpp
+	g++ -c $< -fPIC $(CXXFLAGS) -o $@
+
+slide_draw.o: slide_draw.cpp slide_draw.h
+	g++ -c $< -fPIC $(CXXFLAGS) $(LIBCAIRO) -o $@
+
+slide_record_visitor_cairo.o: slide_record_visitor_cairo.cpp slide_record_visitor_cairo.hpp
+	g++ -c $< -fPIC $(CXXFLAGS) $(LIBCAIRO) -o $@
+
+libslide.so: $(LIBSLIDE_OBJS)
+	g++ -shared $^ -fPIC $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
 
 main: main.cpp libslide.so
 	g++ $< $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
@@ -75,7 +65,7 @@ cairo: cairo.cpp libslide.so
 	g++ $< $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
 
 $(LIB_FILE): gslide.c libslide.so
-	g++ -shared -fPIC $< $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
+	g++ -shared $< -fPIC $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
 $(GIR_FILE): $(LIB_FILE)
 	g-ir-scanner gslide.[ch]             \
