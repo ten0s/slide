@@ -29,6 +29,7 @@ LIBSLIDE_OBJS=\
 	slide_library_header_parser.o \
 	slide_library_directory.o \
 	slide_library_directory_parser.o \
+	slide_loader.o \
 	slide_record_parser.o \
 	slide_record_visitor_ostream.o \
 	slide_record_visitor_cairo.o \

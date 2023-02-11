@@ -16,8 +16,8 @@ public:
     SlideCache& operator=(const SlideCache&) = delete;
     SlideCache& operator=(SlideCache&&) = delete;
 
-    const Slide* find(const std::string& slide_uri) const;
-    void store(const std::string& slide_uri, Slide* slide);
+    const Slide* get(const std::string& slide_uri) const;
+    void set(const std::string& slide_uri, Slide* slide);
 
 private:
     std::unordered_map<std::string, Slide*> _cache;

@@ -12,7 +12,7 @@ SlideCache::~SlideCache()
 }
 
 const Slide*
-SlideCache::find(const std::string& slide_uri) const
+SlideCache::get(const std::string& slide_uri) const
 {
     auto it = _cache.find(slide_uri);
     if (it != _cache.end()) {
@@ -23,7 +23,7 @@ SlideCache::find(const std::string& slide_uri) const
 }
 
 void
-SlideCache::store(const std::string& slide_uri, Slide* slide)
+SlideCache::set(const std::string& slide_uri, Slide* slide)
 {
     _cache.insert({slide_uri, slide});
 }
