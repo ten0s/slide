@@ -6,6 +6,8 @@
 
 #include "slide_library_header.hpp"
 
+namespace libslide {
+
 class Slide;
 class SlideLibraryDirectory;
 
@@ -44,5 +46,7 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib);
+
+} // namespace libslide
 
 #endif // __SLIDE_LIBRARY_HPP__

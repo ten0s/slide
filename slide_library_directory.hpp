@@ -4,6 +4,8 @@
 #include <ostream>
 #include <string>
 
+namespace libslide {
+
 class SlideLibraryDirectory {
 public:
     explicit SlideLibraryDirectory(const std::string& name,
@@ -21,5 +23,7 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const SlideLibraryDirectory& dir);
+
+} // namespace libslide
 
 #endif // __SLIDE_LIBRARY_DIRECTORY_HPP__

@@ -1,6 +1,8 @@
 #ifndef __SLIDE_RECORD_VISITOR_HPP__
 #define __SLIDE_RECORD_VISITOR_HPP__
 
+namespace libslide {
+
 class SlideRecordVector;
 class SlideRecordOffsetVector;
 class SlideRecordCommonEndpoint;
@@ -18,5 +20,7 @@ public:
     virtual void accept(SlideRecordColor&) = 0;
     virtual void accept(SlideRecordEndOfFile&) = 0;
 };
+
+} // namespace libslide
 
 #endif // __SLIDE_RECORD_VISITOR_HPP__

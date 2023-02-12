@@ -1,6 +1,8 @@
 #include <ostream>
 #include "slide_header.hpp"
 
+namespace libslide {
+
 std::ostream& operator<<(std::ostream& os, const SlideHeader& header)
 {
     os << "ID String      : " << header.id_string() << "\n";
@@ -15,3 +17,5 @@ std::ostream& operator<<(std::ostream& os, const SlideHeader& header)
                                   "Big-endian") << "\n";
     return os;
 }
+
+} // namespace libslide

@@ -3,10 +3,16 @@
 #include "slide_library_header.hpp"
 #include "slide_library_header_parser.hpp"
 
+namespace {
+
 struct Header {
     // "AutoCAD Slide Library 1.0" CR LF ^Z NUL NUL NUL NUL  Header (32 bytes)
     uint8_t id_str[32];
 };
+
+} // namespace
+
+namespace libslide {
 
 std::tuple<SlideLibraryHeader, size_t>
 parse_slide_library_header(const uint8_t* buf, size_t size)
@@ -30,3 +36,5 @@ parse_slide_library_header(const uint8_t* buf, size_t size)
 
     return {header, offset};
 }
+
+} // namespace libslide

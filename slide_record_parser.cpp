@@ -5,6 +5,8 @@
 #include "slide_record_parser.hpp"
 #include "slide_parser_util.hpp"
 
+namespace libslide {
+
 static
 std::vector<std::pair<int16_t, int16_t>>
 parse_polygon(size_t n, const uint8_t* buf, Endian endian);
@@ -109,3 +111,5 @@ parse_polygon(size_t n, const uint8_t* buf, Endian endian)
 
     return vertices;
 }
+
+} // namespace libslide

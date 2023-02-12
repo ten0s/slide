@@ -5,9 +5,13 @@
 #include <cstdint> // uint8_t
 #include <tuple>
 
+namespace libslide {
+
 class SlideLibraryDirectory;
 
 std::tuple<SlideLibraryDirectory*, size_t>
 parse_slide_library_directory(const uint8_t* buf, size_t size);
+
+} // namespace libslide
 
 #endif // __SLIDE_LIBRARY_DIRECTORY_PARSER_HPP__

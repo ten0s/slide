@@ -2,6 +2,8 @@
 #include "slide_record.hpp"
 #include "slide_record_visitor_cairo.hpp"
 
+namespace libslide {
+
 static const unsigned PADDING_X = 1;
 static const unsigned PADDING_Y = 1;
 
@@ -135,3 +137,5 @@ void SlideRecordVisitorCairo::accept(SlideRecordEndOfFile&)
 {
 
 }
+
+} // namespace libslide

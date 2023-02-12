@@ -5,6 +5,8 @@
 #include <vector>
 #include "slide_header.hpp"
 
+namespace libslide {
+
 class SlideRecord;
 class SlideRecordVisitor;
 
@@ -37,5 +39,7 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const Slide& slide);
+
+} // namespace libslide
 
 #endif // __SLIDE_HPP__

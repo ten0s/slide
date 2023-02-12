@@ -1,5 +1,7 @@
 #include "slide_colors.hpp"
 
+namespace libslide {
+
 namespace AutoCAD {
 
 // AutoCAD Color Index (ACI)
@@ -265,3 +267,5 @@ RGB colors[] = {
 };
 
 } // namespace AutoCAD
+
+} // namespace libslide

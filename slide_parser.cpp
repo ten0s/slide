@@ -5,6 +5,8 @@
 #include "slide_record.hpp"
 #include "slide_record_parser.hpp"
 
+namespace libslide {
+
 std::tuple<SlideHeader, std::vector<SlideRecord*>, size_t>
 parse_slide(const uint8_t* buf, size_t size)
 {
@@ -23,3 +25,5 @@ parse_slide(const uint8_t* buf, size_t size)
 
     return {header, records, offset};
 }
+
+} // namespace libslide

@@ -4,6 +4,8 @@
 #include <cairo.h>
 #include "slide_record_visitor.hpp"
 
+namespace libslide {
+
 class SlideRecordVisitorCairo : public SlideRecordVisitor {
 public:
     explicit SlideRecordVisitorCairo(cairo_t* cr,
@@ -36,5 +38,7 @@ private:
     double _scale_x;
     double _scale_y;
 };
+
+} // namespace libslide
 
 #endif // __SLIDE_VISITOR_CAIRO_HPP__

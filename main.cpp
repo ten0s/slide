@@ -4,6 +4,8 @@
 #include "slide_library.hpp"
 #include "slide_util.hpp"
 
+using namespace libslide;
+
 void usage(const std::string& prog)
 {
     std::cerr << "Usage: " << prog << " <SLIDE.sld | SLIDELIB.slb [NAME]>\n";

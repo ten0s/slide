@@ -5,6 +5,8 @@
 #include "slide_header_parser.hpp"
 #include "slide_parser_util.hpp"
 
+namespace {
+
 // The floating-point aspect ratio value and all 2-byte integers are
 // written in the native format of the CPU that was used to create the file
 // (for 8086-family CPUs, IEEE double-precision, and low-order byte first).
@@ -32,6 +34,10 @@ struct HeaderV2 {
     uint8_t hardware_fill[2]; // 0x0002 Unused
     uint8_t test_number[2];   // 0x1234 - LE | BE
 };
+
+} // namespace
+
+namespace libslide {
 
 std::tuple<SlideHeader, size_t>
 parse_slide_header(const uint8_t* buf, size_t size)
@@ -114,3 +120,5 @@ parse_slide_header(const uint8_t* buf, size_t size)
 
     return {header, offset};
 }
+
+} // namespace libslide

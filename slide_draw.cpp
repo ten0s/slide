@@ -5,6 +5,8 @@
 #include "slide_loader.hpp"
 #include "slide_record_visitor_cairo.hpp"
 
+using namespace libslide;
+
 int slide_draw(cairo_t *cr,
                unsigned x,
                unsigned y,

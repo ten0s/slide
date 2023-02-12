@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include "slide_endian.hpp"
 
+namespace libslide {
+
 template<typename T>
 T read(const uint8_t buf[sizeof(T)], Endian endian) {
     union { uint8_t in[sizeof(T)]; T out; } x;
@@ -38,5 +40,7 @@ uint8_t low_order_byte(T val) {
     x.in = val;
     return x.out[0];
 }
+
+} // namespace libslide
 
 #endif // __SLIDE_PARSER_UTIL_HPP__

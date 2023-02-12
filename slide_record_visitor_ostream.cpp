@@ -2,6 +2,8 @@
 #include "slide_record.hpp"
 #include "slide_record_visitor_ostream.hpp"
 
+namespace libslide {
+
 void SlideRecordVisitorOStream::accept(SlideRecordVector& r)
 {
     _os << "(VECTOR"
@@ -53,3 +55,5 @@ void SlideRecordVisitorOStream::accept(SlideRecordEndOfFile&)
 {
     _os << "(END_OF_FILE)\n";
 }
+
+} // namespace libslide

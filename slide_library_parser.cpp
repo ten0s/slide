@@ -7,6 +7,8 @@
 #include "slide_library_directory.hpp"
 #include "slide_library_directory_parser.hpp"
 
+namespace libslide {
+
 std::tuple<SlideLibraryHeader,
            std::vector<SlideLibraryDirectory*>,
            std::vector<Slide*>,
@@ -38,3 +40,5 @@ parse_slide_library(const uint8_t* buf, size_t size)
 
     return {header, dirs, slides, totaloffset};
 }
+
+} // namespace libslide

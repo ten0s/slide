@@ -2,9 +2,11 @@
 #include <cstring>   // basename
 #include "slide_util.hpp"
 
+namespace libslide {
+
 std::string basename(const std::string& filename)
 {
-    return basename(filename.c_str());
+    return ::basename(filename.c_str());
 }
 
 std::string get_ext(const std::string& filename)
@@ -27,3 +29,5 @@ std::string to_upper(const std::string& in)
     );
     return out;
 }
+
+} // namespace libslide

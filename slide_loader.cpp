@@ -9,6 +9,8 @@
 #include "slide_loader.hpp"
 #include "slide_util.hpp"
 
+namespace libslide {
+
 static SlideCache cache;
 
 using var_t = std::variant<std::tuple<std::string, std::string>, std::string>;
@@ -16,7 +18,7 @@ using var_t = std::variant<std::tuple<std::string, std::string>, std::string>;
 static std::string
 normalize_slide_file(const std::string& file)
 {
-    return std::filesystem::absolute(file);
+    return std::filesystem::absolute(file).u8string();
 }
 
 static std::string
@@ -137,3 +139,5 @@ slide_from_uri(const std::string& slide_uri)
     // Look slides cache again.
     return cache.get(normal_uri);
 }
+
+} // namespace libslide

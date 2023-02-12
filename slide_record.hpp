@@ -5,6 +5,8 @@
 #include <vector>
 #include "slide_record_visitor.hpp"
 
+namespace libslide {
+
 class SlideRecord {
 public:
     virtual ~SlideRecord() {}
@@ -120,5 +122,7 @@ public:
         visitor.accept(*this);
     }
 };
+
+} // namespace libslide
 
 #endif // __SLIDE_RECORD_HPP__

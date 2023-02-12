@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+namespace libslide {
+
 struct RGB {
     uint8_t red;
     uint8_t green;
@@ -16,5 +18,7 @@ namespace AutoCAD {
 extern RGB colors[];
 
 } // namespace AutoCAD
+
+} // namespace libslide
 
 #endif // __SLIDE_COLORS_HPP__

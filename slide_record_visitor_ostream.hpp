@@ -4,6 +4,8 @@
 #include <ostream>
 #include "slide_record_visitor.hpp"
 
+namespace libslide {
+
 class SlideRecordVisitorOStream : public SlideRecordVisitor {
 public:
     explicit SlideRecordVisitorOStream(std::ostream& os) : _os{os} {}
@@ -18,5 +20,7 @@ public:
 private:
     std::ostream& _os;
 };
+
+} // namespace libslide
 
 #endif // __SLIDE_RECORD_VISITOR_OSTREAM_HPP__

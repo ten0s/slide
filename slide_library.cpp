@@ -9,6 +9,8 @@
 #include "slide_library_directory.hpp"
 #include "slide_util.hpp"
 
+namespace libslide {
+
 SlideLibrary SlideLibrary::from_file(const std::string& filename)
 {
     std::ifstream is{filename, std::ios::binary | std::ios::ate};
@@ -127,3 +129,5 @@ std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib)
 
     return os;
 }
+
+} // namespace libslide

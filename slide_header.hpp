@@ -4,6 +4,8 @@
 #include <string>
 #include "slide_endian.hpp"
 
+namespace libslide {
+
 class SlideHeader {
 public:
     explicit SlideHeader(const std::string& id_string,
@@ -45,5 +47,7 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& os, const SlideHeader& header);
+
+} // namespace libslide
 
 #endif // __SLIDE_HEADER_HPP__

@@ -1,6 +1,8 @@
 #include "slide_cache.hpp"
 #include "slide.hpp"
 
+namespace libslide {
+
 SlideCache::SlideCache() {}
 
 SlideCache::~SlideCache()
@@ -27,3 +29,5 @@ SlideCache::set(const std::string& slide_uri, Slide* slide)
 {
     _cache.insert({slide_uri, slide});
 }
+
+} // namespace libslide

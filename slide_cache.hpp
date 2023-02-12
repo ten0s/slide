@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+namespace libslide {
+
 class Slide;
 
 class SlideCache {
@@ -22,5 +24,7 @@ public:
 private:
     std::unordered_map<std::string, Slide*> _cache;
 };
+
+} // namespace libslide
 
 #endif // __SLIDE_CACHE_HPP__
