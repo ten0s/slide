@@ -1,18 +1,22 @@
 CXX=c++
+CC=cc
 
 DEBUG_CPPFLAGS=
 DEBUG_CXXFLAGS=-g -O0 -Wall -std=c++17
+DEBUG_CFLAGS=-g -O0 -Wall
 DEBUG_LDFLAGS=
 
 RELEASE_CPPFLAGS=
 RELEASE_CXXFLAGS=-g -Wall -Werror -std=c++17
+RELEASE_CFLAGS=-g -Wall -Werror
 RELEASE_LDFLAGS=-static-libstdc++ -static-libgcc
 
 CPPFLAGS=$(DEBUG_CPPFLAGS)
 CXXFLAGS=$(DEBUG_CXXFLAGS)
+CFLAGS=$(DEBUG_CFLAGS)
 LDFLAGS=$(DEBUG_LDFLAGS)
 
-LIBSLIDE=-L`pwd` -lslide -Wl,-rpath='$$ORIGIN'
+LIBSLIDE=-L`pwd` -lslide
 LIBCAIRO=`pkg-config --cflags --libs cairo`
 LIBGTK3=`pkg-config --cflags --libs gtk+-3.0`
 LIBGLIB2=`pkg-config --cflags --libs glib-2.0`
@@ -37,7 +41,8 @@ LIBSLIDE_OBJS=\
 	slide_record_visitor_cairo.o \
 	slide_util.o
 
-LIB_EXT := ${shell case `uname -s` in MINGW64*) echo "dll";; Linux) echo "so";; Darwin) "dylib";; *) echo "Unknown";; esac}
+LIB_EXT := ${shell case `uname -s` in MINGW64*) echo "dll";; Linux) echo "so";; Darwin) echo "dylib";; *) echo "Unknown";; esac}
+LD_RPATH := ${shell case `uname -s` in MINGW64* | Linux) echo "-Wl,-rpath='\$$ORIGIN'";; Darwin) echo "";; *) echo "Unknown";; esac}
 
 NAMESPACE=Slide
 NSVERSION=1.0
@@ -50,7 +55,7 @@ GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 PREFIX ?= `pwd`
 
-all: libslide.$(LIB_EXT) main cairo $(TYPELIB_FILE)
+all: libslide.$(LIB_EXT) $(TYPELIB_FILE) main cairo
 
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
@@ -67,17 +72,23 @@ libslide.so: $(LIBSLIDE_OBJS)
 libslide.dll: $(LIBSLIDE_OBJS)
 	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
 
+libslide.dylib: $(LIBSLIDE_OBJS)
+	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
+
 main: main.cpp libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LD_RPATH) -o $@
 
 cairo: cairo.cpp libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) $(LD_RPATH) -o $@
 
 libgslide.so: gslide.c libslide.so
-	$(CXX) -shared $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
+	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
 libgslide.dll: gslide.c libslide.dll
-	$(CXX) -shared $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
+	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
+
+libgslide.dylib: gslide.c libslide.dylib
+	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
 $(GIR_FILE): libgslide.$(LIB_EXT)
 	g-ir-scanner gslide.[ch]             \
@@ -103,6 +114,10 @@ install:
 	mv $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)
 
 clean:
-	rm -f *.dll, *.dll.a, *.exe *.o *.so *.gir *.typelib
+	rm -f *.o *.so
+	rm -f *.dll *.dll.a *.exe
+	rm -f *.dylib
+	rm -rf *.dSYM
+	rm -f *.gir *.typelib
 	rm -rf $(PREFIX)/$(LIB_DIR) $(PREFIX)/$(SHARE_DIR)
 	rm -rf tmp-introspect*

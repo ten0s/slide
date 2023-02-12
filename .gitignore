@@ -1,9 +1,10 @@
 *.o
+*.so
 *.dll
 *.dll.a
-*.dylib
 *.exe
+*.dylib
+*.dSYM
 *.gir
-*.so
 *.typelib
 tmp-introspect*
