@@ -3,6 +3,6 @@
 
 std::ostream& operator<<(std::ostream& os, const SlideLibraryHeader& header)
 {
-    os << "ID string: " << header.id_string() << "\n";
+    os << "ID String: " << header.id_string() << "\n";
     return os;
 }
