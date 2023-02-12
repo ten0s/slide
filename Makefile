@@ -1,9 +1,11 @@
+CXX=c++
+
 DEBUG_CPPFLAGS=
-DEBUG_CXXFLAGS=-g -O0 -Wall
+DEBUG_CXXFLAGS=-g -O0 -Wall -std=c++17
 DEBUG_LDFLAGS=
 
 RELEASE_CPPFLAGS=
-RELEASE_CXXFLAGS=-g -Wall -Werror
+RELEASE_CXXFLAGS=-g -Wall -Werror -std=c++17
 RELEASE_LDFLAGS=-static-libstdc++ -static-libgcc
 
 CPPFLAGS=$(DEBUG_CPPFLAGS)
@@ -51,25 +53,25 @@ PREFIX ?= `pwd`
 all: libslide.so main cairo $(TYPELIB_FILE)
 
 %.o: %.cpp %.hpp
-	g++ -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
 slide_draw.o: slide_draw.cpp slide_draw.h
-	g++ -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
 
 slide_record_visitor_cairo.o: slide_record_visitor_cairo.cpp slide_record_visitor_cairo.hpp
-	g++ -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
 
 libslide.so: $(LIBSLIDE_OBJS)
-	g++ -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
+	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
 
 main: main.cpp libslide.so
-	g++ $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
 
 cairo: cairo.cpp libslide.so
-	g++ $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
 
 $(LIB_FILE): gslide.c libslide.so
-	g++ -shared $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
+	$(CXX) -shared $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
 $(GIR_FILE): $(LIB_FILE)
 	g-ir-scanner gslide.[ch]             \

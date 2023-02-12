@@ -3,7 +3,7 @@
 
 #include <cstddef> // size_t
 #include <cstdint> // uint8_t
-#include <vector>
+#include <tuple>
 #include "slide_endian.hpp"
 
 class SlideRecord;
