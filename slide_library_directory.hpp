@@ -13,7 +13,7 @@ public:
         {}
 
     const std::string& name() const { return _name; }
-    size_t addr() const { return _addr; }
+    uint32_t addr() const { return _addr; }
 
 private:
     std::string _name;

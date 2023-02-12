@@ -10,37 +10,37 @@
 // (for 8086-family CPUs, IEEE double-precision, and low-order byte first).
 struct HeaderV1 {
     // Generic Part
-    char id_string[17];    // AutoCAD Slide CR LF ^Z NUL
-    char type_indicator;   // 56
-    char level_indicator;  // 01
-    char high_x_dot[2];    // LE | BE
-    char high_y_dot[2];    // LE | BE
+    uint8_t id_string[17];    // AutoCAD Slide CR LF ^Z NUL
+    uint8_t type_indicator;   // 56
+    uint8_t level_indicator;  // 01
+    uint8_t high_x_dot[2];    // LE | BE
+    uint8_t high_y_dot[2];    // LE | BE
     // Specific
-    char aspect_ratio[8];  // Float LE | BE
-    char hardware_fill[2]; // 0x00 | 0x02 Unused
+    uint8_t aspect_ratio[8];  // Float LE | BE
+    uint8_t hardware_fill[2]; // 0x00 | 0x02 Unused
 };
 
 struct HeaderV2 {
     // Generic Part
-    char id_string[17];    // AutoCAD Slide CR LF ^Z NUL
-    char type_indicator;   // 56
-    char level_indicator;  // 02
-    char high_x_dot[2];    // LE | BE
-    char high_y_dot[2];    // LE | BE
+    uint8_t id_string[17];    // AutoCAD Slide CR LF ^Z NUL
+    uint8_t type_indicator;   // 56
+    uint8_t level_indicator;  // 02
+    uint8_t high_x_dot[2];    // LE | BE
+    uint8_t high_y_dot[2];    // LE | BE
     // Specific Part
-    char aspect_ratio[4];  // LE always
-    char hardware_fill[2]; // 0x0002 Unused
-    char test_number[2];   // 0x1234 - LE | BE
+    uint8_t aspect_ratio[4];  // LE always
+    uint8_t hardware_fill[2]; // 0x0002 Unused
+    uint8_t test_number[2];   // 0x1234 - LE | BE
 };
 
 std::tuple<SlideHeader, size_t>
 parse_slide_header(const uint8_t* buf, size_t size)
 {
     Endian endian = Endian::UNK;
-    short high_x_dot;
-    short high_y_dot;
+    uint8_t high_x_dot;
+    uint8_t high_y_dot;
     double aspect_ratio;
-    short hardware_fill;
+    uint8_t hardware_fill;
 
     std::string id_str{"AutoCAD Slide"};
     size_t id_str_sz = id_str.size();
@@ -50,8 +50,8 @@ parse_slide_header(const uint8_t* buf, size_t size)
         throw std::runtime_error{"Invalid slide file header"};
     }
 
-    char type_indicator = buf[offsetof(HeaderV1, type_indicator)];
-    char level_indicator = buf[offsetof(HeaderV1, level_indicator)];
+    uint8_t type_indicator = buf[offsetof(HeaderV1, type_indicator)];
+    uint8_t level_indicator = buf[offsetof(HeaderV1, level_indicator)];
 
     switch (level_indicator) {
     case 1: { // Old version

@@ -21,10 +21,10 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
 
     if (hob <= 0x7f) {
         // Vector. Bytes: 8
-        auto x0 = read<uint16_t>(buf+0*sizeof(uint16_t), endian);
-        auto y0 = read<uint16_t>(buf+1*sizeof(uint16_t), endian);
-        auto x1 = read<uint16_t>(buf+2*sizeof(uint16_t), endian);
-        auto y1 = read<uint16_t>(buf+3*sizeof(uint16_t), endian);
+        auto x0 = read<int16_t>(buf+0*sizeof(int16_t), endian);
+        auto y0 = read<int16_t>(buf+1*sizeof(int16_t), endian);
+        auto x1 = read<int16_t>(buf+2*sizeof(int16_t), endian);
+        auto y1 = read<int16_t>(buf+3*sizeof(int16_t), endian);
         record = new SlideRecordVector{x0, y0, x1, y1};
         offset = 8;
     } else if (hob == 0xfb) {
