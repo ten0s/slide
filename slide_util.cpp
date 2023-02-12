@@ -2,22 +2,23 @@
 #include <filesystem>
 #include "slide_util.hpp"
 
+namespace fs = std::filesystem;
+
 namespace libslide {
 
 std::string basename(const std::string& filename)
 {
-    namespace fs = std::filesystem;
     return fs::path(filename).filename().u8string();
 }
 
 std::string get_ext(const std::string& filename)
 {
-    return filename.substr(filename.rfind("."));
+    return fs::path(filename).extension().u8string();
 }
 
 std::string strip_ext(const std::string& filename)
 {
-    return filename.substr(0, filename.rfind("."));
+    return fs::path(filename).stem().u8string();
 }
 
 std::string to_upper(const std::string& in)
