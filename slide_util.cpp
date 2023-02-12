@@ -1,12 +1,13 @@
 #include <algorithm> // std::transform
-#include <cstring>   // basename
+#include <filesystem>
 #include "slide_util.hpp"
 
 namespace libslide {
 
 std::string basename(const std::string& filename)
 {
-    return ::basename(filename.c_str());
+    namespace fs = std::filesystem;
+    return fs::path(filename).filename();
 }
 
 std::string get_ext(const std::string& filename)

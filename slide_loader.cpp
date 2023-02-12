@@ -18,7 +18,8 @@ using var_t = std::variant<std::tuple<std::string, std::string>, std::string>;
 static std::string
 normalize_slide_file(const std::string& file)
 {
-    return std::filesystem::absolute(file).u8string();
+    namespace fs = std::filesystem;
+    return fs::absolute(file).u8string();
 }
 
 static std::string
