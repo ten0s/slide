@@ -7,7 +7,7 @@ namespace libslide {
 std::string basename(const std::string& filename)
 {
     namespace fs = std::filesystem;
-    return fs::path(filename).filename();
+    return fs::path(filename).filename().u8string();
 }
 
 std::string get_ext(const std::string& filename)
