@@ -5,28 +5,27 @@
 void SlideRecordVisitorOStream::accept(SlideRecordVector& r)
 {
     _os << "(VECTOR"
-        << " " << r.x0()
-        << " " << r.y0()
-        << " " << r.x1()
-        << " " << r.y1()
+        << " " << (int)r.x0()
+        << " " << (int)r.y0()
+        << " " << (int)r.x1()
+        << " " << (int)r.y1()
         << ")\n";
 }
 
 void SlideRecordVisitorOStream::accept(SlideRecordOffsetVector& r)
 {
     _os << "(OFFSET_VECTOR"
-        << " " << r.dx0()
-        << " " << r.dy0()
-        << " " << r.dx1()
-        << " " << r.dy1()
+        << " " << (int)r.dx0()
+        << " " << (int)r.dx1()
+        << " " << (int)r.dy1()
         << ")\n";
 }
 
 void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& r)
 {
     _os << "(COMMON_ENDPOINT"
-        << " " << r.dx0()
-        << " " << r.dy0()
+        << " " << (int)r.dx0()
+        << " " << (int)r.dy0()
         << ")\n";
 }
 
@@ -42,9 +41,11 @@ void SlideRecordVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
 void SlideRecordVisitorOStream::accept(SlideRecordColor& r)
 {
     RGB rgb = AutoCAD::colors[r.color()];
-    _os << "(COLOR " << r.color() << ")"
+    _os << "(COLOR " << (int)r.color() << ")"
         << " # ("
-        << int(rgb.red) << " " << int(rgb.green) << " " << int(rgb.blue)
+        << (int)rgb.red   << " "
+        << (int)rgb.green << " "
+        << (int)rgb.blue
         << ")\n";
 }
 

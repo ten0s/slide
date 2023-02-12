@@ -9,10 +9,10 @@ public:
     explicit SlideHeader(const std::string& id_string,
                          uint8_t type_indicator,
                          uint8_t level_indicator,
-                         uint8_t high_x_dot,
-                         uint8_t high_y_dot,
+                         uint16_t high_x_dot,
+                         uint16_t high_y_dot,
                          double aspect_ration,
-                         uint8_t hardware_fill,
+                         uint16_t hardware_fill,
                          Endian endian)
         : _id_string{id_string},
           _type_indicator{type_indicator},
@@ -27,8 +27,8 @@ public:
     std::string id_string() const { return _id_string; }
     uint8_t type_indicator() const { return _type_indicator; }
     uint8_t level_indicator() const { return _level_indicator; }
-    uint8_t high_x_dot() const { return _high_x_dot; }
-    uint8_t high_y_dot() const { return _high_y_dot; }
+    uint16_t high_x_dot() const { return _high_x_dot; }
+    uint16_t high_y_dot() const { return _high_y_dot; }
     double aspect_ratio() const { return _aspect_ratio; }
     uint8_t hardware_fill() const { return _hardware_fill; }
     Endian endian() const { return _endian; }
@@ -37,10 +37,10 @@ private:
     std::string _id_string;
     uint8_t _type_indicator;
     uint8_t _level_indicator;
-    uint8_t _high_x_dot;
-    uint8_t _high_y_dot;
+    uint16_t _high_x_dot;
+    uint16_t _high_y_dot;
     double _aspect_ratio;
-    uint8_t _hardware_fill;
+    uint16_t _hardware_fill;
     Endian _endian;
 };
 

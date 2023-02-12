@@ -37,10 +37,10 @@ std::tuple<SlideHeader, size_t>
 parse_slide_header(const uint8_t* buf, size_t size)
 {
     Endian endian = Endian::UNK;
-    uint8_t high_x_dot;
-    uint8_t high_y_dot;
+    uint16_t high_x_dot;
+    uint16_t high_y_dot;
     double aspect_ratio;
-    uint8_t hardware_fill;
+    uint16_t hardware_fill;
 
     std::string id_str{"AutoCAD Slide"};
     size_t id_str_sz = id_str.size();

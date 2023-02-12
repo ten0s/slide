@@ -15,9 +15,9 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
     size_t offset = 0;
     bool stop = false;
 
-    auto head = read<uint16_t>(buf, endian);
-    auto hob = high_order_byte<uint16_t>(head);
-    auto lob = low_order_byte<uint16_t>(head);
+    auto head = read<int16_t>(buf, endian);
+    auto hob = high_order_byte<int16_t>(head);
+    auto lob = low_order_byte<int16_t>(head);
 
     if (hob <= 0x7f) {
         // Vector. Bytes: 8
