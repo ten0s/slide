@@ -37,11 +37,11 @@ LIBSLIDE_OBJS=\
 	slide_record_visitor_cairo.o \
 	slide_util.o
 
+LIB_EXT := ${shell case `uname -s` in MINGW64*) echo "dll";; Linux) echo "so";; Darwin) "dylib";; *) echo "Unknown";; esac}
+
 NAMESPACE=Slide
 NSVERSION=1.0
 LIB_NAME=gslide
-SYM_PREFIX=gslide
-LIB_FILE=lib$(LIB_NAME).so
 GIR_FILE=$(NAMESPACE)-$(NSVERSION).gir
 TYPELIB_FILE=$(NAMESPACE)-$(NSVERSION).typelib
 LIB_DIR=lib
@@ -50,7 +50,7 @@ GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 PREFIX ?= `pwd`
 
-all: libslide.so main cairo $(TYPELIB_FILE)
+all: libslide.$(LIB_EXT) main cairo $(TYPELIB_FILE)
 
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
@@ -64,23 +64,29 @@ slide_record_visitor_cairo.o: slide_record_visitor_cairo.cpp slide_record_visito
 libslide.so: $(LIBSLIDE_OBJS)
 	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
 
-main: main.cpp libslide.so
+libslide.dll: $(LIBSLIDE_OBJS)
+	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
+
+main: main.cpp libslide.$(LIB_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) -o $@
 
-cairo: cairo.cpp libslide.so
+cairo: cairo.cpp libslide.$(LIB_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) -o $@
 
-$(LIB_FILE): gslide.c libslide.so
+libgslide.so: gslide.c libslide.so
 	$(CXX) -shared $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
-$(GIR_FILE): $(LIB_FILE)
+libgslide.dll: gslide.c libslide.dll
+	$(CXX) -shared $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
+
+$(GIR_FILE): libgslide.$(LIB_EXT)
 	g-ir-scanner gslide.[ch]             \
 		--warn-all                       \
 		--library-path=`pwd`             \
 		--library=$(LIB_NAME)            \
 		--namespace=$(NAMESPACE)         \
 		--nsversion=$(NSVERSION)         \
-		--symbol-prefix=$(SYM_PREFIX)    \
+		--symbol-prefix=$(LIB_NAME)      \
 		--identifier-prefix=$(NAMESPACE) \
 		--include=GLib-2.0               \
 		--output=$@
@@ -92,11 +98,11 @@ install:
 	mkdir -p $(PREFIX)/$(LIB_DIR)
 	mkdir -p $(PREFIX)/$(GIR_DIR)
 	mkdir -p $(PREFIX)/$(TYPELIB_DIR)
-	mv $(LIB_FILE) $(PREFIX)/$(LIB_DIR)
+	mv libgslide.* $(PREFIX)/$(LIB_DIR)
 	mv $(GIR_FILE) $(PREFIX)/$(GIR_DIR)
 	mv $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)
 
 clean:
-	rm -f *.o *.so *.gir *.typelib
+	rm -f *.dll, *.dll.a, *.exe *.o *.so *.gir *.typelib
 	rm -rf $(PREFIX)/$(LIB_DIR) $(PREFIX)/$(SHARE_DIR)
 	rm -rf tmp-introspect*

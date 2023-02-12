@@ -1,5 +1,8 @@
 *.o
+*.dll
+*.dll.a
 *.dylib
+*.exe
 *.gir
 *.so
 *.typelib
