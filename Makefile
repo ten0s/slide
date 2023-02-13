@@ -109,6 +109,7 @@ install:
 	mkdir -p $(PREFIX)/$(LIB_DIR)
 	mkdir -p $(PREFIX)/$(GIR_DIR)
 	mkdir -p $(PREFIX)/$(TYPELIB_DIR)
+	mv libslide.* $(PREFIX)/$(LIB_DIR)
 	mv libgslide.* $(PREFIX)/$(LIB_DIR)
 	mv $(GIR_FILE) $(PREFIX)/$(GIR_DIR)
 	mv $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)
