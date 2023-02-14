@@ -22,18 +22,18 @@ Todo:
 $ make
 ```
 
-## Test
-
-```
-$ export LD_LIBRARY_PATH=$PWD/lib/ GI_TYPELIB_PATH=$PWD/lib/
-$ src/slide ...
-$ src/slide-draw ..
-```
-
 ## Install
 
 ```
 $ make install [PREFIX=/usr/local]
+```
+
+## Test
+
+```
+$ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
+$ src/slide ...
+$ src/slide-draw ..
 ```
 
 ## License
