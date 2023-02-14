@@ -5,12 +5,12 @@
 
 G_BEGIN_DECLS
 
-int gi_slide_draw(void *cr,
+int gi_slide_draw(gpointer cr,
                   unsigned x,
                   unsigned y,
                   unsigned width,
                   unsigned height,
-                  const char *slide_uri);
+                  const gchar *slide_uri);
 
 G_END_DECLS
 

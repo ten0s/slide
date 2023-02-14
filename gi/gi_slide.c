@@ -13,12 +13,12 @@
  * Draws on the slide on Cairo context.
  */
 int
-gi_slide_draw(void *cr,
+gi_slide_draw(gpointer cr,
               unsigned x,
               unsigned y,
               unsigned width,
               unsigned height,
-              const char *slide_uri)
+              const gchar *slide_uri)
 {
     return slide_draw((cairo_t *)cr, x, y, width, height, slide_uri);
 }
