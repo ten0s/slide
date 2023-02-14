@@ -3,8 +3,9 @@ AutoCAD slide library and command line utility
 Features:
 
 * Parse slide (.sld) and slide library (.slb)
-* Slide drawing on Cairo surface
-* Slide drawing on Cairo surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
+* Slide drawing on [Cairo](https://www.cairographics.org/) surface
+* Slide drawing on [Cairo](https://www.cairographics.org/) surface
+  via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
 
 Todo:
 
