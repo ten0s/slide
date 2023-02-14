@@ -1,4 +1,4 @@
-AutoCAD Slide(s) Library
+AutoCAD slide library and utilities for command line
 
 Features:
 
