@@ -7,4 +7,5 @@
 *.dSYM
 *.gir
 *.typelib
+install
 tmp-introspect*

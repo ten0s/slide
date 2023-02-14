@@ -1,8 +1,8 @@
 #include <iostream>
 #include <gtk/gtk.h>
 #include <cairo.h>
-#include "slide_draw.h"
-#include "slide_util.hpp"
+#include "../lib/slide_draw.h"
+#include "../lib/slide_util.hpp"
 
 using namespace libslide;
 

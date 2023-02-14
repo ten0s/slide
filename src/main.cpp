@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include "slide.hpp"
-#include "slide_library.hpp"
-#include "slide_util.hpp"
+#include "../lib/slide.hpp"
+#include "../lib/slide_library.hpp"
+#include "../lib/slide_util.hpp"
 
 using namespace libslide;
 
