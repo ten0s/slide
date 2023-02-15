@@ -2,10 +2,10 @@ include ../Makefile.inc
 
 NAMESPACE=SlideLib
 NSVERSION=1.0
-LIB_NAME=gislide
-SYM_PREFIX=gi_slide
+
 GIR_FILE=$(NAMESPACE)-$(NSVERSION).gir
 TYPELIB_FILE=$(NAMESPACE)-$(NSVERSION).typelib
+
 GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 
@@ -23,11 +23,12 @@ libgislide.dylib: gi_slide.c ../lib/libslide.dylib
 $(GIR_FILE): libgislide.$(LIB_EXT)
 	g-ir-scanner gi_slide.[ch]           \
 		--warn-all                       \
-		--library-path=`pwd`/../lib/     \
-		--library=$(LIB_NAME)            \
+		--library-path=$(CURDIR)         \
+		--library-path=$(CURDIR)/../lib  \
+		--library=gislide                \
+		--symbol-prefix=gi_slide         \
 		--namespace=$(NAMESPACE)         \
 		--nsversion=$(NSVERSION)         \
-		--symbol-prefix=$(SYM_PREFIX)    \
 		--identifier-prefix=$(NAMESPACE) \
 		--include=GLib-2.0               \
 		--output=$@
