@@ -10,7 +10,6 @@ all:
 
 .PHONY: install
 install:
-	echo $(PREFIX)
 	@for subdir in $(SUBDIRS);           do \
 		cd $$subdir                      && \
 		$(MAKE) install PREFIX=$(PREFIX) && \

@@ -41,7 +41,7 @@ install:
 	mkdir -p $(PREFIX)/$(LIB_DIR)
 	mkdir -p $(PREFIX)/$(GIR_DIR)
 	mkdir -p $(PREFIX)/$(TYPELIB_DIR)
-	cp libgislide.* $(PREFIX)/$(LIB_DIR)
+	cp libgislide.$(LIB_EXT) $(PREFIX)/$(LIB_DIR)
 	cp $(GIR_FILE) $(PREFIX)/$(GIR_DIR)
 	cp $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)
 

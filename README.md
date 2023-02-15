@@ -26,7 +26,7 @@ $ make
 ## Install
 
 ```
-$ make install [PREFIX=/usr/local]
+$ make install [PREFIX=$PWD/install]
 ```
 
 ## Test
