@@ -5,10 +5,10 @@ all: slide slide-draw
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
-slide: slide.cpp ../lib/libslide.$(LIB_EXT)
+slide: slide.cpp ../lib/libslide.$(DLL_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LD_RPATH) -o $@
 
-slide-draw: slide-draw.cpp ../lib/libslide.$(LIB_EXT)
+slide-draw: slide-draw.cpp ../lib/libslide.$(DLL_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) $(LD_RPATH) -o $@
 
 .PHONY: install

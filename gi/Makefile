@@ -6,9 +6,6 @@ NSVERSION=1.0
 GIR_FILE=$(NAMESPACE)-$(NSVERSION).gir
 TYPELIB_FILE=$(NAMESPACE)-$(NSVERSION).typelib
 
-GIR_DIR=$(SHARE_DIR)/gir-1.0
-TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
-
 all: $(TYPELIB_FILE)
 
 libgislide.so: gi_slide.c ../lib/libslide.so
@@ -20,7 +17,7 @@ libgislide.dll: gi_slide.c ../lib/libslide.dll
 libgislide.dylib: gi_slide.c ../lib/libslide.dylib
 	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
 
-$(GIR_FILE): libgislide.$(LIB_EXT)
+$(GIR_FILE): libgislide.$(DLL_EXT)
 	g-ir-scanner gi_slide.[ch]           \
 		--warn-all                       \
 		--library-path=$(CURDIR)         \
@@ -41,7 +38,7 @@ install:
 	mkdir -p $(PREFIX)/$(LIB_DIR)
 	mkdir -p $(PREFIX)/$(GIR_DIR)
 	mkdir -p $(PREFIX)/$(TYPELIB_DIR)
-	cp libgislide.$(LIB_EXT) $(PREFIX)/$(LIB_DIR)
+	cp libgislide.$(DLL_EXT) $(PREFIX)/$(DLL_DIR)
 	cp $(GIR_FILE) $(PREFIX)/$(GIR_DIR)
 	cp $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)
 

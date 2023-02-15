@@ -20,7 +20,7 @@ LIBSLIDE_OBJS=\
 	slide_draw.o \
 	slide_util.o
 
-all: libslide.$(LIB_EXT)
+all: libslide.$(DLL_EXT)
 
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
@@ -44,7 +44,7 @@ libslide.dylib: $(LIBSLIDE_OBJS)
 .PHONY: install
 install:
 	mkdir -p $(PREFIX)/$(LIB_DIR)
-	cp libslide.$(LIB_EXT) $(PREFIX)/$(LIB_DIR)
+	cp libslide.$(DLL_EXT) $(PREFIX)/$(DLL_DIR)
 
 .PHONY: clean
 clean:
