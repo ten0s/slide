@@ -23,9 +23,12 @@ LIBSLIDE=-L`pwd`/../lib -lslide
 
 BIN_DIR=bin
 LIB_DIR=lib
-DLL_DIR := ${shell case `uname -s` in MINGW64*) echo "bin";; Linux | Darwin) echo "lib";; *) echo "Unknown-DLL_DIR";; esac}
-GIR_DIR=share/gir-1.0
+SHARE_DIR=share
+
+GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 
+DLL_DIR := ${shell case `uname -s` in MINGW64*) echo "bin";; Linux | Darwin) echo "lib";; *) echo "Unknown-DLL_DIR";; esac}
 DLL_EXT := ${shell case `uname -s` in MINGW64*) echo "dll";; Linux) echo "so";; Darwin) echo "dylib";; *) echo "Unknown-DLL_EXT";; esac}
+
 LD_RPATH := ${shell case `uname -s` in MINGW64* | Linux) echo "-Wl,-rpath='\$$ORIGIN'";; Darwin) echo "";; *) echo "Unknown-LD_PATH";; esac}

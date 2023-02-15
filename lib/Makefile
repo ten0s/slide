@@ -43,8 +43,8 @@ libslide.dylib: $(LIBSLIDE_OBJS)
 
 .PHONY: install
 install:
-	mkdir -p $(PREFIX)/$(LIB_DIR)
-	cp libslide.$(DLL_EXT) $(PREFIX)/$(DLL_DIR)
+	mkdir -p $(PREFIX)/$(DLL_DIR)
+	cp libslide.$(DLL_EXT) $(PREFIX)/$(DLL_DIR)/
 
 .PHONY: clean
 clean:

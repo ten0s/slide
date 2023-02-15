@@ -35,12 +35,12 @@ $(TYPELIB_FILE): $(GIR_FILE)
 
 .PHONY: install
 install:
-	mkdir -p $(PREFIX)/$(LIB_DIR)
+	mkdir -p $(PREFIX)/$(DLL_DIR)
 	mkdir -p $(PREFIX)/$(GIR_DIR)
 	mkdir -p $(PREFIX)/$(TYPELIB_DIR)
-	cp libgislide.$(DLL_EXT) $(PREFIX)/$(DLL_DIR)
-	cp $(GIR_FILE) $(PREFIX)/$(GIR_DIR)
-	cp $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)
+	cp libgislide.$(DLL_EXT) $(PREFIX)/$(DLL_DIR)/
+	cp $(GIR_FILE) $(PREFIX)/$(GIR_DIR)/
+	cp $(TYPELIB_FILE) $(PREFIX)/$(TYPELIB_DIR)/
 
 .PHONY: clean
 clean:

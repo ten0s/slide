@@ -14,7 +14,7 @@ slide-draw: slide-draw.cpp ../lib/libslide.$(DLL_EXT)
 .PHONY: install
 install:
 	mkdir -p $(PREFIX)/$(BIN_DIR)
-	cp slide slide-draw $(PREFIX)/$(BIN_DIR)
+	cp slide slide-draw $(PREFIX)/$(BIN_DIR)/
 
 .PHONY: clean
 clean:
