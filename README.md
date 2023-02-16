@@ -6,6 +6,7 @@ Features:
 * Slide drawing on [Cairo](https://www.cairographics.org/) surface
 * Slide drawing on [Cairo](https://www.cairographics.org/) surface
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
+* Linux, Windows and MacOS support
 
 Todo:
 
