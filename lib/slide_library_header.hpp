@@ -18,8 +18,6 @@ private:
     std::string _id_string;
 };
 
-std::ostream& operator<<(std::ostream& os, const SlideLibraryHeader& header);
-
 } // namespace libslide
 
 #endif // __SLIDE_LIBRARY_HEADER_HPP__

@@ -111,21 +111,24 @@ const Slide* SlideLibrary::find(size_t idx) const
 
 std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib)
 {
-    os << "Slide Library Name: " << lib.name() << "\n";
-    os << "Slide Library Size: " << lib.size() << "\n";
+    auto& header = lib.header();
 
-    os << "Slide Library Header:\n";
-    os << lib.header();
+    os << "Info:\n";
 
-    os << "Slide Library Dirs:\n";
+    os << "    Type : " << header.id_string() << "\n";
+    os << "    Name : " << lib.name() << "\n";
+    os << "    Size : " << lib.size() << "\n";
+
+    os << "Slides:\n";
     for (auto& dir : lib.dirs()) {
-        os << *dir;
+        os << "    " << dir->name();
+        os << "\n";
     };
 
-    os << "Slide Library Slides:\n";
-    for (auto& slide : lib.slides()) {
-        os << *slide;
-    };
+    //os << "Slide Infos:\n";
+    //for (auto& slide : lib.slides()) {
+    //    os << *slide;
+    //};
 
     return os;
 }

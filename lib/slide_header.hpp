@@ -46,8 +46,6 @@ private:
     Endian _endian;
 };
 
-std::ostream& operator<<(std::ostream& os, const SlideHeader& header);
-
 } // namespace libslide
 
 #endif // __SLIDE_HEADER_HPP__

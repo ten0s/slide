@@ -77,14 +77,22 @@ void Slide::visit_records(SlideRecordVisitor& visitor) const
 
 std::ostream& operator<<(std::ostream& os, const Slide& slide)
 {
-    os << "Slide Name: " << slide.name() << "\n";
-    os << "Slide Size: " << slide.size() << "\n";
+    auto& header = slide.header();
+    auto version = (int)header.level_indicator();
 
-    os << "Slide Header:\n";
-    os << slide.header();
+    os << "Info:\n";
+    os << "    Type         : " << header.id_string() << " " << version << ".0" << "\n";
+    os << "    Name         : " << slide.name() << "\n";
+    os << "    Size         : " << slide.size() << "\n";
+    os << "    Width        : " << header.high_x_dot() << "\n";
+    os << "    Height       : " << header.high_y_dot() << "\n";
+    os << "    Aspect Ratio : " << header.aspect_ratio() << "\n";
+    os << "    Byte Order   : " << (header.endian() == Endian::LE ?
+                                  "Little-endian" :
+                                  "Big-endian") << "\n";
 
-    os << "Slide Records:\n";
-    SlideRecordVisitorOStream visitor{os};
+    os << "Records:\n";
+    SlideRecordVisitorOStream visitor{os, 4};
     slide.visit_records(visitor);
 
     return os;
