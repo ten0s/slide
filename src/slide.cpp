@@ -11,7 +11,7 @@ void usage(const std::string& prog)
     std::cerr << "Usage: " << prog << " <SLIDE.sld | SLIDELIB.slb [NAME]>\n";
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
    if (argc == 2) {
        std::string filename = argv[1];
