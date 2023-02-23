@@ -5,11 +5,11 @@ all: slide slide-view
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
-slide: slide.cpp ../lib/libslide.$(DLL_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LD_RPATH) -o $@
+slide: slide.cpp ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -Wl,-Bdynamic -o $@
 
-slide-view: slide-view.cpp ../lib/libslide.$(DLL_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBCAIRO) $(LIBGTK3) $(LD_RPATH) -o $@
+slide-view: slide-view.cpp ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -Wl,-Bdynamic $(LIBCAIRO) $(LIBGTK3) -o $@
 
 .PHONY: install
 install:

@@ -20,7 +20,7 @@ LIBSLIDE_OBJS=\
 	slide_draw.o \
 	slide_util.o
 
-all: libslide.$(DLL_EXT)
+all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
@@ -41,6 +41,9 @@ libslide.dll: $(LIBSLIDE_OBJS)
 libslide.dylib: $(LIBSLIDE_OBJS)
 	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
 
+libslide.a: $(LIBSLIDE_OBJS)
+	ar rcv $@ $^
+
 .PHONY: install
 install:
 	mkdir -p $(PREFIX)/$(DLL_DIR)
@@ -49,6 +52,7 @@ install:
 .PHONY: clean
 clean:
 	rm -f *.o *.so
-	rm -f *.dll *.dll.a
+	rm -f *.dll
 	rm -f *.dylib
+	rm -r *.a
 	rm -rf *.dSYM
