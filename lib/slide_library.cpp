@@ -21,7 +21,7 @@ SlideLibrary SlideLibrary::from_file(const std::string& filename)
         is.seekg(0);
         // Read the whole file.
         if (is.read((char*)buf.get(), size)) {
-            auto name = to_upper(strip_ext(basename(filename)));
+            auto name = strip_ext(basename(filename));
             return from_buf(name, buf.get(), size);
         } else {
             std::stringstream ss;
