@@ -4,8 +4,8 @@
 #include <sstream>
 #include "slide.hpp"
 #include "slide_parser.hpp"
-#include "slide_record.hpp"
-#include "slide_record_visitor_ostream.hpp"
+#include "slide_records.hpp"
+#include "slide_records_visitor_ostream.hpp"
 #include "slide_util.hpp"
 
 namespace libslide {
@@ -68,34 +68,11 @@ Slide::~Slide()
     _records = {};
 }
 
-void Slide::visit_records(SlideRecordVisitor& visitor) const
+void Slide::visit_records(SlideRecordsVisitor& visitor) const
 {
     for (auto& record : _records) {
         record->visit(visitor);
     }
-}
-
-std::ostream& operator<<(std::ostream& os, const Slide& slide)
-{
-    auto& header = slide.header();
-    auto version = (int)header.level_indicator();
-
-    os << "Info:\n";
-    os << "    Type         : " << header.id_string() << " " << version << ".0" << "\n";
-    os << "    Name         : " << slide.name() << "\n";
-    os << "    Size         : " << slide.size() << "\n";
-    os << "    Width        : " << header.high_x_dot() << "\n";
-    os << "    Height       : " << header.high_y_dot() << "\n";
-    os << "    Aspect Ratio : " << header.aspect_ratio() << "\n";
-    os << "    Byte Order   : " << (header.endian() == Endian::LE ?
-                                  "Little-endian" :
-                                  "Big-endian") << "\n";
-
-    os << "Records:\n";
-    SlideRecordVisitorOStream visitor{os, 4};
-    slide.visit_records(visitor);
-
-    return os;
 }
 
 } // namespace libslide

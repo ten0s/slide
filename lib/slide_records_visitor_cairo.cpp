@@ -1,20 +1,20 @@
 #include "slide_colors.hpp"
-#include "slide_record.hpp"
-#include "slide_record_visitor_cairo.hpp"
+#include "slide_records.hpp"
+#include "slide_records_visitor_cairo.hpp"
 
 namespace libslide {
 
 static const unsigned PADDING_X = 1;
 static const unsigned PADDING_Y = 1;
 
-SlideRecordVisitorCairo::SlideRecordVisitorCairo(cairo_t* cr,
-                                                 unsigned src_width,
-                                                 unsigned src_height,
-                                                 double   src_ratio,
-                                                 unsigned dst_x,
-                                                 unsigned dst_y,
-                                                 unsigned dst_width,
-                                                 unsigned dst_height)
+SlideRecordsVisitorCairo::SlideRecordsVisitorCairo(cairo_t* cr,
+                                                   unsigned src_width,
+                                                   unsigned src_height,
+                                                   double   src_ratio,
+                                                   unsigned dst_x,
+                                                   unsigned dst_y,
+                                                   unsigned dst_width,
+                                                   unsigned dst_height)
     : _cr{cr},
       _dst_x{dst_x},
       _dst_y{dst_y},
@@ -48,19 +48,19 @@ SlideRecordVisitorCairo::SlideRecordVisitorCairo(cairo_t* cr,
 }
 
 inline
-double SlideRecordVisitorCairo::adjust_x(unsigned x) const {
+double SlideRecordsVisitorCairo::adjust_x(unsigned x) const {
     // Scale & Move
     return x * _scale_x + _dst_x + PADDING_X;
 }
 
 inline
-double SlideRecordVisitorCairo::adjust_y(unsigned y) const {
+double SlideRecordsVisitorCairo::adjust_y(unsigned y) const {
     // Point (0,0) is located at the lower-left corner.
     // Scale & Move
     return _dst_height - y * _scale_y + _dst_y - PADDING_Y;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordVector& r)
+void SlideRecordsVisitorCairo::accept(SlideRecordVector& r)
 {
     int x0 = r.x0(), y0 = r.y0();
     int x1 = r.x1(), y1 = r.y1();
@@ -74,7 +74,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordVector& r)
     _last_y = y0;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordOffsetVector& r)
+void SlideRecordsVisitorCairo::accept(SlideRecordOffsetVector& r)
 {
     int x0 = _last_x + r.dx0(), y0 = _last_y + r.dy0();
     int x1 = _last_x + r.dx1(), y1 = _last_y + r.dy1();
@@ -88,7 +88,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordOffsetVector& r)
     _last_y = y0;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
+void SlideRecordsVisitorCairo::accept(SlideRecordCommonEndpoint& r)
 {
     // This is a vector starting at the last point.
     int x0 = _last_x,           y0 = _last_y;
@@ -103,7 +103,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordCommonEndpoint& r)
     _last_y = y1;
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordSolidFillPolygon& r)
+void SlideRecordsVisitorCairo::accept(SlideRecordSolidFillPolygon& r)
 {
     auto& vs = r.vertices();
     if (vs.size() > 0) {
@@ -124,7 +124,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordSolidFillPolygon& r)
     }
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
+void SlideRecordsVisitorCairo::accept(SlideRecordColor& r)
 {
     RGB rgb = AutoCAD::colors[r.color()];
     cairo_set_source_rgb(_cr,
@@ -133,7 +133,7 @@ void SlideRecordVisitorCairo::accept(SlideRecordColor& r)
                          rgb.blue  / 255.0);
 }
 
-void SlideRecordVisitorCairo::accept(SlideRecordEndOfFile&)
+void SlideRecordsVisitorCairo::accept(SlideRecordEndOfFile&)
 {
 
 }

@@ -6,7 +6,7 @@ all: slide slide-view
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
 slide: slide.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -Wl,-Bdynamic -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -lboost_program_options -Wl,-Bdynamic -o $@
 
 slide-view: slide-view.cpp ../lib/libslide.$(LIB_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -Wl,-Bdynamic $(LIBCAIRO) $(LIBGTK3) -o $@

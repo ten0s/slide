@@ -45,8 +45,6 @@ private:
     size_t _size;
 };
 
-std::ostream& operator<<(std::ostream& os, const SlideLibrary& lib);
-
 } // namespace libslide
 
 #endif // __SLIDE_LIBRARY_HPP__

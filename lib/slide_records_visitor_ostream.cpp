@@ -1,13 +1,14 @@
 #include "slide_colors.hpp"
-#include "slide_record.hpp"
-#include "slide_record_visitor_ostream.hpp"
+#include "slide_records.hpp"
+#include "slide_records_visitor_ostream.hpp"
 
 namespace libslide {
 
-SlideRecordVisitorOStream::SlideRecordVisitorOStream(std::ostream& os, size_t pad)
-    : _os{os}, _pad{std::string(pad, ' ')} {}
+SlideRecordsVisitorOStream::SlideRecordsVisitorOStream(
+    std::ostream& os, const std::string& pad)
+    : _os{os}, _pad{pad} {}
 
-void SlideRecordVisitorOStream::accept(SlideRecordVector& r)
+void SlideRecordsVisitorOStream::accept(SlideRecordVector& r)
 {
     _os << _pad;
     _os << "(VECTOR"
@@ -18,7 +19,7 @@ void SlideRecordVisitorOStream::accept(SlideRecordVector& r)
         << ")\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordOffsetVector& r)
+void SlideRecordsVisitorOStream::accept(SlideRecordOffsetVector& r)
 {
     _os << _pad;
     _os << "(OFFSET_VECTOR"
@@ -28,7 +29,7 @@ void SlideRecordVisitorOStream::accept(SlideRecordOffsetVector& r)
         << ")\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& r)
+void SlideRecordsVisitorOStream::accept(SlideRecordCommonEndpoint& r)
 {
     _os << _pad;
     _os << "(COMMON_ENDPOINT"
@@ -37,7 +38,7 @@ void SlideRecordVisitorOStream::accept(SlideRecordCommonEndpoint& r)
         << ")\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
+void SlideRecordsVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
 {
     _os << _pad;
     _os << "(SOLID_FILL_POLYGON";
@@ -47,7 +48,7 @@ void SlideRecordVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
     _os << ")\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordColor& r)
+void SlideRecordsVisitorOStream::accept(SlideRecordColor& r)
 {
     //RGB rgb = AutoCAD::colors[r.color()];
     _os << _pad;
@@ -60,7 +61,7 @@ void SlideRecordVisitorOStream::accept(SlideRecordColor& r)
         << "\n";
 }
 
-void SlideRecordVisitorOStream::accept(SlideRecordEndOfFile&)
+void SlideRecordsVisitorOStream::accept(SlideRecordEndOfFile&)
 {
     _os << _pad;
     _os << "(END_OF_FILE)\n";

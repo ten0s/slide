@@ -22,8 +22,6 @@ private:
     uint32_t _addr;
 };
 
-std::ostream& operator<<(std::ostream& os, const SlideLibraryDirectory& dir);
-
 } // namespace libslide
 
 #endif // __SLIDE_LIBRARY_DIRECTORY_HPP__

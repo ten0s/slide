@@ -1,16 +1,16 @@
-#ifndef __SLIDE_RECORD_HPP__
-#define __SLIDE_RECORD_HPP__
+#ifndef __SLIDE_RECORDS_HPP__
+#define __SLIDE_RECORDS_HPP__
 
 #include <cstdint>
 #include <vector>
-#include "slide_record_visitor.hpp"
+#include "slide_records_visitor.hpp"
 
 namespace libslide {
 
 class SlideRecord {
 public:
     virtual ~SlideRecord() {}
-    virtual void visit(SlideRecordVisitor& v) = 0;
+    virtual void visit(SlideRecordsVisitor& v) = 0;
 };
 
 class SlideRecordVector : public SlideRecord {
@@ -26,7 +26,7 @@ public:
     int16_t x1() const { return _x1; }
     int16_t y1() const { return _y1; }
 
-    void visit(SlideRecordVisitor& visitor) override {
+    void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);
     }
 
@@ -50,7 +50,7 @@ public:
     int8_t dx1() const { return _dx1; }
     int8_t dy1() const { return _dy1; }
 
-    void visit(SlideRecordVisitor& visitor) override {
+    void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);
     }
 
@@ -70,7 +70,7 @@ public:
     int8_t dx0() const { return _dx0; }
     int8_t dy0() const { return _dy0; }
 
-    void visit(SlideRecordVisitor& visitor) override {
+    void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);
     }
 
@@ -90,7 +90,7 @@ public:
 
     const vertices_t vertices() const { return _vertices; }
 
-    void visit(SlideRecordVisitor& visitor) override {
+    void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);
     }
 
@@ -106,7 +106,7 @@ public:
 
     uint8_t color() const { return _color; }
 
-    void visit(SlideRecordVisitor& visitor) override {
+    void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);
     }
 
@@ -118,11 +118,11 @@ class SlideRecordEndOfFile : public SlideRecord {
 public:
     explicit SlideRecordEndOfFile() {}
 
-    void visit(SlideRecordVisitor& visitor) override {
+    void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);
     }
 };
 
 } // namespace libslide
 
-#endif // __SLIDE_RECORD_HPP__
+#endif // __SLIDE_RECORDS_HPP__

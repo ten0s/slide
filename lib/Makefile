@@ -7,11 +7,12 @@ LIBSLIDE_OBJS=\
 	slide_library.o \
 	slide_library_parser.o \
 	slide_library_header_parser.o \
-	slide_library_directory.o \
 	slide_library_directory_parser.o \
+	slide_printers.o \
+	slide_library_printers.o \
 	slide_record_parser.o \
-	slide_record_visitor_ostream.o \
-	slide_record_visitor_cairo.o \
+	slide_records_visitor_ostream.o \
+	slide_records_visitor_cairo.o \
 	slide_cache.o \
 	slide_loader.o \
 	slide_colors.o \
@@ -26,7 +27,7 @@ all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 slide_draw.o: slide_draw.cpp slide_draw.h
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
 
-slide_record_visitor_cairo.o: slide_record_visitor_cairo.cpp slide_record_visitor_cairo.hpp
+slide_records_visitor_cairo.o: slide_records_visitor_cairo.cpp slide_records_visitor_cairo.hpp
 	echo $(LIBCAIRO)
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
 

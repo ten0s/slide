@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iomanip> // std::setfill, std::setw, std::hex
 #include <sstream> // std::ostringstream
-#include "slide_record.hpp"
+#include "slide_records.hpp"
 #include "slide_record_parser.hpp"
 #include "slide_parser_util.hpp"
 

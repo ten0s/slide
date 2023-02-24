@@ -1,5 +1,5 @@
-#ifndef __SLIDE_RECORD_VISITOR_HPP__
-#define __SLIDE_RECORD_VISITOR_HPP__
+#ifndef __SLIDE_RECORDS_VISITOR_HPP__
+#define __SLIDE_RECORDS_VISITOR_HPP__
 
 namespace libslide {
 
@@ -10,9 +10,9 @@ class SlideRecordSolidFillPolygon;
 class SlideRecordColor;
 class SlideRecordEndOfFile;
 
-class SlideRecordVisitor {
+class SlideRecordsVisitor {
 public:
-    virtual ~SlideRecordVisitor() {}
+    virtual ~SlideRecordsVisitor() {}
     virtual void accept(SlideRecordVector&) = 0;
     virtual void accept(SlideRecordOffsetVector&) = 0;
     virtual void accept(SlideRecordCommonEndpoint&) = 0;
@@ -23,4 +23,4 @@ public:
 
 } // namespace libslide
 
-#endif // __SLIDE_RECORD_VISITOR_HPP__
+#endif // __SLIDE_RECORDS_VISITOR_HPP__

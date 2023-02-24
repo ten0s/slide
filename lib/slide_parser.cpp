@@ -2,7 +2,7 @@
 #include "slide_parser.hpp"
 #include "slide_header.hpp"
 #include "slide_header_parser.hpp"
-#include "slide_record.hpp"
+#include "slide_records.hpp"
 #include "slide_record_parser.hpp"
 
 namespace libslide {

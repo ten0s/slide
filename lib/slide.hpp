@@ -8,7 +8,7 @@
 namespace libslide {
 
 class SlideRecord;
-class SlideRecordVisitor;
+class SlideRecordsVisitor;
 
 class Slide {
 public:
@@ -28,7 +28,7 @@ public:
 
     const std::string& name() const { return _name; }
     const SlideHeader& header() const { return _header; }
-    void visit_records(SlideRecordVisitor& visitor) const;
+    void visit_records(SlideRecordsVisitor& visitor) const;
     size_t size() const { return _size; }
 
 private:
@@ -37,8 +37,6 @@ private:
     std::vector<SlideRecord*> _records;
     size_t _size;
 };
-
-std::ostream& operator<<(std::ostream& os, const Slide& slide);
 
 } // namespace libslide
 

@@ -1,15 +1,15 @@
-#ifndef __SLIDE_RECORD_VISITOR_OSTREAM_HPP__
-#define __SLIDE_RECORD_VISITOR_OSTREAM_HPP__
+#ifndef __SLIDE_RECORDS_VISITOR_OSTREAM_HPP__
+#define __SLIDE_RECORDS_VISITOR_OSTREAM_HPP__
 
 #include <ostream>
 #include <string>
-#include "slide_record_visitor.hpp"
+#include "slide_records_visitor.hpp"
 
 namespace libslide {
 
-class SlideRecordVisitorOStream : public SlideRecordVisitor {
+class SlideRecordsVisitorOStream : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordVisitorOStream(std::ostream& os, size_t pad);
+    explicit SlideRecordsVisitorOStream(std::ostream& os, const std::string& pad);
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;
@@ -24,4 +24,4 @@ private:
 
 } // namespace libslide
 
-#endif // __SLIDE_RECORD_VISITOR_OSTREAM_HPP__
+#endif // __SLIDE_RECORDS_VISITOR_OSTREAM_HPP__
