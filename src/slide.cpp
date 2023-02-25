@@ -164,8 +164,7 @@ int main(int argc, char* argv[])
 
                 if (vm.count("info")) {
                     auto raw = vm["info"].as<std::string>();
-                    auto info = parse_slide_info(raw);
-                    if (info) {
+                    if (auto info = parse_slide_info(raw)) {
                         print_slide_info(std::cout, slide, info.value());
                         return 0;
                     } else {
@@ -181,8 +180,7 @@ int main(int argc, char* argv[])
 
                 if (vm.count("info")) {
                     auto raw = vm["info"].as<std::string>();
-                    auto info = parse_library_info(raw);
-                    if (info) {
+                    if (auto info = parse_library_info(raw)) {
                         print_library_info(std::cout, library, info.value());
                         return 0;
                     } else {
@@ -216,8 +214,7 @@ int main(int argc, char* argv[])
                 if (slide) {
                     if (vm.count("info")) {
                         auto raw = vm["info"].as<std::string>();
-                        auto info = parse_slide_info(raw);
-                        if (info) {
+                        if (auto info = parse_slide_info(raw)) {
                             print_slide_info(std::cout, *slide, info.value());
                             return 0;
                         } else {

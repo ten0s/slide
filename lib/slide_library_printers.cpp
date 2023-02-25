@@ -23,7 +23,7 @@ operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::INF
     return os;
 }
 
-template<>
+template <>
 std::ostream&
 operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::NAMES>& p)
 {
