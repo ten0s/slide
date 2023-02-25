@@ -15,14 +15,14 @@ operator<<(std::ostream& os, const SlidePrinter<slide_info_t::INFO>& p)
     auto& header = slide.header();
     auto version = (int)header.level_indicator();
 
-    os << pad << "Type         : " << header.id_string() << " " << version << ".0" << "\n";
-    os << pad << "Name         : " << slide.name() << "\n";
-    os << pad << "Size         : " << slide.size() << "\n";
-    os << pad << "Width        : " << header.high_x_dot() << "\n";
-    os << pad << "Height       : " << header.high_y_dot() << "\n";
-    os << pad << "Aspect Ratio : " << header.aspect_ratio() << "\n";
-    os << pad << "Endian       : " << (header.endian() == Endian::LE ?
-                                       "little" : "big") << "\n";
+    os << pad << "Type   : " << header.id_string() << " " << version << ".0" << "\n";
+    os << pad << "Name   : " << slide.name() << "\n";
+    os << pad << "Size   : " << slide.size() << "\n";
+    os << pad << "Width  : " << header.high_x_dot() << "\n";
+    os << pad << "Height : " << header.high_y_dot() << "\n";
+    os << pad << "Ratio  : " << header.aspect_ratio() << "\n";
+    os << pad << "Endian : " << (header.endian() == Endian::LE ?
+                                       "Little" : "Big") << "\n";
     return os;
 }
 
