@@ -6,10 +6,10 @@ all: slide slide-view
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
 slide: slide.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -lboost_program_options -Wl,-Bdynamic -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
 
 slide-view: slide-view.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -Wl,-Bstatic $(LIBSLIDE) -Wl,-Bdynamic $(LIBCAIRO) $(LIBGTK3) -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(DLL_CAIRO) $(DLL_GTK3) -o $@
 
 .PHONY: install
 install:

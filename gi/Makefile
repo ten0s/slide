@@ -9,13 +9,13 @@ TYPELIB_FILE=$(NAMESPACE)-$(NSVERSION).typelib
 all: $(TYPELIB_FILE)
 
 libgislide.so: gi_slide.c ../lib/libslide.so
-	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
+	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -o $@
 
 libgislide.dll: gi_slide.c ../lib/libslide.dll
-	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
+	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -Wl,--out-implib,$@.a -o $@
 
 libgislide.dylib: gi_slide.c ../lib/libslide.dylib
-	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LIBSLIDE) $(LIBGLIB2) $(LIBCAIRO) -o $@
+	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -o $@
 
 $(GIR_FILE): libgislide.$(DLL_EXT)
 	g-ir-scanner gi_slide.[ch]           \

@@ -1,6 +1,6 @@
 include ../Makefile.inc
 
-LIBSLIDE_OBJS=\
+SLIDE_OBJS=\
 	slide.o \
 	slide_parser.o \
 	slide_header_parser.o \
@@ -25,22 +25,21 @@ all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
 slide_draw.o: slide_draw.cpp slide_draw.h
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(DLL_CAIRO) -o $@
 
 slide_records_visitor_cairo.o: slide_records_visitor_cairo.cpp slide_records_visitor_cairo.hpp
-	echo $(LIBCAIRO)
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LIBCAIRO) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(DLL_CAIRO) -o $@
 
-libslide.so: $(LIBSLIDE_OBJS)
-	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
+libslide.so: $(SLIDE_OBJS)
+	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -o $@
 
-libslide.dll: $(LIBSLIDE_OBJS)
-	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -Wl,--out-implib,$@.a -o $@
+libslide.dll: $(SLIDE_OBJS)
+	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -Wl,--out-implib,$@.a -o $@
 
-libslide.dylib: $(LIBSLIDE_OBJS)
-	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBCAIRO) -o $@
+libslide.dylib: $(SLIDE_OBJS)
+	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -o $@
 
-libslide.a: $(LIBSLIDE_OBJS)
+libslide.a: $(SLIDE_OBJS)
 	ar rcv $@ $^
 
 .PHONY: install

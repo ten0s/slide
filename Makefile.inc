@@ -16,10 +16,17 @@ CXXFLAGS=$(DEBUG_CXXFLAGS)
 CFLAGS=$(DEBUG_CFLAGS)
 LDFLAGS=$(DEBUG_LDFLAGS)
 
-LIBCAIRO=`pkg-config --cflags --libs cairo`
-LIBGLIB2=`pkg-config --cflags --libs glib-2.0`
-LIBGTK3=`pkg-config --cflags --libs gtk+-3.0`
-LIBSLIDE=-L`pwd`/../lib -lslide
+# Dynamic vs Static linking
+# DLL_ is for dynamic linking (.dll, .dynlib, so)
+# LIB_ is for static linking (.a, .lib)
+
+DLL_CAIRO=`pkg-config --cflags --libs cairo`
+DLL_GLIB2=`pkg-config --cflags --libs glib-2.0`
+DLL_GTK3=`pkg-config --cflags --libs gtk+-3.0`
+DLL_SLIDE=-L../lib -lslide
+
+LIB_SLIDE=-Wl,-Bstatic $(DLL_SLIDE) -Wl,-Bdynamic
+LIB_BOOST_PROGRAM_OPTIONS=-Wl,-Bstatic -lboost_program_options -Wl,-Bdynamic
 
 BIN_DIR=bin
 LIB_DIR=lib
