@@ -41,4 +41,7 @@ $ src/slide-view ..
 
 ## License
 
-?
+The project is licensed under the GNU General Public License v3.0 or later.
+See [LICENSE](LICENSE) or
+https://spdx.org/licenses/GPL-3.0-or-later.html
+for full license information.
