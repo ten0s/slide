@@ -14,12 +14,12 @@ Features:
 Todo:
 
 * Convert slide to png
-* Make slide from text records
-* Make slide library from slides (what SLIDELIB does)
 * Extract slides from slide library
 * Add slide to slide library
 * Delete slide from slide library
 * Rename slides in slide library
+* Make slide library from slides (what SLIDELIB does)
+* Make slide from text records
 
 ## Build
 

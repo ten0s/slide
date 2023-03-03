@@ -24,7 +24,7 @@ GIR_DIR=$(SHARE_DIR)/gir-1.0
 TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 
 # Use Windows notation for dynamic vs static linking
-# DLL_ is for dynamic linking (.dll, .dynlib, so)
+# DLL_ is for dynamic linking (.dll, .dynlib, .so)
 # LIB_ is for static linking (.a, .lib)
 
 # Dynamic libs
