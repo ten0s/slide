@@ -1,12 +1,14 @@
 CXX=c++
 CC=cc
 
-DEBUG_CPPFLAGS=
+VERSION := $(shell git describe)
+
+DEBUG_CPPFLAGS=-DVERSION=\"${VERSION}\"
 DEBUG_CXXFLAGS=-g -O0 -Wall -std=c++17
 DEBUG_CFLAGS=-g -O0 -Wall
 DEBUG_LDFLAGS=
 
-RELEASE_CPPFLAGS=
+RELEASE_CPPFLAGS=-DVERSION="${VERSION}"
 RELEASE_CXXFLAGS=-g -Wall -Werror -std=c++17
 RELEASE_CFLAGS=-g -Wall -Werror
 RELEASE_LDFLAGS=-static-libstdc++ -static-libgcc

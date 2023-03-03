@@ -35,10 +35,10 @@ using namespace libslide;
 
 template<typename T>
 static void
-print_usage(std::ostream& os, const std::string& prog, const T& desc)
+print_usage(std::ostream& os, const std::string& prog, const T& options)
 {
     os << "Usage: " << prog << " [options] <FILE.sld | FILE.slb [NAME | NUM]>\n"
-       << desc << "\n";
+       << options << "\n";
 }
 
 static
@@ -50,7 +50,7 @@ parse_slide_info(const std::string& raw)
     auto what = to_upper(raw);
     if (what == "INFO") {
         info = slide_info_t::INFO;
-    } else if (what == "RECS") {
+    } else if (what == "RECORDS") {
         info = slide_info_t::RECS;
     }else if (what == "ALL") {
         info = slide_info_t::ALL;
@@ -136,42 +136,61 @@ int main(int argc, char* argv[])
 {
     auto prog = basename(argv[0]);
 
-    /*
-    options_description general("General options");
-    general.add_options()
-        ("help", "produce a help message")
-        ("help-module", po::value<string>(),
-         "produce a help for a given module")
-        ("version", "output the version number")
-    ;
-    */
-
-    po::options_description desc("Allowed options");
-    desc.add_options()
-        ("info,i", po::value<std::string>()->default_value("info"), "print slide or library info")
-        ("names", po::value<std::vector<std::string>>(), "FILE.sld or FILE.slb [NAME | NUM]")
-        ("help,h", "print help")
+    po::options_description generic("Generic options");
+    generic.add_options()
+        ("help", "print help")
         ("version", "print version number")
         ;
+
+    po::options_description config("Configuration");
+    config.add_options()
+        ("what,w",
+         po::value<std::string>()->default_value("info"),
+         "print slide info (info, records, all)\n"
+         "or library info (info, names, all)")
+        ;
+
+    po::options_description hidden("Hidden options");
+    hidden.add_options()
+       ("names",
+         po::value<std::vector<std::string>>(),
+         "FILE.sld or FILE.slb [NAME | NUM]")
+        ;
+
+    po::options_description all_options;
+    all_options.add(generic).add(config).add(hidden);
+
+    po::options_description visible_options("Allowed options");
+    visible_options.add(generic).add(config);
 
     po::positional_options_description p;
     p.add("names", -1);
 
     po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv)
-              .options(desc)
-              .positional(p)
-              .run(), vm);
-    po::notify(vm);
+    try {
+        po::store(po::command_line_parser(argc, argv)
+                  .options(all_options)
+                  .positional(p)
+                  .run(), vm);
+        po::notify(vm);
+    } catch (const boost::program_options::unknown_option& e) {
+        std::cerr << "Unknown option: " << e.get_option_name() << "\n";
+        goto usage;
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << "\n";
+        goto usage;
+    }
 
     if (vm.count("help")) {
-        print_usage(std::cout, prog, desc);
+        print_usage(std::cout, prog, visible_options);
         return 0;
     }
 
     if (vm.count("version")) {
-        // TODO
-        std::cout << "0.0.0" << "\n";
+        #ifndef VERSION
+        #define VERSION "0.0.0"
+        #endif
+        std::cout << VERSION << "\n";
         return 0;
     }
 
@@ -183,34 +202,32 @@ int main(int argc, char* argv[])
             if (ext == ".sld") {
                 Slide slide = Slide::from_file(file);
 
-                if (vm.count("info")) {
-                    auto raw = vm["info"].as<std::string>();
+                if (vm.count("what")) {
+                    auto raw = vm["what"].as<std::string>();
                     if (auto info = parse_slide_info(raw)) {
                         print_slide_info(std::cout, slide, info.value());
                         return 0;
                     } else {
-                        std::cerr << "Invalid slide info value: " << raw << "\n";
+                        std::cerr << "Invalid slide info: " << raw << "\n";
                         goto usage;
                     }
                 }
 
-                // TODO: Add other commands here
                 return 0;
             } else if (ext == ".slb") {
                 SlideLibrary library = SlideLibrary::from_file(file);
 
-                if (vm.count("info")) {
-                    auto raw = vm["info"].as<std::string>();
+                if (vm.count("what")) {
+                    auto raw = vm["what"].as<std::string>();
                     if (auto info = parse_library_info(raw)) {
                         print_library_info(std::cout, library, info.value());
                         return 0;
                     } else {
-                        std::cerr << "Invalid slide library info value: " << raw << "\n";
+                        std::cerr << "Invalid slide library info: " << raw << "\n";
                         goto usage;
                     }
                 }
 
-                // TODO: Add other commands here
                 return 0;
             } else {
                 std::cerr << "Invalid slide extension: " << ext << "\n";
@@ -233,18 +250,17 @@ int main(int argc, char* argv[])
                 }
 
                 if (slide) {
-                    if (vm.count("info")) {
-                        auto raw = vm["info"].as<std::string>();
+                    if (vm.count("what")) {
+                        auto raw = vm["what"].as<std::string>();
                         if (auto info = parse_slide_info(raw)) {
                             print_slide_info(std::cout, *slide, info.value());
                             return 0;
                         } else {
-                            std::cerr << "Invalid slide info value: " << raw << "\n";
+                            std::cerr << "Invalid slide info: " << raw << "\n";
                             goto usage;
                         }
                     }
 
-                    // TODO: Add other commands here
                     return 0;
                 } else {
                     std::cerr << "Library slide not found: " << name << "\n";
@@ -255,13 +271,9 @@ int main(int argc, char* argv[])
                 goto usage;
             }
         }
-
-    } else {
-        std::cerr << "Invalid names\n";
-        goto usage;
     }
 
 usage:
-    print_usage(std::cerr, prog, desc);
+    print_usage(std::cerr, prog, visible_options);
     return 1;
 }
