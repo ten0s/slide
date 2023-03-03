@@ -9,7 +9,7 @@ slide-info: slide-info.cpp ../lib/libslide.$(LIB_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
 
 slide-view: slide-view.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(DLL_CAIRO) $(DLL_GTK3) -o $@
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) $(DLL_CAIRO) $(DLL_GTK3) -o $@
 
 .PHONY: install
 install:

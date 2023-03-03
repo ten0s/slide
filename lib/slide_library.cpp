@@ -46,12 +46,12 @@ SlideLibrary SlideLibrary::from_file(const std::string& filename)
             return from_buf(name, buf.get(), size);
         } else {
             std::stringstream ss;
-            ss << "Library read failed: " << filename;
+            ss << "Slide library read failed: " << filename;
             throw std::runtime_error{ss.str()};
         }
     } else {
         std::stringstream ss;
-        ss << "Library library failed: " << filename;
+        ss << "Slide library open failed: " << filename;
         throw std::runtime_error{ss.str()};
     }
 }

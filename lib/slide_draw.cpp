@@ -67,9 +67,7 @@ int slide_draw(cairo_t *cr,
         slide->visit_records(visitor);
 
     } catch (const std::exception& e) {
-        std::ostringstream ss;
-        ss << "Exception: " << e.what() << "\n";
-        std::cerr << ss.str();
+        std::cerr << "Error: " << e.what() << "\n";
         return -1;
     }
 

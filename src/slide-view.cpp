@@ -22,14 +22,20 @@
 #include <iostream>
 #include <gtk/gtk.h>
 #include <cairo.h>
+#include <boost/program_options.hpp>
+
 #include "../lib/slide_draw.h"
 #include "../lib/slide_util.hpp"
 
+namespace po = boost::program_options;
 using namespace libslide;
 
-void usage(const std::string& prog)
+template<typename T>
+static void
+print_usage(std::ostream& os, const std::string& prog, const T& options)
 {
-    std::cerr << "Usage: " << prog << " <SLIDE.sld | SLIDELIB.slb NAME>\n";
+    os << "Usage: " << prog << " [options] <FILE.sld | FILE.slb [NAME | NUM]>\n"
+       << options << "\n";
 }
 
 gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
@@ -45,12 +51,9 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     cairo_fill(cr);
 
     // Draw slide
-    slide_draw(
-        cr,
-        0, 0,
-        width, height,
-        slide_uri
-    );
+    if (slide_draw(cr, 0, 0, width, height, slide_uri) != 0) {
+        gtk_main_quit();
+    }
 
     return FALSE;
 }
@@ -75,27 +78,93 @@ int main (int argc, char* argv[])
 {
     gtk_init(&argc, &argv);
 
-    if (argc == 2) {
-        std::string filename = argv[1];
-        if (get_ext(filename) == ".sld") {
-            std::string title = strip_ext(basename(filename));
-            std::string uri = filename;
-            show_window(title.c_str(), uri.c_str());
-            return 0;
+    auto prog = basename(argv[0]);
+
+    po::options_description generic("Generic options");
+    generic.add_options()
+        ("help", "print help")
+        ("version", "print version number")
+        ;
+
+    po::options_description hidden("Hidden options");
+    hidden.add_options()
+       ("names",
+         po::value<std::vector<std::string>>(),
+         "FILE.sld or FILE.slb [NAME | NUM]")
+        ;
+
+    po::options_description all_options;
+    all_options.add(generic).add(hidden);
+
+    po::options_description visible_options("Allowed options");
+    visible_options.add(generic);
+
+    po::positional_options_description p;
+    p.add("names", -1);
+
+    po::variables_map vm;
+    try {
+        po::store(po::command_line_parser(argc, argv)
+                  .options(all_options)
+                  .positional(p)
+                  .run(), vm);
+        po::notify(vm);
+    } catch (const boost::program_options::unknown_option& e) {
+        std::cerr << "Error: Unknown option: " << e.get_option_name() << "\n";
+        return 1;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+        return 1;
+    }
+
+    if (vm.count("help")) {
+        print_usage(std::cout, prog, visible_options);
+        return 0;
+    }
+
+    if (vm.count("version")) {
+        #ifndef VERSION
+        #define VERSION "0.0.0"
+        #endif
+        std::cout << VERSION << "\n";
+        return 0;
+    }
+
+    if (vm.count("names")) {
+        auto names = vm["names"].as<std::vector<std::string>>();
+        if (names.size() == 1) {
+            auto file = names[0];
+            auto ext = get_ext(file);
+            if (ext == ".sld") {
+                std::string title = strip_ext(basename(file));
+                std::string uri = file;
+                show_window(title.c_str(), uri.c_str());
+                return 0;
+            } else if (ext == ".slb") {
+                std::cerr << "Error: Expected slide name\n";
+                return 1;
+            } else {
+                std::cerr << "Error: Invalid slide extension: " << ext << "\n";
+                return 1;
+            }
+        }
+
+        if (names.size() == 2) {
+            auto file = names[0];
+            auto ext = get_ext(file);
+            if (ext == ".slb") {
+                auto name = names[1];
+                std::string title = strip_ext(basename(file)) + "(" + name + ")";
+                std::string uri = file + "(" + name + ")";
+                show_window(title.c_str(), uri.c_str());
+                return 0;
+            } else {
+                std::cerr << "Error: Invalid library extension: " << ext << "\n";
+                return 1;
+            }
         }
     }
 
-    if (argc == 3) {
-        std::string filename = argv[1];
-        std::string name = argv[2];
-        if (get_ext(filename) == ".slb") {
-            std::string title = strip_ext(basename(filename)) + "(" + name + ")";
-            std::string uri = filename + "(" + name + ")";
-            show_window(title.c_str(), uri.c_str());
-            return 0;
-        }
-    }
-
-    usage(basename(argv[0]));
+    print_usage(std::cerr, prog, visible_options);
     return 1;
 }
