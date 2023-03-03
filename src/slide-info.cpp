@@ -25,6 +25,7 @@
 #include <boost/program_options.hpp>
 
 #include "../lib/slide.hpp"
+#include "../lib/slide_version.hpp"
 #include "../lib/slide_printers.hpp"
 #include "../lib/slide_library.hpp"
 #include "../lib/slide_library_printers.hpp"
@@ -187,9 +188,6 @@ int main(int argc, char* argv[])
     }
 
     if (vm.count("version")) {
-        #ifndef VERSION
-        #define VERSION "0.0.0"
-        #endif
         std::cout << VERSION << "\n";
         return 0;
     }

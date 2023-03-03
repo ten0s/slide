@@ -24,6 +24,7 @@
 #include <cairo.h>
 #include <boost/program_options.hpp>
 
+#include "../lib/slide_version.hpp"
 #include "../lib/slide_draw.h"
 #include "../lib/slide_util.hpp"
 
@@ -123,9 +124,6 @@ int main (int argc, char* argv[])
     }
 
     if (vm.count("version")) {
-        #ifndef VERSION
-        #define VERSION "0.0.0"
-        #endif
         std::cout << VERSION << "\n";
         return 0;
     }
