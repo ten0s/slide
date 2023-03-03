@@ -45,12 +45,12 @@ Slide Slide::from_file(const std::string& filename)
             return from_buf(name, buf.get(), size);
         } else {
             std::stringstream ss;
-            ss << "Slide file read failed: " << filename << "\n";
+            ss << "Slide file read failed: " << filename;
             throw std::runtime_error{ss.str()};
         }
     } else {
         std::stringstream ss;
-        ss << "Slide file open failed: " << filename << "\n";
+        ss << "Slide file open failed: " << filename;
         throw std::runtime_error{ss.str()};
     }
 }

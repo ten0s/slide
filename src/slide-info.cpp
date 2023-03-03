@@ -174,11 +174,11 @@ int main(int argc, char* argv[])
                   .run(), vm);
         po::notify(vm);
     } catch (const boost::program_options::unknown_option& e) {
-        std::cerr << "Unknown option: " << e.get_option_name() << "\n";
-        goto usage;
+        std::cerr << "Error: Unknown option: " << e.get_option_name() << "\n";
+        return 1;
     } catch (const std::exception& e) {
-        std::cerr << e.what() << "\n";
-        goto usage;
+        std::cerr << "Error: " << e.what() << "\n";
+        return 1;
     }
 
     if (vm.count("help")) {
@@ -200,38 +200,44 @@ int main(int argc, char* argv[])
             auto file = names[0];
             auto ext = get_ext(file);
             if (ext == ".sld") {
-                Slide slide = Slide::from_file(file);
+                try {
+                    Slide slide = Slide::from_file(file);
 
-                if (vm.count("what")) {
-                    auto raw = vm["what"].as<std::string>();
-                    if (auto info = parse_slide_info(raw)) {
-                        print_slide_info(std::cout, slide, info.value());
-                        return 0;
-                    } else {
-                        std::cerr << "Invalid slide info: " << raw << "\n";
-                        goto usage;
+                    if (vm.count("what")) {
+                        auto raw = vm["what"].as<std::string>();
+                        if (auto info = parse_slide_info(raw)) {
+                            print_slide_info(std::cout, slide, info.value());
+                            return 0;
+                        } else {
+                            std::cerr << "Error: Invalid slide info: " << raw << "\n";
+                            return 1;
+                        }
                     }
+                } catch (const std::exception& e) {
+                    std::cerr << "Error: " << e.what() << "\n";
+                    return 1;
                 }
-
-                return 0;
             } else if (ext == ".slb") {
-                SlideLibrary library = SlideLibrary::from_file(file);
+                try {
+                    SlideLibrary library = SlideLibrary::from_file(file);
 
-                if (vm.count("what")) {
-                    auto raw = vm["what"].as<std::string>();
-                    if (auto info = parse_library_info(raw)) {
-                        print_library_info(std::cout, library, info.value());
-                        return 0;
-                    } else {
-                        std::cerr << "Invalid slide library info: " << raw << "\n";
-                        goto usage;
+                    if (vm.count("what")) {
+                        auto raw = vm["what"].as<std::string>();
+                        if (auto info = parse_library_info(raw)) {
+                            print_library_info(std::cout, library, info.value());
+                            return 0;
+                        } else {
+                            std::cerr << "Error: Invalid slide library info: " << raw << "\n";
+                            return 1;
+                        }
                     }
+                } catch (const std::exception& e) {
+                    std::cerr << "Error: " << e.what() << "\n";
+                    return 1;
                 }
-
-                return 0;
             } else {
-                std::cerr << "Invalid slide extension: " << ext << "\n";
-                goto usage;
+                std::cerr << "Error: Invalid slide extension: " << ext << "\n";
+                return 1;
             }
         }
 
@@ -240,40 +246,44 @@ int main(int argc, char* argv[])
             auto ext = get_ext(file);
             if (ext == ".slb") {
                 auto name = names[1];
-                SlideLibrary library = SlideLibrary::from_file(file);
-                const Slide* slide = library.find(name);
-                if (!slide) {
-                    try {
-                        size_t idx = std::stol(name);
-                        slide = library.find(idx);
-                    } catch (...) { }
-                }
 
-                if (slide) {
-                    if (vm.count("what")) {
-                        auto raw = vm["what"].as<std::string>();
-                        if (auto info = parse_slide_info(raw)) {
-                            print_slide_info(std::cout, *slide, info.value());
-                            return 0;
-                        } else {
-                            std::cerr << "Invalid slide info: " << raw << "\n";
-                            goto usage;
-                        }
+                try {
+                    SlideLibrary library = SlideLibrary::from_file(file);
+                    const Slide* slide = library.find(name);
+                    if (!slide) {
+                        try {
+                            size_t idx = std::stol(name);
+                            slide = library.find(idx);
+                        } catch (...) { }
                     }
 
-                    return 0;
-                } else {
-                    std::cerr << "Library slide not found: " << name << "\n";
+                    if (slide) {
+                        if (vm.count("what")) {
+                            auto raw = vm["what"].as<std::string>();
+                            if (auto info = parse_slide_info(raw)) {
+                                print_slide_info(std::cout, *slide, info.value());
+                                return 0;
+                            } else {
+                                std::cerr << "Invalid slide info: " << raw << "\n";
+                                return 1;
+                            }
+                        }
+                    } else {
+                        std::cerr << "Error: Library slide not found: " << name << "\n";
+                        return 1;
+                    }
+                } catch (const std::exception& e) {
+                    std::cerr << "Error: " << e.what() << "\n";
                     return 1;
                 }
+
             } else {
-                std::cerr << "Invalid library extension: " << ext << "\n";
-                goto usage;
+                std::cerr << "Error: Invalid library extension: " << ext << "\n";
+                return 1;
             }
         }
     }
 
-usage:
     print_usage(std::cerr, prog, visible_options);
     return 1;
 }
