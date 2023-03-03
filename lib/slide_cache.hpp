@@ -22,6 +22,8 @@
 #ifndef __SLIDE_CACHE_HPP__
 #define __SLIDE_CACHE_HPP__
 
+#include <memory>
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -39,11 +41,11 @@ public:
     SlideCache& operator=(const SlideCache&) = delete;
     SlideCache& operator=(SlideCache&&) = delete;
 
-    const Slide* get(const std::string& slide_uri) const;
-    void set(const std::string& slide_uri, Slide* slide);
+    std::optional<std::shared_ptr<Slide>> get(const std::string& slide_uri) const;
+    void set(const std::string& slide_uri, std::shared_ptr<Slide> slide);
 
 private:
-    std::unordered_map<std::string, Slide*> _cache;
+    std::unordered_map<std::string, std::shared_ptr<Slide>> _cache;
 };
 
 } // namespace libslide

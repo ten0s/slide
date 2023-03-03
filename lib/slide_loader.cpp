@@ -28,6 +28,7 @@
 #include "slide_library_directory.hpp"
 #include "slide_cache.hpp"
 #include "slide_loader.hpp"
+#include <memory>
 #include "slide_util.hpp"
 
 namespace libslide {
@@ -104,11 +105,11 @@ cache_slide_file(const std::string& file)
     Slide slide = Slide::from_file(file);
 
     // Move slide.
-    Slide* moved_slide = new Slide{std::move(slide)};
+    auto shared = std::make_shared<Slide>(std::move(slide));
 
     // Store moved slide to cache.
     auto normal_uri = normalize_slide_file(file);
-    cache.set(normal_uri, moved_slide);
+    cache.set(normal_uri, shared);
 }
 
 static void
@@ -126,26 +127,30 @@ cache_slide_lib(const std::string& file)
 
     auto normal_file = normalize_slide_file(file);
     for (auto it = begin; it != end; ++it) {
-        auto normal_name = normalize_slide_name((*it)->name());
-        auto normal_uri = make_slide_lib_name_uri(normal_file, normal_name);
-
         // Move slide.
         size_t idx = std::distance(begin, it);
-        Slide* moved_slide = new Slide(std::move(*slides.at(idx)));
+        auto shared = std::make_shared<Slide>(std::move(*slides.at(idx)));
 
-        // Store moved slide to cache.
-        cache.set(normal_uri, moved_slide);
+        // Store named slide to cache.
+        auto normal_name = normalize_slide_name((*it)->name());
+        auto normal_uri = make_slide_lib_name_uri(normal_file, normal_name);
+        cache.set(normal_uri, shared);
+
+        // Store indexed slide to cache.
+        auto index_name = std::to_string(idx);
+        auto index_uri = make_slide_lib_name_uri(normal_file, index_name);
+        cache.set(index_uri, shared);
     }
 }
 
-const Slide*
+std::optional<std::shared_ptr<Slide>>
 slide_from_uri(const std::string& slide_uri)
 {
     auto parsed_uri = parse_slide_uri(slide_uri);
     auto normal_uri = join_slide_uri(parsed_uri);
 
     // Look slides cache.
-    const Slide *slide = cache.get(normal_uri);
+    auto slide = cache.get(normal_uri);
     if (slide) {
         return slide;
     }

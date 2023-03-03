@@ -43,23 +43,24 @@ int slide_draw(cairo_t *cr,
     try {
 
         // Load slide.
-        const Slide* slide = slide_from_uri(slide_uri);
+        auto maybeSlide = slide_from_uri(slide_uri);
 
-        if (!slide) {
+        if (!maybeSlide) {
             std::ostringstream ss;
             ss << "Slide " << slide_uri << " not found";
             throw std::runtime_error(ss.str());
         }
 
-        unsigned sld_width = slide->header().high_x_dot();
+        auto slide = maybeSlide.value();
+        unsigned sld_width  = slide->header().high_x_dot();
         unsigned sld_height = slide->header().high_y_dot();
-        double   sld_aspect_ratio = slide->header().aspect_ratio();
+        double   sld_ratio  = slide->header().aspect_ratio();
 
         // Draw slide.
         SlideRecordsVisitorCairo visitor{
             cr,
             sld_width, sld_height,
-            sld_aspect_ratio,
+            sld_ratio,
             x, y,
             width, height
         };

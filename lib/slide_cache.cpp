@@ -28,25 +28,22 @@ SlideCache::SlideCache() {}
 
 SlideCache::~SlideCache()
 {
-    for (auto& [_key, slide] : _cache) {
-        delete slide;
-    }
     _cache = {};
 }
 
-const Slide*
+std::optional<std::shared_ptr<Slide>>
 SlideCache::get(const std::string& slide_uri) const
 {
     auto it = _cache.find(slide_uri);
     if (it != _cache.end()) {
         return it->second;
     } else {
-        return nullptr;
+        return {};
     }
 }
 
 void
-SlideCache::set(const std::string& slide_uri, Slide* slide)
+SlideCache::set(const std::string& slide_uri, std::shared_ptr<Slide> slide)
 {
     _cache.insert({slide_uri, slide});
 }
