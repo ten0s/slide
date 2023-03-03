@@ -1,5 +1,5 @@
 /**
- *   AutoCAD slide library and command line utility
+ *   AutoCAD slide library
  *
  *   Copyright (C) 2023 Dmitry Klionsky aka ten0s <dm.klionsky@gmail.com>
  *
