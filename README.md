@@ -37,8 +37,8 @@ $ make install [PREFIX=$PWD/install]
 
 ```
 $ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
-$ src/slide ...
-$ src/slide-view ..
+$ src/slide-info ...
+$ src/slide-view ...
 ```
 
 ## License
