@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
     po::options_description generic("Generic options");
     generic.add_options()
         ("help", "print help")
-        ("version", "print version number")
+        ("version", "print version")
         ;
 
     po::options_description config("Configuration");
