@@ -19,40 +19,41 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_PRINTERS_HPP__
-#define __SLIDE_PRINTERS_HPP__
+#ifndef __SLIDE_LIBRARY_INFO_PRINTERS_HPP__
+#define __SLIDE_LIBRARY_INFO_PRINTERS_HPP__
 
 #include <ostream>
 #include <string>
 
 namespace libslide {
 
-enum class slide_info_t {
+enum class slide_library_info_t {
     NONE = 0,
     INFO,
-    RECS,
+    NAMES,
+    DIRS,
     ALL
 };
 
-class Slide;
+class SlideLibrary;
 
-template <slide_info_t>
-class SlidePrinter {
+template <slide_library_info_t>
+class SlideLibraryInfoPrinter {
 public:
-    explicit SlidePrinter(const Slide& slide, const std::string& pad = "")
-        : _slide{slide}, _pad{pad} {}
+    explicit SlideLibraryInfoPrinter(const SlideLibrary& lib, const std::string& pad = "")
+        : _lib{lib}, _pad{pad} {}
 
-    const Slide& slide() const { return _slide; }
-    const std::string&  pad() const { return _pad; }
+    const SlideLibrary& lib() const { return _lib; }
+    const std::string& pad() const { return _pad; }
 
 private:
-    const Slide& _slide;
+    const SlideLibrary& _lib;
     std::string _pad;
 };
 
-template <slide_info_t What>
-std::ostream& operator<<(std::ostream& os, const SlidePrinter<What>& p);
+template <slide_library_info_t What>
+std::ostream& operator<<(std::ostream& os, const SlideLibraryInfoPrinter<What>& p);
 
 } // namespace libslide
 
-#endif // __SLIDE_PRINTERS_HPP__
+#endif // __SLIDE_LIBRARY_INFO_PRINTERS_HPP__

@@ -8,8 +8,8 @@ SLIDE_OBJS=\
 	slide_library_parser.o \
 	slide_library_header_parser.o \
 	slide_library_directory_parser.o \
-	slide_printers.o \
-	slide_library_printers.o \
+	slide_info_printers.o \
+	slide_library_info_printers.o \
 	slide_record_parser.o \
 	slide_records_visitor_ostream.o \
 	slide_records_visitor_cairo.o \

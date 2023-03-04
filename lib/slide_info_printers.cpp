@@ -21,14 +21,14 @@
 
 #include "slide.hpp"
 #include "slide_header.hpp"
-#include "slide_printers.hpp"
+#include "slide_info_printers.hpp"
 #include "slide_records_visitor_ostream.hpp"
 
 namespace libslide {
 
 template <>
 std::ostream&
-operator<<(std::ostream& os, const SlidePrinter<slide_info_t::INFO>& p)
+operator<<(std::ostream& os, const SlideInfoPrinter<slide_info_t::INFO>& p)
 {
     auto& slide = p.slide();
     auto& pad = p.pad();
@@ -49,7 +49,7 @@ operator<<(std::ostream& os, const SlidePrinter<slide_info_t::INFO>& p)
 
 template <>
 std::ostream&
-operator<<(std::ostream& os, const SlidePrinter<slide_info_t::RECS>& p)
+operator<<(std::ostream& os, const SlideInfoPrinter<slide_info_t::RECS>& p)
 {
     auto& slide = p.slide();
     auto& pad = p.pad();

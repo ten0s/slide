@@ -23,13 +23,13 @@
 #include "slide.hpp"
 #include "slide_library.hpp"
 #include "slide_library_directory.hpp"
-#include "slide_library_printers.hpp"
+#include "slide_library_info_printers.hpp"
 
 namespace libslide {
 
 template <>
 std::ostream&
-operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::INFO>& p)
+operator<<(std::ostream& os, const SlideLibraryInfoPrinter<slide_library_info_t::INFO>& p)
 {
     auto& lib = p.lib();
     auto& pad = p.pad();
@@ -46,7 +46,7 @@ operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::INF
 
 template <>
 std::ostream&
-operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::NAMES>& p)
+operator<<(std::ostream& os, const SlideLibraryInfoPrinter<slide_library_info_t::NAMES>& p)
 {
     auto& lib = p.lib();
     auto& pad = p.pad();
@@ -60,7 +60,7 @@ operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::NAM
 
 template <>
 std::ostream&
-operator<<(std::ostream& os, const SlideLibraryPrinter<slide_library_info_t::DIRS>& p)
+operator<<(std::ostream& os, const SlideLibraryInfoPrinter<slide_library_info_t::DIRS>& p)
 {
     auto& lib = p.lib();
     auto& pad = p.pad();

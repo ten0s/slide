@@ -24,9 +24,9 @@
 #include <cairo.h>
 #include <boost/program_options.hpp>
 
-#include "../lib/slide_version.hpp"
 #include "../lib/slide_draw.h"
 #include "../lib/slide_util.hpp"
+#include "../lib/slide_version.hpp"
 
 namespace po = boost::program_options;
 using namespace libslide;

@@ -25,11 +25,11 @@
 #include <boost/program_options.hpp>
 
 #include "../lib/slide.hpp"
-#include "../lib/slide_version.hpp"
-#include "../lib/slide_printers.hpp"
+#include "../lib/slide_info_printers.hpp"
 #include "../lib/slide_library.hpp"
-#include "../lib/slide_library_printers.hpp"
+#include "../lib/slide_library_info_printers.hpp"
 #include "../lib/slide_util.hpp"
+#include "../lib/slide_version.hpp"
 
 namespace po = boost::program_options;
 using namespace libslide;
@@ -92,15 +92,15 @@ print_slide_info(std::ostream& os, const Slide& slide, slide_info_t info)
     switch (info) {
     case slide_info_t::ALL:
         os << "Info:\n";
-        os << SlidePrinter<slide_info_t::INFO>{slide, "  "};
+        os << SlideInfoPrinter<slide_info_t::INFO>{slide, "  "};
         os << "Records:\n";
-        os << SlidePrinter<slide_info_t::RECS>{slide, "  "};
+        os << SlideInfoPrinter<slide_info_t::RECS>{slide, "  "};
         break;
     case slide_info_t::INFO:
-        os << SlidePrinter<slide_info_t::INFO>{slide};
+        os << SlideInfoPrinter<slide_info_t::INFO>{slide};
         break;
     case slide_info_t::RECS:
-        os << SlidePrinter<slide_info_t::RECS>{slide};
+        os << SlideInfoPrinter<slide_info_t::RECS>{slide};
         break;
     default:
         break;
@@ -115,18 +115,18 @@ print_library_info(std::ostream& os, const SlideLibrary& lib, slide_library_info
     switch (info) {
     case slide_library_info_t::ALL:
         os << "Info:\n";
-        os << SlideLibraryPrinter<slide_library_info_t::INFO>{lib, "  "};
+        os << SlideLibraryInfoPrinter<slide_library_info_t::INFO>{lib, "  "};
         os << "Names:\n";
-        os << SlideLibraryPrinter<slide_library_info_t::NAMES>{lib, "  "};
+        os << SlideLibraryInfoPrinter<slide_library_info_t::NAMES>{lib, "  "};
         break;
     case slide_library_info_t::INFO:
-        os << SlideLibraryPrinter<slide_library_info_t::INFO>{lib};
+        os << SlideLibraryInfoPrinter<slide_library_info_t::INFO>{lib};
         break;
     case slide_library_info_t::NAMES:
-        os << SlideLibraryPrinter<slide_library_info_t::NAMES>{lib};
+        os << SlideLibraryInfoPrinter<slide_library_info_t::NAMES>{lib};
         break;
     case slide_library_info_t::DIRS:
-        os << SlideLibraryPrinter<slide_library_info_t::DIRS>{lib};
+        os << SlideLibraryInfoPrinter<slide_library_info_t::DIRS>{lib};
         break;
     default:
         break;
