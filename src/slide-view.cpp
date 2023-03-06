@@ -132,13 +132,13 @@ int main (int argc, char* argv[])
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() == 1) {
             auto file = names[0];
-            auto ext = get_ext(file);
-            if (ext == ".sld") {
+            auto ext = to_upper(get_ext(file));
+            if (ext == ".SLD") {
                 std::string title = strip_ext(basename(file));
                 std::string uri = file;
                 show_window(title.c_str(), uri.c_str());
                 return 0;
-            } else if (ext == ".slb") {
+            } else if (ext == ".SLB") {
                 std::cerr << "Error: Expected slide name\n";
                 return 1;
             } else {
@@ -149,8 +149,8 @@ int main (int argc, char* argv[])
 
         if (names.size() == 2) {
             auto file = names[0];
-            auto ext = get_ext(file);
-            if (ext == ".slb") {
+            auto ext = to_upper(get_ext(file));
+            if (ext == ".SLB") {
                 auto name = names[1];
                 std::string title = strip_ext(basename(file)) + "(" + name + ")";
                 std::string uri = file + "(" + name + ")";

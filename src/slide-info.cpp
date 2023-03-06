@@ -196,8 +196,8 @@ int main(int argc, char* argv[])
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() == 1) {
             auto file = names[0];
-            auto ext = get_ext(file);
-            if (ext == ".sld") {
+            auto ext = to_upper(get_ext(file));
+            if (ext == ".SLD") {
                 try {
                     Slide slide = Slide::from_file(file);
 
@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;
                 }
-            } else if (ext == ".slb") {
+            } else if (ext == ".SLB") {
                 try {
                     SlideLibrary library = SlideLibrary::from_file(file);
 
@@ -241,8 +241,8 @@ int main(int argc, char* argv[])
 
         if (names.size() == 2) {
             auto file = names[0];
-            auto ext = get_ext(file);
-            if (ext == ".slb") {
+            auto ext = to_upper(get_ext(file));
+            if (ext == ".SLB") {
                 auto name = names[1];
 
                 try {
