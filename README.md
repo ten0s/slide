@@ -9,11 +9,11 @@ Features:
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
+* Convert slide to PNG and SVG
 * Linux, Windows and MacOS support
 
 Todo:
 
-* Convert slide to png
 * Extract slides from slide library
 * Add slide to slide library
 * Delete slide from slide library
@@ -39,6 +39,7 @@ $ make install [PREFIX=$PWD/install]
 $ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
 $ src/slide-info ...
 $ src/slide-view ...
+$ src/slide-convert ...
 ```
 
 ## License

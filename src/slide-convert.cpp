@@ -21,10 +21,10 @@
 
 #include <iostream>
 #include <cairo.h>
+#include <cairo-svg.h>
+#include <unordered_map>
 #include <boost/program_options.hpp>
 
-//#include "../lib/slide.hpp"
-//#include "../lib/slide_library.hpp"
 #include "../lib/slide_draw.h"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
@@ -40,12 +40,6 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
        << options << "\n";
 }
 
-static void
-write_to_png(const std::string& slide_uri, unsigned width, unsigned height, const std::string& filename)
-{
-    cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-    cairo_t* cr = cairo_create(cs);
-
 /*
     // Draw black background
     cairo_set_source_rgb(cr, 0, 0, 0);
@@ -53,14 +47,41 @@ write_to_png(const std::string& slide_uri, unsigned width, unsigned height, cons
     cairo_fill(cr);
 */
 
+static void
+write_to_png(const std::string& slide_uri, unsigned width, unsigned height, const std::string& filename)
+{
+    cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+    cairo_t* cr = cairo_create(cs);
+
     // Draw slide
     if (slide_draw(cr, 0, 0, width, height, slide_uri.c_str()) == 0) {
         cairo_surface_write_to_png(cs, filename.c_str());
     }
 
-    cairo_surface_destroy(cs);
     cairo_destroy(cr);
+    cairo_surface_destroy(cs);
 }
+
+static void
+write_to_svg(const std::string& slide_uri, unsigned width, unsigned height, const std::string& filename)
+{
+    cairo_surface_t *cs = cairo_svg_surface_create(filename.c_str(), width, height);
+    cairo_t* cr = cairo_create(cs);
+
+    // Draw slide
+    if (slide_draw(cr, 0, 0, width, height, slide_uri.c_str()) == 0) {
+        cairo_surface_flush(cs);
+    }
+
+    cairo_destroy(cr);
+    cairo_surface_destroy(cs);
+}
+
+using writer_t = std::function<void(const std::string&, unsigned, unsigned, const std::string&)>;
+static std::unordered_map<std::string, writer_t> map {
+    { "PNG", write_to_png },
+    { "SVG", write_to_svg },
+};
 
 int main (int argc, char* argv[])
 {
@@ -72,15 +93,21 @@ int main (int argc, char* argv[])
         ("version", "print version")
         ;
 
-/*
     po::options_description config("Configuration");
     config.add_options()
-        ("to-png",
+        ("to,t",
          po::value<std::string>(),
-         "print slide info (info, records, all)\n"
-         "or library info (info, names, all)")
+         "convert to (png, svg)")
+        ("width,w",
+         po::value<unsigned>()->default_value(800),
+         "output width")
+        ("height,h",
+         po::value<unsigned>()->default_value(600),
+         "output height")
+        ("output,o",
+         po::value<std::string>(),
+         "output filename")
         ;
-*/
 
     po::options_description hidden("Hidden options");
     hidden.add_options()
@@ -90,10 +117,10 @@ int main (int argc, char* argv[])
         ;
 
     po::options_description all_options;
-    all_options.add(generic).add(hidden);
+    all_options.add(generic).add(config).add(hidden);
 
     po::options_description visible_options("Allowed options");
-    visible_options.add(generic);
+    visible_options.add(generic).add(config);
 
     po::positional_options_description p;
     p.add("names", -1);
@@ -123,9 +150,30 @@ int main (int argc, char* argv[])
         return 0;
     }
 
-    const unsigned width  = 600;
-    const unsigned height = 400;
-    const std::string filename = "test.png";
+    writer_t writer;
+    if (vm.count("to")) {
+        auto to = vm["to"].as<std::string>();
+        if (auto it = map.find(to_upper(to)); it != map.end()) {
+            writer = (*it).second;
+        } else {
+            std::cerr << "Error: Unknown 'to': " << to << "\n";
+            return 1;
+        }
+    } else {
+        std::cerr << "Error: Expected 'to'\n";
+        return 1;
+    }
+
+    std::string filename;
+    if (vm.count("output")) {
+        filename = vm["output"].as<std::string>();
+    } else {
+        std::cerr << "Error: Expected 'to'\n";
+        return 1;
+    }
+
+    const unsigned width  = vm["width"].as<unsigned>();
+    const unsigned height = vm["height"].as<unsigned>();
 
     if (vm.count("names")) {
         auto names = vm["names"].as<std::vector<std::string>>();
@@ -134,7 +182,7 @@ int main (int argc, char* argv[])
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLD") {
                 std::string uri = file;
-                write_to_png(uri, width, height, filename);
+                writer(uri, width, height, filename);
                 return 0;
             } else if (ext == ".SLB") {
                 std::cerr << "Error: Expected slide name\n";
@@ -151,7 +199,7 @@ int main (int argc, char* argv[])
             if (ext == ".SLB") {
                 auto name = names[1];
                 std::string uri = file + "(" + name + ")";
-                write_to_png(uri, width, height, filename);
+                writer(uri, width, height, filename);
                 return 0;
             } else {
                 std::cerr << "Error: Invalid library extension: " << ext << "\n";
