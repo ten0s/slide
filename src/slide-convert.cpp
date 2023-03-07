@@ -26,6 +26,7 @@
 #include <boost/program_options.hpp>
 
 #include "../lib/slide_draw.h"
+#include "../lib/slide_colors.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
 
@@ -40,20 +41,33 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
        << options << "\n";
 }
 
-/*
-    // Draw black background
-    cairo_set_source_rgb(cr, 0, 0, 0);
+static void
+draw_background(cairo_t* cr, unsigned width, unsigned height, int color_index)
+{
+    if (color_index < 0) {
+        return;
+    }
+
+    RGB rgb = AutoCAD::colors[color_index];
+    cairo_set_source_rgb(cr,
+                         rgb.red   / 255.0,
+                         rgb.green / 255.0,
+                         rgb.blue  / 255.0);
     cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);
-*/
+}
 
 static void
-write_to_png(const std::string& slide_uri, unsigned width, unsigned height, const std::string& filename)
+write_to_png(const std::string& slide_uri,
+             unsigned width, unsigned height,
+             int color_index,
+             const std::string& filename)
 {
     cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
     cairo_t* cr = cairo_create(cs);
 
-    // Draw slide
+    draw_background(cr, width, height, color_index);
+
     if (slide_draw(cr, 0, 0, width, height, slide_uri.c_str()) == 0) {
         cairo_surface_write_to_png(cs, filename.c_str());
     }
@@ -63,12 +77,16 @@ write_to_png(const std::string& slide_uri, unsigned width, unsigned height, cons
 }
 
 static void
-write_to_svg(const std::string& slide_uri, unsigned width, unsigned height, const std::string& filename)
+write_to_svg(const std::string& slide_uri,
+             unsigned width, unsigned height,
+             int color_index,
+             const std::string& filename)
 {
     cairo_surface_t *cs = cairo_svg_surface_create(filename.c_str(), width, height);
     cairo_t* cr = cairo_create(cs);
 
-    // Draw slide
+    draw_background(cr, width, height, color_index);
+
     if (slide_draw(cr, 0, 0, width, height, slide_uri.c_str()) == 0) {
         cairo_surface_flush(cs);
     }
@@ -77,7 +95,7 @@ write_to_svg(const std::string& slide_uri, unsigned width, unsigned height, cons
     cairo_surface_destroy(cs);
 }
 
-using writer_t = std::function<void(const std::string&, unsigned, unsigned, const std::string&)>;
+using writer_t = std::function<void(const std::string&, unsigned, unsigned, int, const std::string&)>;
 static std::unordered_map<std::string, writer_t> map {
     { "PNG", write_to_png },
     { "SVG", write_to_svg },
@@ -104,6 +122,11 @@ int main (int argc, char* argv[])
         ("height,h",
          po::value<unsigned>()->default_value(600),
          "output height")
+        ("background,b",
+         po::value<int>()->default_value(0),
+         "output background AutoCAD color index\n"
+         "(https://gohtx.com/acadcolors.php)\n"
+         "or -1 for transparent")
         ("output,o",
          po::value<std::string>(),
          "output filename")
@@ -174,6 +197,7 @@ int main (int argc, char* argv[])
 
     const unsigned width  = vm["width"].as<unsigned>();
     const unsigned height = vm["height"].as<unsigned>();
+    const int background  = vm["background"].as<int>();
 
     if (vm.count("names")) {
         auto names = vm["names"].as<std::vector<std::string>>();
@@ -182,7 +206,7 @@ int main (int argc, char* argv[])
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLD") {
                 std::string uri = file;
-                writer(uri, width, height, filename);
+                writer(uri, width, height, background, filename);
                 return 0;
             } else if (ext == ".SLB") {
                 std::cerr << "Error: Expected slide name\n";
@@ -199,7 +223,7 @@ int main (int argc, char* argv[])
             if (ext == ".SLB") {
                 auto name = names[1];
                 std::string uri = file + "(" + name + ")";
-                writer(uri, width, height, filename);
+                writer(uri, width, height, background, filename);
                 return 0;
             } else {
                 std::cerr << "Error: Invalid library extension: " << ext << "\n";
