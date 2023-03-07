@@ -262,7 +262,7 @@ int main(int argc, char* argv[])
                                 print_slide_info(std::cout, *slide, info.value());
                                 return 0;
                             } else {
-                                std::cerr << "Invalid slide info: " << raw << "\n";
+                                std::cerr << "Error: Invalid slide info: " << raw << "\n";
                                 return 1;
                             }
                         }
