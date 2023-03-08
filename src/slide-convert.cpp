@@ -25,10 +25,12 @@
 #include <unordered_map>
 #include <boost/program_options.hpp>
 
-#include "../lib/slide_draw.h"
+#include "../lib/slide.hpp"
 #include "../lib/slide_colors.hpp"
+#include "../lib/slide_loader.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
+#include "../lib/slide_records_visitor_cairo.hpp"
 
 namespace po = boost::program_options;
 using namespace libslide;
@@ -42,13 +44,15 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 }
 
 static void
-draw_background(cairo_t* cr, unsigned width, unsigned height, int color_index)
+draw_background(cairo_t* cr,
+                int color,
+                int width, int height)
 {
-    if (color_index < 0) {
+    if (color < 0) {
         return;
     }
 
-    RGB rgb = AutoCAD::colors[color_index];
+    RGB rgb = AutoCAD::colors[color];
     cairo_set_source_rgb(cr,
                          rgb.red   / 255.0,
                          rgb.green / 255.0,
@@ -58,44 +62,60 @@ draw_background(cairo_t* cr, unsigned width, unsigned height, int color_index)
 }
 
 static void
-write_to_png(const std::string& slide_uri,
-             unsigned width, unsigned height,
-             int color_index,
+draw_slide(cairo_t* cr,
+           const Slide* slide,
+           unsigned width, unsigned height)
+{
+    unsigned sld_width  = slide->header().high_x_dot();
+    unsigned sld_height = slide->header().high_y_dot();
+    double   sld_ratio  = slide->header().aspect_ratio();
+
+    SlideRecordsVisitorCairo visitor{
+        cr,
+        sld_width, sld_height,
+        sld_ratio,
+        0, 0,
+        width, height
+    };
+    slide->visit_records(visitor);
+}
+
+static void
+write_to_png(const Slide* slide,
+             int background,
+             int width, int height,
              const std::string& filename)
 {
     cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
     cairo_t* cr = cairo_create(cs);
 
-    draw_background(cr, width, height, color_index);
+    draw_background(cr, background, width, height);
+    draw_slide(cr, slide, width, height);
 
-    if (slide_draw(cr, 0, 0, width, height, slide_uri.c_str()) == 0) {
-        cairo_surface_write_to_png(cs, filename.c_str());
-    }
-
+    cairo_surface_write_to_png(cs, filename.c_str());
     cairo_destroy(cr);
     cairo_surface_destroy(cs);
 }
 
 static void
-write_to_svg(const std::string& slide_uri,
-             unsigned width, unsigned height,
-             int color_index,
+write_to_svg(const Slide* slide,
+             int background,
+             int width, int height,
+
              const std::string& filename)
 {
     cairo_surface_t *cs = cairo_svg_surface_create(filename.c_str(), width, height);
     cairo_t* cr = cairo_create(cs);
 
-    draw_background(cr, width, height, color_index);
+    draw_background(cr, background, width, height);
+    draw_slide(cr, slide, width, height);
 
-    if (slide_draw(cr, 0, 0, width, height, slide_uri.c_str()) == 0) {
-        cairo_surface_flush(cs);
-    }
-
+    cairo_surface_flush(cs);
     cairo_destroy(cr);
     cairo_surface_destroy(cs);
 }
 
-using writer_t = std::function<void(const std::string&, unsigned, unsigned, int, const std::string&)>;
+using writer_t = std::function<void(const Slide*, int, int, int, const std::string&)>;
 static std::unordered_map<std::string, writer_t> map {
     { "PNG", write_to_png },
     { "SVG", write_to_svg },
@@ -117,11 +137,11 @@ int main (int argc, char* argv[])
          po::value<std::string>(),
          "convert to (png, svg)")
         ("width,w",
-         po::value<unsigned>()->default_value(800),
-         "output width")
+         po::value<unsigned>(),
+         "output width, slide's width by default")
         ("height,h",
-         po::value<unsigned>()->default_value(600),
-         "output height")
+         po::value<unsigned>(),
+         "output height, slide's height by default")
         ("background,b",
          po::value<int>(),
          "output background AutoCAD color [-1, 255]\n"
@@ -191,12 +211,26 @@ int main (int argc, char* argv[])
     if (vm.count("output")) {
         filename = vm["output"].as<std::string>();
     } else {
-        std::cerr << "Error: Expected 'to'\n";
+        std::cerr << "Error: Expected 'output'\n";
         return 1;
     }
 
-    const unsigned width  = vm["width"].as<unsigned>();
-    const unsigned height = vm["height"].as<unsigned>();
+    int width = -1;
+    if (vm.count("width")) {
+        width = vm["width"].as<unsigned>();
+        if (width < 0) {
+            std::cerr << "Error: Invalid 'width'\n";
+            return 1;
+        }
+    }
+
+    int height = -1;
+    if (vm.count("height")) {
+        height = vm["height"].as<unsigned>();
+        if (height < 0) {
+            std::cerr << "Error: Invalid 'height'\n";
+        }
+    }
 
     int background = 0;
     if (vm.count("background")) {
@@ -211,14 +245,13 @@ int main (int argc, char* argv[])
     }
 
     if (vm.count("names")) {
+        std::string slide_uri;
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() == 1) {
             auto file = names[0];
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLD") {
-                std::string uri = file;
-                writer(uri, width, height, background, filename);
-                return 0;
+                slide_uri = file;
             } else if (ext == ".SLB") {
                 std::cerr << "Error: Expected slide name\n";
                 return 1;
@@ -233,14 +266,28 @@ int main (int argc, char* argv[])
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLB") {
                 auto name = names[1];
-                std::string uri = file + "(" + name + ")";
-                writer(uri, width, height, background, filename);
-                return 0;
+                slide_uri = file + "(" + name + ")";
             } else {
                 std::cerr << "Error: Invalid library extension: " << ext << "\n";
                 return 1;
             }
         }
+
+        auto maybeSlide = slide_from_uri(slide_uri);
+        if (!maybeSlide) {
+            std::cerr << "Error: Slide " << slide_uri << " not found\n";
+            return 1;
+        }
+
+        const Slide* slide = maybeSlide.value().get();
+        if (width < 0) {
+            width = slide->header().high_x_dot();
+        }
+        if (height < 0) {
+            height = slide->header().high_y_dot();
+        }
+        writer(slide, background, width, height, filename);
+        return 0;
     }
 
     print_usage(std::cerr, prog, visible_options);
