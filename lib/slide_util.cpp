@@ -42,6 +42,17 @@ std::string strip_ext(const std::string& filename)
     return fs::path(filename).stem().u8string();
 }
 
+std::string to_lower(const std::string& in)
+{
+    std::string out{in};
+    std::transform(
+        out.begin(), out.end(),
+        out.begin(),
+        [](auto c) { return std::tolower(c); }
+    );
+    return out;
+}
+
 std::string to_upper(const std::string& in)
 {
     std::string out{in};
