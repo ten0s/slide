@@ -26,18 +26,19 @@ clean:
 	done
 
 roll-patch:
-	util/set-version `util/roll-version patch $(VERSION)`
+	@util/set-version `util/roll-version patch $(VERSION)`
 	$(MAKE) roll
 
 roll-minor:
-	util/set-version `util/roll-version minor $(VERSION)`
+	@util/set-version `util/roll-version minor $(VERSION)`
 	$(MAKE) roll
 
 roll-major:
-	util/set-version `util/roll-version major $(VERSION)`
+	@util/set-version `util/roll-version major $(VERSION)`
 	$(MAKE) roll
 
 roll:
+	@echo "New version: $(VERSION)"
 	git add lib/slide_version.hpp
 	@echo 'Now run: $$ make commit-push'
 
