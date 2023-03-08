@@ -110,7 +110,7 @@ int main (int argc, char* argv[])
                   .positional(p)
                   .run(), vm);
         po::notify(vm);
-    } catch (const boost::program_options::unknown_option& e) {
+    } catch (const po::unknown_option& e) {
         std::cerr << "Error: Unknown option: " << e.get_option_name() << "\n";
         return 1;
     } catch (const std::exception& e) {
