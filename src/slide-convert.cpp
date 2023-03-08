@@ -46,7 +46,7 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 static void
 draw_background(cairo_t* cr,
                 int color,
-                int width, int height)
+                unsigned width, unsigned height)
 {
     if (color < 0) {
         return;
@@ -83,7 +83,7 @@ draw_slide(cairo_t* cr,
 static void
 write_to_png(const Slide* slide,
              int background,
-             int width, int height,
+             unsigned width, unsigned height,
              const std::string& filename)
 {
     cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
@@ -100,8 +100,7 @@ write_to_png(const Slide* slide,
 static void
 write_to_svg(const Slide* slide,
              int background,
-             int width, int height,
-
+             unsigned width, unsigned height,
              const std::string& filename)
 {
     cairo_surface_t *cs = cairo_svg_surface_create(filename.c_str(), width, height);
@@ -115,7 +114,10 @@ write_to_svg(const Slide* slide,
     cairo_surface_destroy(cs);
 }
 
-using writer_t = std::function<void(const Slide*, int, int, int, const std::string&)>;
+using writer_t = std::function<void(const Slide*,         // slide
+                                    int,                  // background
+                                    unsigned, unsigned,   // width & height
+                                    const std::string&)>; // filename
 static std::unordered_map<std::string, writer_t> map {
     { "PNG", write_to_png },
     { "SVG", write_to_svg },
