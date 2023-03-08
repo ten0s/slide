@@ -123,10 +123,10 @@ int main (int argc, char* argv[])
          po::value<unsigned>()->default_value(600),
          "output height")
         ("background,b",
-         po::value<int>()->default_value(0),
-         "output background AutoCAD color index\n"
-         "(https://gohtx.com/acadcolors.php)\n"
-         "or -1 for transparent")
+         po::value<int>(),
+         "output background AutoCAD color [-1, 255]\n"
+         "(https://gohtx.com/acadcolors.php),\n"
+         "-1 for transparent, 0 (black) by default")
         ("output,o",
          po::value<std::string>(),
          "output filename")
@@ -197,7 +197,18 @@ int main (int argc, char* argv[])
 
     const unsigned width  = vm["width"].as<unsigned>();
     const unsigned height = vm["height"].as<unsigned>();
-    const int background  = vm["background"].as<int>();
+
+    int background = 0;
+    if (vm.count("background")) {
+        background = vm["background"].as<int>();
+        if (background < -1) {
+            background = -1;
+        }
+        if (background > 255) {
+            std::cerr << "Error: Invalid 'background'\n";
+            return 1;
+        }
+    }
 
     if (vm.count("names")) {
         auto names = vm["names"].as<std::vector<std::string>>();
