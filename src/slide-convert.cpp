@@ -264,7 +264,7 @@ int main (int argc, char* argv[])
             }
         }
 
-        if (names.size() == 2) {
+        if (names.size() >= 2) {
             auto file = names[0];
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLB") {
