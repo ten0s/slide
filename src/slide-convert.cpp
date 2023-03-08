@@ -84,7 +84,7 @@ static void
 write_to_png(const Slide* slide,
              int background,
              unsigned width, unsigned height,
-             const std::string& filename)
+             const char* filename)
 {
     cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
     cairo_t* cr = cairo_create(cs);
@@ -92,7 +92,7 @@ write_to_png(const Slide* slide,
     draw_background(cr, background, width, height);
     draw_slide(cr, slide, width, height);
 
-    cairo_surface_write_to_png(cs, filename.c_str());
+    cairo_surface_write_to_png(cs, filename);
     cairo_destroy(cr);
     cairo_surface_destroy(cs);
 }
@@ -101,9 +101,9 @@ static void
 write_to_svg(const Slide* slide,
              int background,
              unsigned width, unsigned height,
-             const std::string& filename)
+             const char* filename)
 {
-    cairo_surface_t *cs = cairo_svg_surface_create(filename.c_str(), width, height);
+    cairo_surface_t *cs = cairo_svg_surface_create(filename, width, height);
     cairo_t* cr = cairo_create(cs);
 
     draw_background(cr, background, width, height);
@@ -117,7 +117,7 @@ write_to_svg(const Slide* slide,
 using writer_t = std::function<void(const Slide*,         // slide
                                     int,                  // background
                                     unsigned, unsigned,   // width & height
-                                    const std::string&)>; // filename
+                                    const char*)>;        // filename
 static std::unordered_map<std::string, writer_t> map {
     { "PNG", write_to_png },
     { "SVG", write_to_svg },
@@ -292,7 +292,7 @@ int main (int argc, char* argv[])
         if (!filename.size()) {
             filename = slide->name() + "." + to_lower(type);
         }
-        writer(slide, background, width, height, filename);
+        writer(slide, background, width, height, filename.c_str());
         return 0;
     }
 

@@ -129,15 +129,15 @@ int main (int argc, char* argv[])
     }
 
     if (vm.count("names")) {
+        std::string title;
+        std::string slide_uri;
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() == 1) {
             auto file = names[0];
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLD") {
-                std::string title = strip_ext(basename(file));
-                std::string uri = file;
-                show_window(title.c_str(), uri.c_str());
-                return 0;
+                title = strip_ext(basename(file));
+                slide_uri = file;
             } else if (ext == ".SLB") {
                 std::cerr << "Error: Expected slide name\n";
                 return 1;
@@ -147,20 +147,21 @@ int main (int argc, char* argv[])
             }
         }
 
-        if (names.size() == 2) {
+        if (names.size() >= 2) {
             auto file = names[0];
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLB") {
                 auto name = names[1];
-                std::string title = strip_ext(basename(file)) + "(" + name + ")";
-                std::string uri = file + "(" + name + ")";
-                show_window(title.c_str(), uri.c_str());
-                return 0;
+                title = strip_ext(basename(file)) + "(" + name + ")";
+                slide_uri = file + "(" + name + ")";
             } else {
                 std::cerr << "Error: Invalid library extension: " << ext << "\n";
                 return 1;
             }
         }
+
+        show_window(title.c_str(), slide_uri.c_str());
+        return 0;
     }
 
     print_usage(std::cerr, prog, visible_options);
