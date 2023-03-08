@@ -140,10 +140,12 @@ int main (int argc, char* argv[])
          "convert to (png, svg)")
         ("width,w",
          po::value<unsigned>(),
-         "output width, slide's width by default")
+         "output width,\n"
+         "slide's width by default")
         ("height,h",
          po::value<unsigned>(),
-         "output height, slide's height by default")
+         "output height,\n"
+         "slide's height by default")
         ("background,b",
          po::value<int>(),
          "output background AutoCAD color [-1, 255]\n"
@@ -222,7 +224,7 @@ int main (int argc, char* argv[])
     if (vm.count("width")) {
         width = vm["width"].as<unsigned>();
         if (width < 0) {
-            std::cerr << "Error: Invalid 'width'\n";
+            std::cerr << "Error: Invalid 'width': " << width << "\n";
             return 1;
         }
     }
@@ -231,7 +233,7 @@ int main (int argc, char* argv[])
     if (vm.count("height")) {
         height = vm["height"].as<unsigned>();
         if (height < 0) {
-            std::cerr << "Error: Invalid 'height'\n";
+            std::cerr << "Error: Invalid 'height': " << height << "\n";
         }
     }
 
