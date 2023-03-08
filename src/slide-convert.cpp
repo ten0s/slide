@@ -153,7 +153,8 @@ int main (int argc, char* argv[])
          "-1 for transparent, 0 (black) by default")
         ("output,o",
          po::value<std::string>(),
-         "output filename")
+         "output filename,\n"
+         "slide's name and type as extension by default")
         ;
 
     po::options_description hidden("Hidden options");
@@ -215,9 +216,6 @@ int main (int argc, char* argv[])
     std::string filename;
     if (vm.count("output")) {
         filename = vm["output"].as<std::string>();
-    } else {
-        std::cerr << "Error: Expected 'output'\n";
-        return 1;
     }
 
     int width = -1;
@@ -290,6 +288,9 @@ int main (int argc, char* argv[])
         }
         if (height < 0) {
             height = slide->header().high_y_dot();
+        }
+        if (!filename.size()) {
+            filename = slide->name() + "." + to_lower(type);
         }
         writer(slide, background, width, height, filename);
         return 0;
