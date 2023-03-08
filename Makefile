@@ -1,5 +1,6 @@
 SUBDIRS = lib gi src
 PREFIX ?= $(CURDIR)/install
+VERSION := $(shell util/get-version)
 
 all:
 	@for subdir in $(SUBDIRS); do \
@@ -23,3 +24,24 @@ clean:
 		$(MAKE) clean          && \
 		cd ..                   ; \
 	done
+
+roll-patch:
+	util/set-version `util/roll-version patch $(VERSION)`
+	$(MAKE) roll
+
+roll-minor:
+	util/set-version `util/roll-version minor $(VERSION)`
+	$(MAKE) roll
+
+roll-major:
+	util/set-version `util/roll-version major $(VERSION)`
+	$(MAKE) roll
+
+roll:
+	git add lib/slide_version.hpp
+	@echo 'Now run: $$ make commit-push'
+
+commit-push:
+	git commit -m "Roll ${VERSION}"
+	git tag "${VERSION}"
+	git push origin `git branch --show-current 2>/dev/null` --tags

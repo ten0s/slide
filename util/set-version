@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+NEW_VERSION=${1?}
+
+sed -Ei "s|(.*VERSION\s*=\s*\")(.*)(\".*)|\1${NEW_VERSION}\3|" lib/slide_version.hpp
