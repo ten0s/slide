@@ -19,7 +19,7 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#include "slide_colors.hpp"
+//#include "slide_colors.hpp"
 #include "slide_records.hpp"
 #include "slide_records_visitor_ostream.hpp"
 

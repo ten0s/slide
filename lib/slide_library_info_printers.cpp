@@ -31,10 +31,10 @@ template <>
 std::ostream&
 operator<<(std::ostream& os, const SlideLibraryInfoPrinter<slide_library_info_t::INFO>& p)
 {
-    auto& lib = p.lib();
-    auto& pad = p.pad();
+    const auto& lib = p.lib();
+    const auto& pad = p.pad();
 
-    auto& header = lib.header();
+    const auto& header = lib.header();
 
     os << pad << "Type   : " << header.id_string() << "\n";
     os << pad << "Name   : " << lib.name() << "\n";
@@ -48,10 +48,10 @@ template <>
 std::ostream&
 operator<<(std::ostream& os, const SlideLibraryInfoPrinter<slide_library_info_t::NAMES>& p)
 {
-    auto& lib = p.lib();
-    auto& pad = p.pad();
+    const auto& lib = p.lib();
+    const auto& pad = p.pad();
 
-    for (auto& dir : lib.dirs()) {
+    for (const auto& dir : lib.dirs()) {
         os << pad << dir->name() << "\n";
     };
 
@@ -62,17 +62,22 @@ template <>
 std::ostream&
 operator<<(std::ostream& os, const SlideLibraryInfoPrinter<slide_library_info_t::DIRS>& p)
 {
-    auto& lib = p.lib();
-    auto& pad = p.pad();
+    const auto& lib = p.lib();
+    const auto& pad = p.pad();
 
     size_t max = 0;
-    for (auto& dir : lib.dirs()) {
+    for (const auto& dir : lib.dirs()) {
         max = std::max(max, dir->name().size());
     };
 
-    for (auto& dir : lib.dirs()) {
+    for (const auto& dir : lib.dirs()) {
         size_t size = dir->name().size();
-        os << pad << dir->name() << std::string(max - size + 1, ' ') << ": " << dir->addr() << "\n";
+        os << pad
+           << dir->name()
+           << std::string(max - size + 1, ' ')
+           << ": "
+           << dir->addr()
+           << "\n";
     };
 
     return os;

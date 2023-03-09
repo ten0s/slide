@@ -30,11 +30,11 @@ template <>
 std::ostream&
 operator<<(std::ostream& os, const SlideInfoPrinter<slide_info_t::INFO>& p)
 {
-    auto& slide = p.slide();
-    auto& pad = p.pad();
+    const auto& slide = p.slide();
+    const auto& pad = p.pad();
 
-    auto& header = slide.header();
-    auto version = (int)header.level_indicator();
+    const auto& header = slide.header();
+    const auto version = (int)header.level_indicator();
 
     os << pad << "Type   : " << header.id_string() << " " << version << ".0" << "\n";
     os << pad << "Name   : " << slide.name() << "\n";
@@ -51,8 +51,8 @@ template <>
 std::ostream&
 operator<<(std::ostream& os, const SlideInfoPrinter<slide_info_t::RECS>& p)
 {
-    auto& slide = p.slide();
-    auto& pad = p.pad();
+    const auto& slide = p.slide();
+    const auto& pad = p.pad();
 
     SlideRecordsVisitorOStream visitor{os, pad};
     slide.visit_records(visitor);

@@ -75,7 +75,7 @@ parse_library_info(const std::string& raw)
         info = slide_library_info_t::NAMES;
     } else if (what == "DIRS") {
         info = slide_library_info_t::DIRS;
-    }else if (what == "ALL") {
+    } else if (what == "ALL") {
         info = slide_library_info_t::ALL;
     } else {
         return {};
