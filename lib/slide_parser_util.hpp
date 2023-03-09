@@ -49,6 +49,26 @@ T read(const uint8_t buf[sizeof(T)], Endian endian) {
 }
 
 template<typename T>
+void write(uint8_t buf[sizeof(T)], T val, Endian endian) {
+    union { T in; uint8_t out[sizeof(T)]; } x;
+    x.in = val;
+    switch (endian) {
+    case Endian::LE:
+        for (size_t i = 0; i < sizeof(T); ++i) {
+            buf[i] = x.out[i];
+        }
+        break;
+    case Endian::BE:
+        for (size_t i = 0; i < sizeof(T); ++i) {
+            buf[sizeof(T)-1-i] = x.out[i];
+        }
+        break;
+    default:
+        throw std::runtime_error{"Unknown endian"};
+    }
+}
+
+template<typename T>
 uint8_t high_order_byte(T val) {
     union { T in; uint8_t out[sizeof(T)]; } x;
     x.in = val;

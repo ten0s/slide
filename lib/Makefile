@@ -3,7 +3,9 @@ include ../Makefile.inc
 SLIDE_OBJS=\
 	slide.o \
 	slide_parser.o \
+	slide_writer.o \
 	slide_header_parser.o \
+	slide_header_writer.o \
 	slide_library.o \
 	slide_library_parser.o \
 	slide_library_header_parser.o \
