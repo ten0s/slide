@@ -53,7 +53,7 @@ public:
     uint16_t high_x_dot() const { return _high_x_dot; }
     uint16_t high_y_dot() const { return _high_y_dot; }
     double aspect_ratio() const { return _aspect_ratio; }
-    uint8_t hardware_fill() const { return _hardware_fill; }
+    uint16_t hardware_fill() const { return _hardware_fill; }
     Endian endian() const { return _endian; }
 
 private:

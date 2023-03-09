@@ -72,7 +72,7 @@ parse_slide_uri(const std::string& slide_uri)
     auto i = slide_uri.find("(");
     auto j = slide_uri.rfind(")");
 
-    if (i >=0 && j == slide_uri.length()-1) {
+    if (i != std::string::npos && j == slide_uri.length()-1) {
         // It's a slide library
         return std::make_tuple(
             slide_uri.substr(0, i),

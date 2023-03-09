@@ -39,8 +39,9 @@ struct HeaderV1 {
     uint8_t high_x_dot[2];    // LE | BE
     uint8_t high_y_dot[2];    // LE | BE
     // Specific
-    uint8_t aspect_ratio[8];  // Float LE | BE
+    uint8_t aspect_ratio[8];  // Double LE | BE
     uint8_t hardware_fill[2]; // 0x00 | 0x02 Unused
+    uint8_t filler_byte;      // Unused
 };
 
 struct HeaderV2 {
