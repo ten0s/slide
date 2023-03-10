@@ -19,30 +19,47 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_RECORDS_VISITOR_OSTREAM_HPP__
-#define __SLIDE_RECORDS_VISITOR_OSTREAM_HPP__
+#ifndef __SLIDE_RECORDS_VISITOR_CAIRO_DRAWER_HPP__
+#define __SLIDE_RECORDS_VISITOR_CAIRO_DRAWER_HPP__
 
-#include <ostream>
-#include <string>
+#include <cairo.h>
 #include "slide_records_visitor.hpp"
 
 namespace libslide {
 
-class SlideRecordsVisitorOStream : public SlideRecordsVisitor {
+class SlideRecordsVisitorCairoDrawer : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordsVisitorOStream(std::ostream& os, const std::string& pad);
+    explicit SlideRecordsVisitorCairoDrawer(cairo_t* cr,
+                                            unsigned src_width,   // slide width
+                                            unsigned src_height,  // slide height
+                                            double   src_ratio,   // slide aspect ratio
+                                            unsigned dst_x,       // draw offset x
+                                            unsigned dst_y,       // draw offset y
+                                            unsigned dst_width,   // draw width
+                                            unsigned dst_height); // draw height
+
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;
     void accept(SlideRecordSolidFillPolygon&) override;
     void accept(SlideRecordColor& r) override;
-    void accept(SlideRecordEndOfFile& r) override;
+    void accept(SlideRecordEndOfFile&) override;
 
 private:
-    std::ostream& _os;
-    std::string _pad;
+    double adjust_x(unsigned x) const;
+    double adjust_y(unsigned y) const;
+
+private:
+    cairo_t* _cr;
+    unsigned _dst_x;
+    unsigned _dst_y;
+    unsigned _dst_height;
+    unsigned _last_x;
+    unsigned _last_y;
+    double _scale_x;
+    double _scale_y;
 };
 
 } // namespace libslide
 
-#endif // __SLIDE_RECORDS_VISITOR_OSTREAM_HPP__
+#endif // __SLIDE_RECORDS_VISITOR_CAIRO_DRAWER_HPP__

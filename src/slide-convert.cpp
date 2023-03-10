@@ -30,7 +30,7 @@
 #include "../lib/slide_loader.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
-#include "../lib/slide_records_visitor_cairo.hpp"
+#include "../lib/slide_records_visitor_cairo_drawer.hpp"
 
 namespace po = boost::program_options;
 using namespace libslide;
@@ -70,7 +70,7 @@ draw_slide(cairo_t* cr,
     unsigned sld_height = slide->header().high_y_dot();
     double   sld_ratio  = slide->header().aspect_ratio();
 
-    SlideRecordsVisitorCairo visitor{
+    SlideRecordsVisitorCairoDrawer visitor{
         cr,
         sld_width, sld_height,
         sld_ratio,

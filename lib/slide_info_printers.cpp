@@ -22,7 +22,7 @@
 #include "slide.hpp"
 #include "slide_header.hpp"
 #include "slide_info_printers.hpp"
-#include "slide_records_visitor_ostream.hpp"
+#include "slide_records_visitor_text_writer.hpp"
 
 namespace libslide {
 
@@ -54,7 +54,7 @@ operator<<(std::ostream& os, const SlideInfoPrinter<slide_info_t::RECS>& p)
     const auto& slide = p.slide();
     const auto& pad = p.pad();
 
-    SlideRecordsVisitorOStream visitor{os, pad};
+    SlideRecordsVisitorTextWriter visitor{os, pad};
     slide.visit_records(visitor);
 
     return os;

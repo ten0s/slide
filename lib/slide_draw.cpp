@@ -24,7 +24,7 @@
 #include "slide.hpp"
 #include "slide_draw.h"
 #include "slide_loader.hpp"
-#include "slide_records_visitor_cairo.hpp"
+#include "slide_records_visitor_cairo_drawer.hpp"
 
 using namespace libslide;
 
@@ -57,7 +57,7 @@ int slide_draw(cairo_t *cr,
         double   sld_ratio  = slide->header().aspect_ratio();
 
         // Draw slide.
-        SlideRecordsVisitorCairo visitor{
+        SlideRecordsVisitorCairoDrawer visitor{
             cr,
             sld_width, sld_height,
             sld_ratio,

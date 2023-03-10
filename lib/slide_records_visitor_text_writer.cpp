@@ -21,15 +21,15 @@
 
 //#include "slide_colors.hpp"
 #include "slide_records.hpp"
-#include "slide_records_visitor_ostream.hpp"
+#include "slide_records_visitor_text_writer.hpp"
 
 namespace libslide {
 
-SlideRecordsVisitorOStream::SlideRecordsVisitorOStream(
+SlideRecordsVisitorTextWriter::SlideRecordsVisitorTextWriter(
     std::ostream& os, const std::string& pad)
     : _os{os}, _pad{pad} {}
 
-void SlideRecordsVisitorOStream::accept(SlideRecordVector& r)
+void SlideRecordsVisitorTextWriter::accept(SlideRecordVector& r)
 {
     _os << _pad;
     _os << "(VECTOR"
@@ -40,7 +40,7 @@ void SlideRecordsVisitorOStream::accept(SlideRecordVector& r)
         << ")\n";
 }
 
-void SlideRecordsVisitorOStream::accept(SlideRecordOffsetVector& r)
+void SlideRecordsVisitorTextWriter::accept(SlideRecordOffsetVector& r)
 {
     _os << _pad;
     _os << "(OFFSET_VECTOR"
@@ -50,7 +50,7 @@ void SlideRecordsVisitorOStream::accept(SlideRecordOffsetVector& r)
         << ")\n";
 }
 
-void SlideRecordsVisitorOStream::accept(SlideRecordCommonEndpoint& r)
+void SlideRecordsVisitorTextWriter::accept(SlideRecordCommonEndpoint& r)
 {
     _os << _pad;
     _os << "(COMMON_ENDPOINT"
@@ -59,7 +59,7 @@ void SlideRecordsVisitorOStream::accept(SlideRecordCommonEndpoint& r)
         << ")\n";
 }
 
-void SlideRecordsVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
+void SlideRecordsVisitorTextWriter::accept(SlideRecordSolidFillPolygon& r)
 {
     _os << _pad;
     _os << "(SOLID_FILL_POLYGON";
@@ -69,7 +69,7 @@ void SlideRecordsVisitorOStream::accept(SlideRecordSolidFillPolygon& r)
     _os << ")\n";
 }
 
-void SlideRecordsVisitorOStream::accept(SlideRecordColor& r)
+void SlideRecordsVisitorTextWriter::accept(SlideRecordColor& r)
 {
     //RGB rgb = AutoCAD::colors[r.color()];
     _os << _pad;
@@ -82,7 +82,7 @@ void SlideRecordsVisitorOStream::accept(SlideRecordColor& r)
         << "\n";
 }
 
-void SlideRecordsVisitorOStream::accept(SlideRecordEndOfFile&)
+void SlideRecordsVisitorTextWriter::accept(SlideRecordEndOfFile&)
 {
     _os << _pad;
     _os << "(END_OF_FILE)\n";

@@ -13,8 +13,8 @@ SLIDE_OBJS=\
 	slide_info_printers.o \
 	slide_library_info_printers.o \
 	slide_record_parser.o \
-	slide_records_visitor_ostream.o \
-	slide_records_visitor_cairo.o \
+	slide_records_visitor_text_writer.o \
+	slide_records_visitor_cairo_drawer.o \
 	slide_cache.o \
 	slide_loader.o \
 	slide_colors.o \
@@ -29,7 +29,7 @@ all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 slide_draw.o: slide_draw.cpp slide_draw.h
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(DLL_CAIRO) -o $@
 
-slide_records_visitor_cairo.o: slide_records_visitor_cairo.cpp slide_records_visitor_cairo.hpp
+slide_records_visitor_cairo_drawer.o: slide_records_visitor_cairo_drawer.cpp slide_records_visitor_cairo_drawer.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(DLL_CAIRO) -o $@
 
 libslide.so: $(SLIDE_OBJS)
