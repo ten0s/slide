@@ -35,37 +35,39 @@ write_slide_header(std::ostream& os, const SlideHeader& header, Endian endian)
 
     uint8_t buf2[2];
     write(buf2, header.high_x_dot(), endian);
-    os << buf2[0] << buf2[1];
+    os.write((char*)buf2, sizeof(buf2));
 
     write(buf2, header.high_y_dot(), endian);
-    os << buf2[0] << buf2[1];
+    os.write((char*)buf2, sizeof(buf2));
 
     if (header.level_indicator() == 1) {
+
         // V1 Specific
         uint8_t buf8[8];
         write(buf8, header.aspect_ratio(), endian);
-        os << buf8[0] << buf8[1] << buf8[2] << buf8[3];
-        os << buf8[4] << buf8[5] << buf8[6] << buf8[7];
+        os.write((char*)buf8, sizeof(buf8));
 
         write(buf2, header.hardware_fill(), endian);
-        os << buf2[0] << buf2[1];
+        os.write((char*)buf2, sizeof(buf2));
 
         os << '\x00'; // Filler byte
+
     } else if (header.level_indicator() == 2) {
+
         // V2 Specific
         uint8_t buf4[4];
 
         write(buf4, static_cast<uint32_t>(header.aspect_ratio() * 10'000'000), Endian::LE);
-        os << buf4[0] << buf4[1] << buf4[2] << buf4[3];
+        os.write((char*)buf4, sizeof(buf4));
 
         write(buf2, header.hardware_fill(), endian);
-        os << buf2[0] << buf2[1];
+        os.write((char*)buf2, sizeof(buf2));
 
         write(buf2, 0x1234, endian);
-        os << buf2[0] << buf2[1];
+        os.write((char*)buf2, sizeof(buf2));
 
     } else {
-        throw std::runtime_error{"Unknown version"};
+        throw std::runtime_error{"Unknown slide version"};
     }
     return os;
 }
