@@ -80,11 +80,13 @@ write(std::ostream& os, T val, Endian endian)
 }
 
 template<typename T>
-T make(std::initializer_list<uint8_t> list)
+T make(std::initializer_list<uint8_t> digits)
 {
-    union { uint8_t in[sizeof(T)]; T out; } x;
-    std::copy(std::begin(list), std::end(list), x.in);
-    return x.out;
+    T out {};
+    for (auto digit : digits) {
+        out = (out << 8) + digit;
+    }
+    return out;
 }
 
 template<typename T>

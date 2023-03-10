@@ -78,9 +78,9 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         offset = 6 * (num + 2);
     } else if (hob == 0xfe) {
         // Common endpoint vector. Bytes: 3
-        auto x0 = static_cast<int8_t>(lob);
-        auto y0 = read<int8_t>(buf+2, endian);
-        record = new SlideRecordCommonEndpoint{x0, y0};
+        auto dx0 = static_cast<int8_t>(lob);
+        auto dy0 = read<int8_t>(buf+2, endian);
+        record = new SlideRecordCommonEndpoint{dx0, dy0};
         offset = 3;
     } else if (hob == 0xff) {
         // New color. Bytes: 2

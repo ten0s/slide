@@ -13,6 +13,7 @@ SLIDE_OBJS=\
 	slide_info_printers.o \
 	slide_library_info_printers.o \
 	slide_record_parser.o \
+	slide_records_visitor_binary_writer.o \
 	slide_records_visitor_text_writer.o \
 	slide_records_visitor_cairo_drawer.o \
 	slide_cache.o \

@@ -19,26 +19,31 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#include "slide.hpp"
+#ifndef __SLIDE_RECORDS_VISITOR_BINARY_WRITER_HPP__
+#define __SLIDE_RECORDS_VISITOR_BINARY_WRITER_HPP__
+
+#include <ostream>
+#include <string>
 #include "slide_endian.hpp"
-#include "slide_writer.hpp"
-#include "slide_header_writer.hpp"
-#include "slide_records_visitor_binary_writer.hpp"
+#include "slide_records_visitor.hpp"
 
 namespace libslide {
 
-std::ostream&
-write_slide(std::ostream& os, const Slide& slide)
-{
-    const auto& header = slide.header();
-    Endian endian = header.endian();
+class SlideRecordsVisitorBinaryWriter : public SlideRecordsVisitor {
+public:
+    explicit SlideRecordsVisitorBinaryWriter(std::ostream& os, Endian endian);
+    void accept(SlideRecordVector& r) override;
+    void accept(SlideRecordOffsetVector& r) override;
+    void accept(SlideRecordCommonEndpoint& r) override;
+    void accept(SlideRecordSolidFillPolygon&) override;
+    void accept(SlideRecordColor& r) override;
+    void accept(SlideRecordEndOfFile& r) override;
 
-    write_slide_header(os, header, endian);
-
-    SlideRecordsVisitorBinaryWriter visitor{os, endian};
-    slide.visit_records(visitor);
-
-    return os;
-}
+private:
+    std::ostream& _os;
+    Endian _endian;
+};
 
 } // namespace libslide
+
+#endif // __SLIDE_RECORDS_VISITOR_BINARY_WRITER_HPP__
