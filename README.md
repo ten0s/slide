@@ -10,11 +10,11 @@ Features:
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
 * Convert slide to PNG and SVG
+* Extract slide from slide library
 * Linux, Windows and MacOS support
 
 Todo:
 
-* Extract slides from slide library
 * Add slide to slide library
 * Delete slide from slide library
 * Rename slide in slide library
