@@ -26,7 +26,6 @@
 #include "slide.hpp"
 #include "slide_parser.hpp"
 #include "slide_records.hpp"
-#include "slide_records_visitor_ostream.hpp"
 #include "slide_util.hpp"
 
 namespace libslide {
