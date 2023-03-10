@@ -39,7 +39,7 @@ void SlideRecordsVisitorBinaryWriter::accept(SlideRecordVector& r)
 
 void SlideRecordsVisitorBinaryWriter::accept(SlideRecordOffsetVector& r)
 {
-    write(_os, make<int16_t>({0xfb, r.dx0()}), _endian);
+    write(_os, make<int16_t>({0xfb, static_cast<uint8_t>(r.dx0())}), _endian);
     _os << r.dy0();
     _os << r.dx1();
     _os << r.dy1();
@@ -47,24 +47,26 @@ void SlideRecordsVisitorBinaryWriter::accept(SlideRecordOffsetVector& r)
 
 void SlideRecordsVisitorBinaryWriter::accept(SlideRecordCommonEndpoint& r)
 {
-    write(_os, make<int16_t>({0xfe, r.dx0()}), _endian);
+    write(_os, make<int16_t>({0xfe, static_cast<uint8_t>(r.dx0())}), _endian);
     _os << r.dy0();
 }
 
 void SlideRecordsVisitorBinaryWriter::accept(SlideRecordSolidFillPolygon& r)
 {
+    // Start record
     write(_os, make<int16_t>({0xfd, 0x00}), _endian);
     // x is number of records
     write(_os, static_cast<int16_t>(r.vertices().size()), _endian);
     // y is negative for start record
     write(_os, static_cast<int16_t>(-1), _endian);
 
-    for (auto& [x, y] : r.vertices()) {
+    for (auto [x, y] : r.vertices()) {
         write(_os, make<int16_t>({0xfd, 0x00}), _endian);
         write(_os, static_cast<int16_t>(x), _endian);
         write(_os, static_cast<int16_t>(y), _endian);
     }
 
+    // End Record
     write(_os, make<int16_t>({0xfd, 0x00}), _endian);
     // x is ignored
     write(_os, static_cast<int16_t>(0), _endian);

@@ -63,7 +63,7 @@ void SlideRecordsVisitorTextWriter::accept(SlideRecordSolidFillPolygon& r)
 {
     _os << _pad;
     _os << "(SOLID_FILL_POLYGON";
-    for (auto& [x, y] : r.vertices()) {
+    for (auto [x, y] : r.vertices()) {
         _os << " " << x << " " << y;
     }
     _os << ")\n";
