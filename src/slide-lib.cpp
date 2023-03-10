@@ -54,9 +54,9 @@ int main(int argc, char* argv[])
 
     po::options_description config("Configuration");
     config.add_options()
-        ("extract,e",
+        ("export,e",
          po::value<std::string>(),
-         "extract slide to slide file")
+         "export slide to file")
         ;
 
     po::options_description hidden("Hidden options");
@@ -111,8 +111,8 @@ int main(int argc, char* argv[])
                     SlideLibrary library = SlideLibrary::from_file(file);
 
                     std::string name;
-                    if (vm.count("extract")) {
-                        name = vm["extract"].as<std::string>();
+                    if (vm.count("export")) {
+                        name = vm["export"].as<std::string>();
                     }
 
                     const Slide* slide = library.find(name);
