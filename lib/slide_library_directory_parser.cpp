@@ -23,7 +23,7 @@
 #include <cstring> // strncpy
 #include "slide_library_directory.hpp"
 #include "slide_library_directory_parser.hpp"
-#include "slide_parser_util.hpp"
+#include "slide_value_util.hpp"
 
 namespace {
 

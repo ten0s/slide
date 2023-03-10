@@ -24,6 +24,7 @@
 
 #include <cstdint>
 #include <stdexcept>
+#include <ostream>
 #include "slide_endian.hpp"
 
 namespace libslide {
@@ -66,6 +67,24 @@ void write(uint8_t buf[sizeof(T)], T val, Endian endian) {
     default:
         throw std::runtime_error{"Unknown endian"};
     }
+}
+
+template<typename T>
+std::ostream&
+write(std::ostream& os, T val, Endian endian)
+{
+    uint8_t buf[sizeof(T)];
+    write(buf, val, endian);
+    os.write((char*)buf, sizeof(buf));
+    return os;
+}
+
+template<typename T>
+T make(std::initializer_list<uint8_t> list)
+{
+    union { uint8_t in[sizeof(T)]; T out; } x;
+    std::copy(std::begin(list), std::end(list), x.in);
+    return x.out;
 }
 
 template<typename T>

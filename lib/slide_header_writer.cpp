@@ -21,7 +21,7 @@
 
 #include "slide_header.hpp"
 #include "slide_header_writer.hpp"
-#include "slide_parser_util.hpp"
+#include "slide_value_util.hpp"
 
 namespace libslide {
 
@@ -33,42 +33,23 @@ write_slide_header(std::ostream& os, const SlideHeader& header, Endian endian)
     os << header.type_indicator();
     os << header.level_indicator();
 
-    uint8_t buf2[2];
-    write(buf2, header.high_x_dot(), endian);
-    os.write((char*)buf2, sizeof(buf2));
-
-    write(buf2, header.high_y_dot(), endian);
-    os.write((char*)buf2, sizeof(buf2));
+    write(os, header.high_x_dot(), endian);
+    write(os, header.high_y_dot(), endian);
 
     if (header.level_indicator() == 1) {
-
         // V1 Specific
-        uint8_t buf8[8];
-        write(buf8, header.aspect_ratio(), endian);
-        os.write((char*)buf8, sizeof(buf8));
-
-        write(buf2, header.hardware_fill(), endian);
-        os.write((char*)buf2, sizeof(buf2));
-
+        write(os, header.aspect_ratio(), endian);
+        write(os, header.hardware_fill(), endian);
         os << '\x00'; // Filler byte
-
     } else if (header.level_indicator() == 2) {
-
         // V2 Specific
-        uint8_t buf4[4];
-
-        write(buf4, static_cast<uint32_t>(header.aspect_ratio() * 10'000'000), Endian::LE);
-        os.write((char*)buf4, sizeof(buf4));
-
-        write(buf2, header.hardware_fill(), endian);
-        os.write((char*)buf2, sizeof(buf2));
-
-        write(buf2, 0x1234, endian);
-        os.write((char*)buf2, sizeof(buf2));
-
+        write(os, static_cast<uint32_t>(header.aspect_ratio() * 10'000'000), Endian::LE);
+        write(os, header.hardware_fill(), endian);
+        write(os, make<uint16_t>({0x12, 0x34}), endian); // Test number
     } else {
         throw std::runtime_error{"Unknown slide version"};
     }
+
     return os;
 }
 
