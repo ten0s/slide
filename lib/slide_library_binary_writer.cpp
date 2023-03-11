@@ -21,22 +21,21 @@
 
 #include "slide.hpp"
 #include "slide_endian.hpp"
-#include "slide_writer.hpp"
-#include "slide_header_writer.hpp"
-#include "slide_records_visitor_binary_writer.hpp"
+#include "slide_binary_writer.hpp"
+#include "slide_library_binary_writer.hpp"
 
 namespace libslide {
 
 std::ostream&
-write_slide(std::ostream& os, const Slide& slide)
+write_slide_library_binary(std::ostream& os, const SlideLibrary& lib)
 {
-    const auto& header = slide.header();
-    Endian endian = header.endian();
+    //const auto& header = slide.header();
+    //Endian endian = header.endian();
 
-    write_slide_header(os, header, endian);
+    //write_slide_header_binary(os, header, endian);
 
-    SlideRecordsVisitorBinaryWriter visitor{os, endian};
-    slide.visit_records(visitor);
+    //SlideRecordsVisitorBinaryWriter visitor{os, endian};
+    //slide.visit_records(visitor);
 
     return os;
 }

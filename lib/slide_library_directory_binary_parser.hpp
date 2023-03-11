@@ -19,8 +19,8 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_HEADER_PARSER_HPP__
-#define __SLIDE_HEADER_PARSER_HPP__
+#ifndef __SLIDE_LIBRARY_DIRECTORY_BINARY_PARSER_HPP__
+#define __SLIDE_LIBRARY_DIRECTORY_BINARY_PARSER_HPP__
 
 #include <cstddef> // size_t
 #include <cstdint> // uint8_t
@@ -28,11 +28,11 @@
 
 namespace libslide {
 
-class SlideHeader;
+class SlideLibraryDirectory;
 
-std::tuple<SlideHeader, size_t>
-parse_slide_header(const uint8_t* buf, size_t size);
+std::tuple<SlideLibraryDirectory*, size_t>
+parse_slide_library_directory_binary(const uint8_t* buf, size_t size);
 
 } // namespace libslide
 
-#endif // __SLIDE_HEADER_PARSER_HPP__
+#endif // __SLIDE_LIBRARY_DIRECTORY_BINARY_PARSER_HPP__

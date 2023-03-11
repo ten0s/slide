@@ -2,17 +2,18 @@ include ../Makefile.inc
 
 SLIDE_OBJS=\
 	slide.o \
-	slide_parser.o \
-	slide_writer.o \
-	slide_header_parser.o \
-	slide_header_writer.o \
+	slide_binary_parser.o \
+	slide_binary_writer.o \
+	slide_header_binary_parser.o \
+	slide_header_binary_writer.o \
 	slide_library.o \
-	slide_library_parser.o \
-	slide_library_header_parser.o \
-	slide_library_directory_parser.o \
+	slide_library_binary_parser.o \
+	slide_library_binary_writer.o \
+	slide_library_header_binary_parser.o \
+	slide_library_directory_binary_parser.o \
 	slide_info_printers.o \
 	slide_library_info_printers.o \
-	slide_record_parser.o \
+	slide_record_binary_parser.o \
 	slide_records_visitor_binary_writer.o \
 	slide_records_visitor_text_writer.o \
 	slide_records_visitor_cairo_drawer.o \

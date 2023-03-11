@@ -19,25 +19,26 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_LIBRARY_PARSER_HPP__
-#define __SLIDE_LIBRARY_PARSER_HPP__
-
-#include <cstddef> // size_t
-#include <cstdint> // uint8_t
-#include <vector>
+#include "slide.hpp"
+#include "slide_endian.hpp"
+#include "slide_binary_writer.hpp"
+#include "slide_header_binary_writer.hpp"
+#include "slide_records_visitor_binary_writer.hpp"
 
 namespace libslide {
 
-class Slide;
-class SlideLibraryHeader;
-class SlideLibraryDirectory;
+std::ostream&
+write_slide_binary(std::ostream& os, const Slide& slide)
+{
+    const auto& header = slide.header();
+    Endian endian = header.endian();
 
-std::tuple<SlideLibraryHeader,
-           std::vector<SlideLibraryDirectory*>,
-           std::vector<Slide*>,
-           size_t>
-parse_slide_library(const uint8_t* buf, size_t size);
+    write_slide_header_binary(os, header, endian);
+
+    SlideRecordsVisitorBinaryWriter visitor{os, endian};
+    slide.visit_records(visitor);
+
+    return os;
+}
 
 } // namespace libslide
-
-#endif // __SLIDE_LIBRARY_PARSER_HPP__

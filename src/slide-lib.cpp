@@ -21,13 +21,13 @@
 
 #include <iostream>
 #include <fstream>
-//#include <optional>
 #include <string>
 #include <boost/program_options.hpp>
 
 #include "../lib/slide.hpp"
-#include "../lib/slide_writer.hpp"
+#include "../lib/slide_binary_writer.hpp"
 #include "../lib/slide_library.hpp"
+#include "../lib/slide_library_binary_writer.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
 
@@ -40,6 +40,50 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 {
     os << "Usage: " << prog << " [options] <FILE.slb>\n"
        << options << "\n";
+}
+
+static int
+export_slide_to_file(const SlideLibrary& lib, const std::string& name)
+{
+    const Slide* slide = lib.find(name);
+    if (!slide) {
+        try {
+            size_t idx = std::stol(name);
+            slide = lib.find(idx);
+        } catch (...) { }
+    }
+
+    if (slide) {
+        std::string filename = slide->name() + ".sld";
+        std::ofstream ofs {filename, std::ios::binary};
+        write_slide_binary(ofs, *slide);
+        return 0;
+    } else {
+        std::cerr << "Error: Library slide not found: " << name << "\n";
+        return 1;
+    }
+}
+
+static int
+import_slide_from_file(SlideLibrary& lib, const std::string& libfile, const std::string& sldfile)
+{
+    auto ext = to_upper(get_ext(sldfile));
+    if (ext == ".SLD") {
+        try {
+            //Slide slide = Slide::from_file(sldfile);
+            //lib.append(slide);
+            // TODO: make backup?
+            std::ofstream ofs {"new-" + libfile, std::ios::binary};
+            write_slide_library_binary(ofs, lib);
+            return 0;
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << "\n";
+            return 1;
+        }
+    } else {
+        std::cerr << "Error: Invalid slide extension: " << ext << "\n";
+        return 1;
+    }
 }
 
 int main(int argc, char* argv[])
@@ -57,6 +101,9 @@ int main(int argc, char* argv[])
         ("export,e",
          po::value<std::string>(),
          "export slide to file")
+        ("import,i",
+         po::value<std::string>(),
+         "import slide from file")
         ;
 
     po::options_description hidden("Hidden options");
@@ -103,34 +150,21 @@ int main(int argc, char* argv[])
     if (vm.count("names")) {
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() >= 1) {
-            auto file = names[0];
-            auto ext = to_upper(get_ext(file));
+            auto libfile = names[0];
+            auto ext = to_upper(get_ext(libfile));
             if (ext == ".SLB") {
 
                 try {
-                    SlideLibrary library = SlideLibrary::from_file(file);
+                    SlideLibrary lib = SlideLibrary::from_file(libfile);
 
-                    std::string name;
                     if (vm.count("export")) {
-                        name = vm["export"].as<std::string>();
+                        auto name = vm["export"].as<std::string>();
+                        return export_slide_to_file(lib, name);
                     }
 
-                    const Slide* slide = library.find(name);
-                    if (!slide) {
-                        try {
-                            size_t idx = std::stol(name);
-                            slide = library.find(idx);
-                        } catch (...) { }
-                    }
-
-                    if (slide) {
-                        std::string filename = slide->name() + ".sld";
-                        std::ofstream ofs{filename, std::ios::binary};
-                        write_slide(ofs, *slide);
-                        return 0;
-                    } else {
-                        std::cerr << "Error: Library slide not found: " << name << "\n";
-                        return 1;
+                    if (vm.count("import")) {
+                        auto sldfile = vm["import"].as<std::string>();
+                        return import_slide_from_file(lib, libfile, sldfile);
                     }
 
                 } catch (const std::exception& e) {

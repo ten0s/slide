@@ -22,11 +22,11 @@
 #include <tuple>
 #include <vector>
 #include "slide.hpp"
-#include "slide_parser.hpp"
+#include "slide_binary_parser.hpp"
 #include "slide_library_header.hpp"
-#include "slide_library_header_parser.hpp"
+#include "slide_library_header_binary_parser.hpp"
 #include "slide_library_directory.hpp"
-#include "slide_library_directory_parser.hpp"
+#include "slide_library_directory_binary_parser.hpp"
 
 namespace libslide {
 
@@ -34,15 +34,15 @@ std::tuple<SlideLibraryHeader,
            std::vector<SlideLibraryDirectory*>,
            std::vector<Slide*>,
            size_t>
-parse_slide_library(const uint8_t* buf, size_t size)
+parse_slide_library_binary(const uint8_t* buf, size_t size)
 {
-    auto [header, offset] = parse_slide_library_header(buf, size);
+    auto [header, offset] = parse_slide_library_header_binary(buf, size);
     auto totaloffset = offset;
 
     std::vector<SlideLibraryDirectory*> dirs;
     std::vector<Slide*> slides;
     for (;;) {
-        auto [dir, dirsize] = parse_slide_library_directory(buf+offset, size-offset);
+        auto [dir, dirsize] = parse_slide_library_directory_binary(buf+offset, size-offset);
         offset += dirsize;
         totaloffset += dirsize;
         if (dir) {
@@ -50,7 +50,7 @@ parse_slide_library(const uint8_t* buf, size_t size)
 
             auto name = dir->name();
             auto addr = dir->addr();
-            auto [sldheader, records, sldsize] = parse_slide(buf+addr, size-addr);
+            auto [sldheader, records, sldsize] = parse_slide_binary(buf+addr, size-addr);
             totaloffset += sldsize;
             Slide* slide = new Slide{name, sldheader, records, sldsize};
             slides.push_back(slide);

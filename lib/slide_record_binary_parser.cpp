@@ -23,17 +23,17 @@
 #include <iomanip> // std::setfill, std::setw, std::hex
 #include <sstream> // std::ostringstream
 #include "slide_records.hpp"
-#include "slide_record_parser.hpp"
-#include "slide_value_util.hpp"
+#include "slide_record_binary_parser.hpp"
+#include "slide_binary_util.hpp"
 
 namespace libslide {
 
 static
 std::vector<std::pair<int16_t, int16_t>>
-parse_polygon(size_t n, const uint8_t* buf, Endian endian);
+parse_polygon_binary(size_t n, const uint8_t* buf, Endian endian);
 
 std::tuple<SlideRecord*, size_t, bool>
-parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
+parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
 {
     SlideRecord* record = nullptr;
     size_t offset = 0;
@@ -73,7 +73,7 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
         // y is negative for start record
         auto y = read<int16_t>(buf+2*sizeof(int16_t), endian);
         assert(y < 0);
-        auto vertices = parse_polygon(num+1, buf+3*sizeof(int16_t), endian);
+        auto vertices = parse_polygon_binary(num+1, buf+3*sizeof(int16_t), endian);
         record = new SlideRecordSolidFillPolygon{vertices};
         offset = 6 * (num + 2);
     } else if (hob == 0xfe) {
@@ -99,7 +99,7 @@ parse_slide_record(const uint8_t* buf, size_t /*size*/, Endian endian)
 
 static
 std::vector<std::pair<int16_t, int16_t>>
-parse_polygon(size_t n, const uint8_t* buf, Endian endian)
+parse_polygon_binary(size_t n, const uint8_t* buf, Endian endian)
 {
     std::vector<std::pair<int16_t, int16_t>> vertices;
     size_t offset = 0;

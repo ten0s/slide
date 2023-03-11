@@ -23,8 +23,8 @@
 #include <cstddef> // offsetof
 #include <sstream>
 #include "slide_header.hpp"
-#include "slide_header_parser.hpp"
-#include "slide_value_util.hpp"
+#include "slide_header_binary_parser.hpp"
+#include "slide_binary_util.hpp"
 
 namespace {
 
@@ -62,7 +62,7 @@ struct HeaderV2 {
 namespace libslide {
 
 std::tuple<SlideHeader, size_t>
-parse_slide_header(const uint8_t* buf, size_t size)
+parse_slide_header_binary(const uint8_t* buf, size_t size)
 {
     Endian endian = Endian::UNK;
     uint16_t high_x_dot;

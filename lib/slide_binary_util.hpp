@@ -19,8 +19,8 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_PARSER_UTIL_HPP__
-#define __SLIDE_PARSER_UTIL_HPP__
+#ifndef __SLIDE_BINARY_UTIL_HPP__
+#define __SLIDE_BINARY_UTIL_HPP__
 
 #include <cstdint>
 #include <stdexcept>
@@ -105,4 +105,4 @@ uint8_t low_order_byte(T val) {
 
 } // namespace libslide
 
-#endif // __SLIDE_PARSER_UTIL_HPP__
+#endif // __SLIDE_BINARY_UTIL_HPP__

@@ -22,8 +22,8 @@
 #include <cstddef> // offsetof
 #include <cstring> // strncpy
 #include "slide_library_directory.hpp"
-#include "slide_library_directory_parser.hpp"
-#include "slide_value_util.hpp"
+#include "slide_library_directory_binary_parser.hpp"
+#include "slide_binary_util.hpp"
 
 namespace {
 
@@ -40,7 +40,7 @@ struct Directory {
 namespace libslide {
 
 std::tuple<SlideLibraryDirectory*, size_t>
-parse_slide_library_directory(const uint8_t* buf, size_t /*size*/)
+parse_slide_library_directory_binary(const uint8_t* buf, size_t /*size*/)
 {
     SlideLibraryDirectory* dir = nullptr;
     size_t offset = sizeof(Directory);

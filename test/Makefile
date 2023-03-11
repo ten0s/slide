@@ -1,5 +1,5 @@
 TESTS=\
-	slide_value_util-test
+	slide_binary_util-test
 
 all: $(TESTS)
 

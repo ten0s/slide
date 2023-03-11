@@ -20,13 +20,13 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
 #include "slide_header.hpp"
-#include "slide_header_writer.hpp"
-#include "slide_value_util.hpp"
+#include "slide_header_binary_writer.hpp"
+#include "slide_binary_util.hpp"
 
 namespace libslide {
 
 std::ostream&
-write_slide_header(std::ostream& os, const SlideHeader& header, Endian endian)
+write_slide_header_binary(std::ostream& os, const SlideHeader& header, Endian endian)
 {
     // Generic Part
     os << "AutoCAD Slide" << '\x0d' << '\x0a' << '\x1a' << '\x00';

@@ -58,6 +58,8 @@ public:
     const Slide* find(const std::string& name) const;
     const Slide* find(size_t idx) const;
 
+    void append(Slide&& slide);
+
 private:
     std::string _name;
     SlideLibraryHeader _header;

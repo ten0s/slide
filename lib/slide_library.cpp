@@ -24,9 +24,9 @@
 #include <fstream>
 #include <sstream>
 #include "slide.hpp"
-#include "slide_parser.hpp"
+#include "slide_binary_parser.hpp"
 #include "slide_library.hpp"
-#include "slide_library_parser.hpp"
+#include "slide_library_binary_parser.hpp"
 #include "slide_library_directory.hpp"
 #include "slide_util.hpp"
 
@@ -59,7 +59,7 @@ SlideLibrary SlideLibrary::from_file(const std::string& filename)
 SlideLibrary SlideLibrary::from_buf(const std::string& name,
                                     const uint8_t* buf, size_t size)
 {
-    auto [header, dirs, files, offset] = parse_slide_library(buf, size);
+    auto [header, dirs, files, offset] = parse_slide_library_binary(buf, size);
 
     return SlideLibrary{
         name,
@@ -128,6 +128,13 @@ const Slide* SlideLibrary::find(size_t idx) const
         return _slides.at(idx);
     }
     return nullptr;
+}
+
+void SlideLibrary::append(Slide&& slide)
+{
+    //_dirs.push_back(
+    //_slides.push_back(slide);
+    //_size += slide.size() + ;
 }
 
 } // namespace libslide

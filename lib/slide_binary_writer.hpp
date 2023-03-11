@@ -19,21 +19,18 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_RECORD_PARSER_HPP__
-#define __SLIDE_RECORD_PARSER_HPP__
+#ifndef __SLIDE_BINARY_WRITER_HPP__
+#define __SLIDE_BINARY_WRITER_HPP__
 
-#include <cstddef> // size_t
-#include <cstdint> // uint8_t
-#include <tuple>
-#include "slide_endian.hpp"
+#include <ostream>
 
 namespace libslide {
 
-class SlideRecord;
+class Slide;
 
-std::tuple<SlideRecord*, size_t, bool>
-parse_slide_record(const uint8_t* buf, size_t size, Endian endian);
+std::ostream&
+write_slide_binary(std::ostream& os, const Slide& slide);
 
-} // namespace libslide
+}
 
-#endif // __SLIDE_RECORD_PARSER_HPP__
+#endif // __SLIDE_BINARY_WRITER_HPP__

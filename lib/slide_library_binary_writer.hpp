@@ -19,20 +19,18 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_LIBRARY_HEADER_PARSER_HPP__
-#define __SLIDE_LIBRARY_HEADER_PARSER_HPP__
+#ifndef __SLIDE_LIBRARY_BINARY_WRITER_HPP__
+#define __SLIDE_LIBRARY_BINARY_WRITER_HPP__
 
-#include <cstddef> // size_t
-#include <cstdint> // uint8_t
-#include <tuple>
+#include <ostream>
 
 namespace libslide {
 
-class SlideLibraryHeader;
+class SlideLibrary;
 
-std::tuple<SlideLibraryHeader, size_t>
-parse_slide_library_header(const uint8_t* buf, size_t size);
+std::ostream&
+write_slide_library_binary(std::ostream& os, const SlideLibrary& lib);
 
-} // namespace libslide
+}
 
-#endif // __SLIDE_LIBRARY_HEADER_PARSER_HPP__
+#endif // __SLIDE_LIBRARY_BINARY_WRITER_HPP__

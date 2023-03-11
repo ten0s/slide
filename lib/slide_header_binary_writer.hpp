@@ -19,20 +19,19 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_LIBRARY_DIRECTORY_PARSER_HPP__
-#define __SLIDE_LIBRARY_DIRECTORY_PARSER_HPP__
+#ifndef __SLIDE_HEADER_BINARY_WRITER_HPP__
+#define __SLIDE_HEADER_BINARY_WRITER_HPP__
 
-#include <cstddef> // size_t
-#include <cstdint> // uint8_t
-#include <tuple>
+#include <ostream>
+#include "slide_endian.hpp"
 
 namespace libslide {
 
-class SlideLibraryDirectory;
+class SlideHeader;
 
-std::tuple<SlideLibraryDirectory*, size_t>
-parse_slide_library_directory(const uint8_t* buf, size_t size);
+std::ostream&
+write_slide_header_binary(std::ostream& os, const SlideHeader& header, Endian endian);
 
-} // namespace libslide
+}
 
-#endif // __SLIDE_LIBRARY_DIRECTORY_PARSER_HPP__
+#endif // __SLIDE_HEADER_BINARY_WRITER_HPP__

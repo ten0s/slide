@@ -24,7 +24,7 @@
 #include <fstream>
 #include <sstream>
 #include "slide.hpp"
-#include "slide_parser.hpp"
+#include "slide_binary_parser.hpp"
 #include "slide_records.hpp"
 #include "slide_util.hpp"
 
@@ -57,7 +57,7 @@ Slide Slide::from_file(const std::string& filename)
 Slide Slide::from_buf(const std::string& name,
                       const uint8_t* buf, size_t size)
 {
-    auto [header, records, offset] = parse_slide(buf, size);
+    auto [header, records, offset] = parse_slide_binary(buf, size);
     return Slide{name, header, records, offset};
 }
 

@@ -22,7 +22,7 @@
 #include <cstring> // strncmp
 #include <stdexcept>
 #include "slide_library_header.hpp"
-#include "slide_library_header_parser.hpp"
+#include "slide_library_header_binary_parser.hpp"
 
 namespace {
 
@@ -36,7 +36,7 @@ struct Header {
 namespace libslide {
 
 std::tuple<SlideLibraryHeader, size_t>
-parse_slide_library_header(const uint8_t* buf, size_t size)
+parse_slide_library_header_binary(const uint8_t* buf, size_t size)
 {
     std::string id_str{"AutoCAD Slide Library 1.0"};
     size_t id_str_sz = id_str.size();

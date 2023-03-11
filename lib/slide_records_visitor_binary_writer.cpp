@@ -21,7 +21,7 @@
 
 #include "slide_records.hpp"
 #include "slide_records_visitor_binary_writer.hpp"
-#include "slide_value_util.hpp"
+#include "slide_binary_util.hpp"
 
 namespace libslide {
 
