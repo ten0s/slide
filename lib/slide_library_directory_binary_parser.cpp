@@ -36,7 +36,6 @@ struct Directory {
 
 } // namespace
 
-
 namespace libslide {
 
 std::tuple<SlideLibraryDirectory*, size_t>

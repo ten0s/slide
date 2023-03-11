@@ -19,25 +19,19 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_LIBRARY_HEADER_HPP__
-#define __SLIDE_LIBRARY_HEADER_HPP__
+#ifndef __SLIDE_LIBRARY_HEADER_BINARY_WRITER_HPP__
+#define __SLIDE_LIBRARY_HEADER_BINARY_WRITER_HPP__
 
-#include <string>
+#include <ostream>
+#include "slide_endian.hpp"
 
 namespace libslide {
 
-class SlideLibraryHeader {
-public:
-    explicit SlideLibraryHeader(const std::string& id_string)
-        : _id_string{id_string}
-        {}
+class SlideLibraryHeader;
 
-    std::string id_string() const { return _id_string; }
+std::ostream&
+write_slide_library_header_binary(std::ostream& os, const SlideLibraryHeader& header);
 
-private:
-    std::string _id_string;
-};
+}
 
-} // namespace libslide
-
-#endif // __SLIDE_LIBRARY_HEADER_HPP__
+#endif // __SLIDE_LIBRARY_HEADER_BINARY_WRITER_HPP__

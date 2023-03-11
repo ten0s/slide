@@ -55,6 +55,7 @@ export_slide_to_file(const SlideLibrary& lib, const std::string& name)
 
     if (slide) {
         std::string filename = slide->name() + ".sld";
+        // TODO: make backup?
         std::ofstream ofs {filename, std::ios::binary};
         write_slide_binary(ofs, *slide);
         return 0;

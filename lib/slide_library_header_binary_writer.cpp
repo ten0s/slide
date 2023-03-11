@@ -19,25 +19,19 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_LIBRARY_HEADER_HPP__
-#define __SLIDE_LIBRARY_HEADER_HPP__
-
-#include <string>
+#include "slide_library_header.hpp"
+#include "slide_library_header_binary_writer.hpp"
 
 namespace libslide {
 
-class SlideLibraryHeader {
-public:
-    explicit SlideLibraryHeader(const std::string& id_string)
-        : _id_string{id_string}
-        {}
-
-    std::string id_string() const { return _id_string; }
-
-private:
-    std::string _id_string;
-};
+std::ostream&
+write_slide_library_header_binary(std::ostream& os, const SlideLibraryHeader& /*header*/)
+{
+    os << "AutoCAD Slide Library 1.0"
+       << '\x0d' << '\x0a' << '\x1a'
+       << '\x00' << '\x00' << '\x00'
+       << '\x00';
+    return os;
+}
 
 } // namespace libslide
-
-#endif // __SLIDE_LIBRARY_HEADER_HPP__

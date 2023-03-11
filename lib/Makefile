@@ -10,7 +10,9 @@ SLIDE_OBJS=\
 	slide_library_binary_parser.o \
 	slide_library_binary_writer.o \
 	slide_library_header_binary_parser.o \
+	slide_library_header_binary_writer.o \
 	slide_library_directory_binary_parser.o \
+	slide_library_directory_binary_writer.o \
 	slide_info_printers.o \
 	slide_library_info_printers.o \
 	slide_record_binary_parser.o \

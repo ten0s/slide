@@ -19,23 +19,29 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#include "slide.hpp"
 #include "slide_endian.hpp"
-#include "slide_binary_writer.hpp"
+#include "slide_library.hpp"
 #include "slide_library_binary_writer.hpp"
+#include "slide_library_header_binary_writer.hpp"
+#include "slide_library_directory_binary_writer.hpp"
+#include "slide_binary_writer.hpp"
 
 namespace libslide {
 
 std::ostream&
 write_slide_library_binary(std::ostream& os, const SlideLibrary& lib)
 {
-    //const auto& header = slide.header();
-    //Endian endian = header.endian();
+    const auto& header = lib.header();
+    write_slide_library_header_binary(os, header);
 
-    //write_slide_header_binary(os, header, endian);
+    for (const auto& dir : lib.dirs()) {
+        write_slide_library_directory_binary(os, *dir);
+    }
+    write_slide_library_directory_nil_binary(os);
 
-    //SlideRecordsVisitorBinaryWriter visitor{os, endian};
-    //slide.visit_records(visitor);
+    for (const auto& slide: lib.slides()) {
+        write_slide_binary(os, *slide);
+    }
 
     return os;
 }
