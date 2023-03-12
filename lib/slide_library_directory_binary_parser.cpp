@@ -52,11 +52,8 @@ parse_slide_library_directory_binary(const uint8_t* buf, size_t /*size*/)
     std::shared_ptr<SlideLibraryDirectory> dir;
     if (strlen(name) > 0) {
         // The slide address is always written with the low-order byte first.
-        uint32_t addr = read<uint32_t>(buf + length, Endian::LE);
-        dir = std::shared_ptr<SlideLibraryDirectory>{new SlideLibraryDirectory{
-            std::string{name},
-            addr
-        }};
+        auto addr = read<uint32_t>(buf + length, Endian::LE);
+        dir = std::make_shared<SlideLibraryDirectory>(name, addr);
     }
 
     return {dir, offset};

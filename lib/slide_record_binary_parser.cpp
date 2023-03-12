@@ -49,7 +49,7 @@ parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
         auto y0 = read<int16_t>(buf+1*sizeof(int16_t), endian);
         auto x1 = read<int16_t>(buf+2*sizeof(int16_t), endian);
         auto y1 = read<int16_t>(buf+3*sizeof(int16_t), endian);
-        record = std::shared_ptr<SlideRecord>{new SlideRecordVector{x0, y0, x1, y1}};
+        record = std::make_shared<SlideRecordVector>(x0, y0, x1, y1);
         offset = 8;
     } else if (hob == 0xfb) {
         // Offset vector. Bytes: 5
@@ -57,11 +57,11 @@ parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
         auto dy0 = read<int8_t>(buf+2, endian);
         auto dx1 = read<int8_t>(buf+3, endian);
         auto dy1 = read<int8_t>(buf+4, endian);
-        record = std::shared_ptr<SlideRecord>{new SlideRecordOffsetVector{dx0, dy0, dx1, dy1}};
+        record = std::make_shared<SlideRecordOffsetVector>(dx0, dy0, dx1, dy1);
         offset = 5;
     } else if (hob == 0xfc) {
         // End of file. Bytes: 2
-        record = std::shared_ptr<SlideRecord>{new SlideRecordEndOfFile{}};
+        record = std::make_shared<SlideRecordEndOfFile>();
         offset = 2;
         stop = true;
     } else if (hob == 0xfd) {
@@ -74,18 +74,18 @@ parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
         auto y = read<int16_t>(buf+2*sizeof(int16_t), endian);
         assert(y < 0);
         auto vertices = parse_polygon_binary(num+1, buf+3*sizeof(int16_t), endian);
-        record = std::shared_ptr<SlideRecord>{new SlideRecordSolidFillPolygon{vertices}};
+        record = std::make_shared<SlideRecordSolidFillPolygon>(vertices);
         offset = 6 * (num + 2);
     } else if (hob == 0xfe) {
         // Common endpoint vector. Bytes: 3
         auto dx0 = static_cast<int8_t>(lob);
         auto dy0 = read<int8_t>(buf+2, endian);
-        record = std::shared_ptr<SlideRecord>{new SlideRecordCommonEndpoint{dx0, dy0}};
+        record = std::make_shared<SlideRecordCommonEndpoint>(dx0, dy0);
         offset = 3;
     } else if (hob == 0xff) {
         // New color. Bytes: 2
         auto color = lob;
-        record = std::shared_ptr<SlideRecord>{new SlideRecordColor{color}};
+        record = std::make_shared<SlideRecordColor>(color);
         offset = 2;
     } else {
         std::ostringstream ss;

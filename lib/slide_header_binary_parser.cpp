@@ -93,7 +93,7 @@ parse_slide_header_binary(const uint8_t* buf, size_t size)
             endian = Endian::BE;
             break;
         default:
-            throw new std::runtime_error{"End of File is not found"};
+            throw std::runtime_error{"End of File is not found"};
         }
         high_x_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_x_dot), endian);
         high_y_dot = read<uint16_t>(buf+offsetof(HeaderV1, high_y_dot), endian);

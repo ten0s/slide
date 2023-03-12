@@ -51,7 +51,7 @@ parse_slide_library_binary(const uint8_t* buf, size_t size)
             auto addr = dir->addr();
             auto [sldheader, records, sldsize] = parse_slide_binary(buf+addr, size-addr);
             totaloffset += sldsize;
-            auto slide = std::shared_ptr<Slide>{new Slide{name, sldheader, records, sldsize}};
+            auto slide = std::make_shared<Slide>(name, sldheader, records, sldsize);
             slides.push_back(slide);
         } else {
             break;
