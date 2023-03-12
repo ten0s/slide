@@ -24,6 +24,7 @@
 
 #include <cstddef> // size_t
 #include <cstdint> // uint8_t
+#include <memory>
 #include <tuple>
 #include "slide_endian.hpp"
 
@@ -31,7 +32,7 @@ namespace libslide {
 
 class SlideRecord;
 
-std::tuple<SlideRecord*, size_t, bool>
+std::tuple<std::shared_ptr<SlideRecord>, size_t, bool>
 parse_slide_record_binary(const uint8_t* buf, size_t size, Endian endian);
 
 } // namespace libslide

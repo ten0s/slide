@@ -19,7 +19,6 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#include <tuple>
 #include "slide_binary_parser.hpp"
 #include "slide_header.hpp"
 #include "slide_header_binary_parser.hpp"
@@ -28,13 +27,13 @@
 
 namespace libslide {
 
-std::tuple<SlideHeader, std::vector<SlideRecord*>, size_t>
+std::tuple<SlideHeader, std::vector<std::shared_ptr<SlideRecord>>, size_t>
 parse_slide_binary(const uint8_t* buf, size_t size)
 {
     auto [header, offset] = parse_slide_header_binary(buf, size);
     Endian endian = header.endian();
 
-    std::vector<SlideRecord*> records;
+    std::vector<std::shared_ptr<SlideRecord>> records;
     for (;;) {
         auto [record, delta, stop] = parse_slide_record_binary(buf+offset, size-offset, endian);
         records.push_back(record);

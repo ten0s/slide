@@ -24,6 +24,7 @@
 
 #include <cstddef> // size_t
 #include <cstdint> // uint8_t
+#include <memory>
 #include <vector>
 
 namespace libslide {
@@ -32,7 +33,7 @@ class SlideHeader;
 class SlideRecord;
 
 std::tuple<SlideHeader,
-           std::vector<SlideRecord*>,
+           std::vector<std::shared_ptr<SlideRecord>>,
            size_t>
 parse_slide_binary(const uint8_t* buf, size_t size);
 

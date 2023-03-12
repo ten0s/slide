@@ -22,6 +22,7 @@
 #ifndef __SLIDE_HPP__
 #define __SLIDE_HPP__
 
+#include <memory>
 #include <string>
 #include <vector>
 #include "slide_header.hpp"
@@ -38,7 +39,7 @@ public:
 
     Slide(const std::string& name,
           const SlideHeader& header,
-          const std::vector<SlideRecord*>& records,
+          const std::vector<std::shared_ptr<SlideRecord>>& records,
           size_t size);
     Slide(Slide&&);
     ~Slide();
@@ -55,7 +56,7 @@ public:
 private:
     std::string _name;
     SlideHeader _header;
-    std::vector<SlideRecord*> _records;
+    std::vector<std::shared_ptr<SlideRecord>> _records;
     size_t _size;
 };
 

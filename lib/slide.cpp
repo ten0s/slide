@@ -63,7 +63,7 @@ Slide Slide::from_buf(const std::string& name,
 
 Slide::Slide(const std::string& name,
              const SlideHeader& header,
-             const std::vector<SlideRecord*>& records,
+             const std::vector<std::shared_ptr<SlideRecord>>& records,
              size_t size)
     : _name{name},
       _header{header},
@@ -82,9 +82,6 @@ Slide::Slide(Slide&& old)
 
 Slide::~Slide()
 {
-    for (auto& record : _records) {
-        delete record;
-    }
     _records = {};
 }
 
