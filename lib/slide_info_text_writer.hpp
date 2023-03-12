@@ -19,8 +19,8 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_INFO_PRINTERS_HPP__
-#define __SLIDE_INFO_PRINTERS_HPP__
+#ifndef __SLIDE_INFO_TEXT_WRITER_HPP__
+#define __SLIDE_INFO_TEXT_WRITER_HPP__
 
 #include <ostream>
 #include <string>
@@ -36,23 +36,12 @@ enum class slide_info_t {
 
 class Slide;
 
-template <slide_info_t>
-class SlideInfoPrinter {
-public:
-    explicit SlideInfoPrinter(const Slide& slide, const std::string& pad = "")
-        : _slide{slide}, _pad{pad} {}
-
-    const Slide& slide() const { return _slide; }
-    const std::string&  pad() const { return _pad; }
-
-private:
-    const Slide& _slide;
-    std::string _pad;
-};
-
-template <slide_info_t What>
-std::ostream& operator<<(std::ostream& os, const SlideInfoPrinter<What>& p);
+std::ostream&
+write_slide_info_text(std::ostream& os,
+                      const Slide& slide,
+                      slide_info_t info,
+                      const std::string& pad = "");
 
 } // namespace libslide
 
-#endif // __SLIDE_INFO_PRINTERS_HPP__
+#endif // __SLIDE_INFO_TEXT_WRITER_HPP__

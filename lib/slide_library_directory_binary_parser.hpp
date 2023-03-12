@@ -24,13 +24,14 @@
 
 #include <cstddef> // size_t
 #include <cstdint> // uint8_t
+#include <memory>
 #include <tuple>
 
 namespace libslide {
 
 class SlideLibraryDirectory;
 
-std::tuple<SlideLibraryDirectory*, size_t>
+std::tuple<std::shared_ptr<SlideLibraryDirectory>, size_t>
 parse_slide_library_directory_binary(const uint8_t* buf, size_t size);
 
 } // namespace libslide

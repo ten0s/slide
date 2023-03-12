@@ -25,9 +25,9 @@
 #include <boost/program_options.hpp>
 
 #include "../lib/slide.hpp"
-#include "../lib/slide_info_printers.hpp"
+#include "../lib/slide_info_text_writer.hpp"
 #include "../lib/slide_library.hpp"
-#include "../lib/slide_library_info_printers.hpp"
+#include "../lib/slide_library_info_text_writer.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
 
@@ -92,15 +92,13 @@ print_slide_info(std::ostream& os, const Slide& slide, slide_info_t info)
     switch (info) {
     case slide_info_t::ALL:
         os << "Info:\n";
-        os << SlideInfoPrinter<slide_info_t::INFO>{slide, "  "};
+        write_slide_info_text(os, slide, slide_info_t::INFO, "  ");
         os << "Records:\n";
-        os << SlideInfoPrinter<slide_info_t::RECS>{slide, "  "};
+        write_slide_info_text(os, slide, slide_info_t::RECS, "  ");
         break;
     case slide_info_t::INFO:
-        os << SlideInfoPrinter<slide_info_t::INFO>{slide};
-        break;
     case slide_info_t::RECS:
-        os << SlideInfoPrinter<slide_info_t::RECS>{slide};
+        write_slide_info_text(os, slide, info);
         break;
     default:
         break;
@@ -115,19 +113,14 @@ print_library_info(std::ostream& os, const SlideLibrary& lib, slide_library_info
     switch (info) {
     case slide_library_info_t::ALL:
         os << "Info:\n";
-        os << SlideLibraryInfoPrinter<slide_library_info_t::INFO>{lib, "  "};
+        write_slide_library_info_text(os, lib, slide_library_info_t::INFO, "  ");
         os << "Names:\n";
-        os << SlideLibraryInfoPrinter<slide_library_info_t::NAMES>{lib, "  "};
+        write_slide_library_info_text(os, lib, slide_library_info_t::NAMES, "  ");
         break;
     case slide_library_info_t::INFO:
-        os << SlideLibraryInfoPrinter<slide_library_info_t::INFO>{lib};
-        break;
     case slide_library_info_t::NAMES:
-        os << SlideLibraryInfoPrinter<slide_library_info_t::NAMES>{lib};
-        break;
     case slide_library_info_t::DIRS:
-        os << SlideLibraryInfoPrinter<slide_library_info_t::DIRS>{lib};
-        break;
+        write_slide_library_info_text(os, lib, info);
     default:
         break;
     }
@@ -246,12 +239,12 @@ int main(int argc, char* argv[])
                 auto name = names[1];
 
                 try {
-                    SlideLibrary library = SlideLibrary::from_file(file);
-                    const Slide* slide = library.find(name);
+                    auto lib = SlideLibrary::from_file(file);
+                    auto slide = lib.find(name);
                     if (!slide) {
                         try {
                             size_t idx = std::stol(name);
-                            slide = library.find(idx);
+                            slide = lib.find(idx);
                         } catch (...) { }
                     }
 
@@ -259,7 +252,7 @@ int main(int argc, char* argv[])
                         if (vm.count("what")) {
                             auto raw = vm["what"].as<std::string>();
                             if (auto info = parse_slide_info(raw)) {
-                                print_slide_info(std::cout, *slide, info.value());
+                                print_slide_info(std::cout, *slide.value(), info.value());
                                 return 0;
                             } else {
                                 std::cerr << "Error: Invalid slide info: " << raw << "\n";

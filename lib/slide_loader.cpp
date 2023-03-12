@@ -28,7 +28,6 @@
 #include "slide_library_directory.hpp"
 #include "slide_cache.hpp"
 #include "slide_loader.hpp"
-#include <memory>
 #include "slide_util.hpp"
 
 namespace libslide {
@@ -143,7 +142,7 @@ cache_slide_lib(const std::string& file)
     }
 }
 
-std::optional<std::shared_ptr<Slide>>
+std::optional<std::shared_ptr<const Slide>>
 slide_from_uri(const std::string& slide_uri)
 {
     auto parsed_uri = parse_slide_uri(slide_uri);

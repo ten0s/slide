@@ -41,7 +41,7 @@ public:
     SlideCache& operator=(const SlideCache&) = delete;
     SlideCache& operator=(SlideCache&&) = delete;
 
-    std::optional<std::shared_ptr<Slide>> get(const std::string& slide_uri) const;
+    std::optional<std::shared_ptr<const Slide>> get(const std::string& slide_uri) const;
     void set(const std::string& slide_uri, std::shared_ptr<Slide> slide);
 
 private:

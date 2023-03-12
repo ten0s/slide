@@ -45,7 +45,7 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 static int
 export_slide_to_file(const SlideLibrary& lib, const std::string& name)
 {
-    const Slide* slide = lib.find(name);
+    auto slide = lib.find(name);
     if (!slide) {
         try {
             size_t idx = std::stol(name);
@@ -54,10 +54,10 @@ export_slide_to_file(const SlideLibrary& lib, const std::string& name)
     }
 
     if (slide) {
-        std::string filename = slide->name() + ".sld";
+        auto filename = slide.value()->name() + ".sld";
         // TODO: make backup?
         std::ofstream ofs {filename, std::ios::binary};
-        write_slide_binary(ofs, *slide);
+        write_slide_binary(ofs, *slide.value());
         return 0;
     } else {
         std::cerr << "Error: Library slide not found: " << name << "\n";
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
             if (ext == ".SLB") {
 
                 try {
-                    SlideLibrary lib = SlideLibrary::from_file(libfile);
+                    auto lib = SlideLibrary::from_file(libfile);
 
                     if (vm.count("export")) {
                         auto name = vm["export"].as<std::string>();

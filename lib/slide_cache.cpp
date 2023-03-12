@@ -31,7 +31,7 @@ SlideCache::~SlideCache()
     _cache = {};
 }
 
-std::optional<std::shared_ptr<Slide>>
+std::optional<std::shared_ptr<const Slide>>
 SlideCache::get(const std::string& slide_uri) const
 {
     auto it = _cache.find(slide_uri);

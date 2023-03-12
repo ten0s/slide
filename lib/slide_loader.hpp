@@ -30,7 +30,7 @@ namespace libslide {
 
 class Slide;
 
-std::optional<std::shared_ptr<Slide>>
+std::optional<std::shared_ptr<const Slide>>
 slide_from_uri(const std::string& slide_uri);
 
 } // namespace libslide

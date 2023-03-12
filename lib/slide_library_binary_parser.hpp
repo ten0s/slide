@@ -24,6 +24,7 @@
 
 #include <cstddef> // size_t
 #include <cstdint> // uint8_t
+#include <memory>
 #include <vector>
 
 namespace libslide {
@@ -33,8 +34,8 @@ class SlideLibraryHeader;
 class SlideLibraryDirectory;
 
 std::tuple<SlideLibraryHeader,
-           std::vector<SlideLibraryDirectory*>,
-           std::vector<Slide*>,
+           std::vector<std::shared_ptr<SlideLibraryDirectory>>,
+           std::vector<std::shared_ptr<Slide>>,
            size_t>
 parse_slide_library_binary(const uint8_t* buf, size_t size);
 

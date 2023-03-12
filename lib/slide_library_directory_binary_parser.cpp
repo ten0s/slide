@@ -38,7 +38,7 @@ struct Directory {
 
 namespace libslide {
 
-std::tuple<SlideLibraryDirectory*, size_t>
+std::tuple<std::shared_ptr<SlideLibraryDirectory>, size_t>
 parse_slide_library_directory_binary(const uint8_t* buf, size_t /*size*/)
 {
     constexpr size_t offset = sizeof(Directory);
@@ -49,14 +49,14 @@ parse_slide_library_directory_binary(const uint8_t* buf, size_t /*size*/)
 
     // If name is null, then return dir is null and
     // increased offset should point to the first Slide.
-    SlideLibraryDirectory* dir = nullptr;
+    std::shared_ptr<SlideLibraryDirectory> dir;
     if (strlen(name) > 0) {
         // The slide address is always written with the low-order byte first.
         uint32_t addr = read<uint32_t>(buf + length, Endian::LE);
-        dir = new SlideLibraryDirectory{
-            name,
+        dir = std::shared_ptr<SlideLibraryDirectory>{new SlideLibraryDirectory{
+            std::string{name},
             addr
-        };
+        }};
     }
 
     return {dir, offset};

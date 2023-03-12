@@ -22,6 +22,8 @@
 #ifndef __SLIDE_LIBRARY_HPP__
 #define __SLIDE_LIBRARY_HPP__
 
+#include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -39,8 +41,8 @@ public:
 
     SlideLibrary(const std::string& name,
                  const SlideLibraryHeader& header,
-                 const std::vector<SlideLibraryDirectory*>& dirs,
-                 const std::vector<Slide*>& slides,
+                 const std::vector<std::shared_ptr<SlideLibraryDirectory>>& dirs,
+                 const std::vector<std::shared_ptr<Slide>>& slides,
                  size_t size);
     SlideLibrary(SlideLibrary&&);
     ~SlideLibrary();
@@ -51,20 +53,20 @@ public:
 
     const std::string& name() const { return _name; }
     const SlideLibraryHeader& header() const { return _header; }
-    const std::vector<SlideLibraryDirectory*>& dirs() const { return _dirs; }
-    const std::vector<Slide*>& slides() const { return _slides; }
+    const std::vector<std::shared_ptr<SlideLibraryDirectory>>& dirs() const { return _dirs; }
+    const std::vector<std::shared_ptr<Slide>>& slides() const { return _slides; }
     size_t size() const { return _size; }
 
-    const Slide* find(const std::string& name) const;
-    const Slide* find(size_t idx) const;
+    std::optional<std::shared_ptr<const Slide>> find(const std::string& name) const;
+    std::optional<std::shared_ptr<const Slide>> find(size_t idx) const;
 
     void append(Slide&& slide);
 
 private:
     std::string _name;
     SlideLibraryHeader _header;
-    std::vector<SlideLibraryDirectory*> _dirs;
-    std::vector<Slide*> _slides;
+    std::vector<std::shared_ptr<SlideLibraryDirectory>> _dirs;
+    std::vector<std::shared_ptr<Slide>> _slides;
     size_t _size;
 };
 

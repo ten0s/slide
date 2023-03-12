@@ -32,7 +32,8 @@
 
 namespace libslide {
 
-SlideLibrary SlideLibrary::from_file(const std::string& filename)
+SlideLibrary
+SlideLibrary::from_file(const std::string& filename)
 {
     std::ifstream is{filename, std::ios::binary | std::ios::ate};
     if (is.is_open()) {
@@ -56,24 +57,25 @@ SlideLibrary SlideLibrary::from_file(const std::string& filename)
     }
 }
 
-SlideLibrary SlideLibrary::from_buf(const std::string& name,
-                                    const uint8_t* buf, size_t size)
+SlideLibrary
+SlideLibrary::from_buf(const std::string& name,
+                       const uint8_t* buf, size_t size)
 {
-    auto [header, dirs, files, offset] = parse_slide_library_binary(buf, size);
+    auto [header, dirs, slides, offset] = parse_slide_library_binary(buf, size);
 
     return SlideLibrary{
         name,
         header,
         dirs,
-        files,
+        slides,
         offset,
     };
 }
 
 SlideLibrary::SlideLibrary(const std::string& name,
                            const SlideLibraryHeader& header,
-                           const std::vector<SlideLibraryDirectory*>& dirs,
-                           const std::vector<Slide*>& slides,
+                           const std::vector<std::shared_ptr<SlideLibraryDirectory>>& dirs,
+                           const std::vector<std::shared_ptr<Slide>>& slides,
                            size_t size)
         : _name{name},
           _header{header},
@@ -95,42 +97,38 @@ SlideLibrary::SlideLibrary(SlideLibrary&& old)
 
 SlideLibrary::~SlideLibrary()
 {
-    for (auto& dir : _dirs) {
-        delete dir;
-    }
     _dirs = {};
-
-    for (auto& slide : _slides) {
-        delete slide;
-    };
     _slides = {};
 }
 
-const Slide* SlideLibrary::find(const std::string& name) const
+std::optional<std::shared_ptr<const Slide>>
+SlideLibrary::find(const std::string& name) const
 {
-    std::string upper = to_upper(name);
+    auto upper = to_upper(name);
     auto pos = std::find_if(
         _dirs.cbegin(), _dirs.cend(),
-        [&](auto* dir) { return dir->name() == upper; }
+        [&](const auto& dir) { return dir->name() == upper; }
     );
 
     if (pos != _dirs.cend()) {
-        size_t idx = std::distance(_dirs.cbegin(), pos);
+        auto idx = std::distance(_dirs.cbegin(), pos);
         return find(idx);
     } else {
-        return nullptr;
+        return {};
     }
 }
 
-const Slide* SlideLibrary::find(size_t idx) const
+std::optional<std::shared_ptr<const Slide>>
+SlideLibrary::find(size_t idx) const
 {
     if (idx >= 0 && idx < _slides.size()) {
         return _slides.at(idx);
     }
-    return nullptr;
+    return {};
 }
 
-void SlideLibrary::append(Slide&& slide)
+void
+SlideLibrary::append(Slide&& slide)
 {
     //_dirs.push_back(
     //_slides.push_back(slide);

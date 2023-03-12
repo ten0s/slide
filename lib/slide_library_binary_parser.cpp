@@ -19,10 +19,9 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#include <tuple>
-#include <vector>
 #include "slide.hpp"
 #include "slide_binary_parser.hpp"
+#include "slide_library_binary_parser.hpp"
 #include "slide_library_header.hpp"
 #include "slide_library_header_binary_parser.hpp"
 #include "slide_library_directory.hpp"
@@ -31,16 +30,16 @@
 namespace libslide {
 
 std::tuple<SlideLibraryHeader,
-           std::vector<SlideLibraryDirectory*>,
-           std::vector<Slide*>,
+           std::vector<std::shared_ptr<SlideLibraryDirectory>>,
+           std::vector<std::shared_ptr<Slide>>,
            size_t>
 parse_slide_library_binary(const uint8_t* buf, size_t size)
 {
     auto [header, offset] = parse_slide_library_header_binary(buf, size);
     auto totaloffset = offset;
 
-    std::vector<SlideLibraryDirectory*> dirs;
-    std::vector<Slide*> slides;
+    std::vector<std::shared_ptr<SlideLibraryDirectory>> dirs;
+    std::vector<std::shared_ptr<Slide>> slides;
     for (;;) {
         auto [dir, dirsize] = parse_slide_library_directory_binary(buf+offset, size-offset);
         offset += dirsize;
@@ -52,7 +51,7 @@ parse_slide_library_binary(const uint8_t* buf, size_t size)
             auto addr = dir->addr();
             auto [sldheader, records, sldsize] = parse_slide_binary(buf+addr, size-addr);
             totaloffset += sldsize;
-            Slide* slide = new Slide{name, sldheader, records, sldsize};
+            auto slide = std::shared_ptr<Slide>{new Slide{name, sldheader, records, sldsize}};
             slides.push_back(slide);
         } else {
             break;
