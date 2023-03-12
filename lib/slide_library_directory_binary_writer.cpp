@@ -44,6 +44,7 @@ write_slide_library_directory_nil_binary(std::ostream& os)
 {
     uint8_t nil[32 + 4] = {0};
     os.write((char*)nil, sizeof(nil));
+
     return os;
 }
 
