@@ -36,9 +36,9 @@ public:
         {}
 
     const std::string& name() const { return _name; }
-    uint32_t addr() const { return _addr; }
 
-    void shift_addr(uint32_t offset) { _addr += offset; }
+    uint32_t  addr() const { return _addr; }
+    uint32_t& addr()       { return _addr; }
 
 private:
     std::string _name;

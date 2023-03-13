@@ -128,30 +128,63 @@ SlideLibrary::find(size_t idx) const
     return {};
 }
 
+bool
+SlideLibrary::remove(const std::string& name)
+{
+    auto upper = to_upper(name);
+    auto pos = std::find_if(
+        _dirs.cbegin(), _dirs.cend(),
+        [&](const auto& dir) { return dir->name() == upper; }
+    );
+
+    if (pos != _dirs.cend()) {
+        auto idx = std::distance(_dirs.cbegin(), pos);
+        return remove(idx);
+    } else {
+        return false;
+    }
+}
+
+bool
+SlideLibrary::remove(size_t idx)
+{
+    if (idx >= 0 && idx < _slides.size()) {
+        _dirs.erase(_dirs.begin() + idx);
+        _slides.erase(_slides.begin() + idx);
+
+        recalc_addrs_and_size();
+        return true;
+    }
+    return false;
+}
+
 void
 SlideLibrary::append(std::shared_ptr<Slide> slide)
 {
-    constexpr auto offset = sizeof(Directory);
-
-    // TODO: assumes there are previous slides
-
-    // Shift forward all addrs to one Directory size
-    for (auto& dir : _dirs) {
-        dir->shift_addr(offset);
-    }
-
-    // Last dir addr and slide size
-    auto last_addr = _dirs.back()->addr();
-    auto last_size = _slides.back()->size();
-
-    // New last dir
     auto name = slide->name();
-    auto addr = last_addr + last_size;
+    auto addr = 0; // To be calculated
     auto dir = std::make_shared<SlideLibraryDirectory>(name, addr);
-
     _dirs.push_back(dir);
     _slides.push_back(slide);
-    _size += offset + slide->size();
+
+    recalc_addrs_and_size();
+}
+
+void
+SlideLibrary::recalc_addrs_and_size()
+{
+    constexpr uint32_t headsz = 32; // Library header size
+    constexpr uint32_t dirsz = sizeof(Directory);
+    const size_t count = _dirs.size();
+
+    // First slide addr, including extra nil dir
+    uint32_t addr = headsz + dirsz * count + dirsz;
+    for (size_t i = 0; i < count; ++i) {
+        _dirs[i]->addr() = addr;
+        addr += _slides[i]->size();
+    }
+
+    _size = addr;
 }
 
 } // namespace libslide

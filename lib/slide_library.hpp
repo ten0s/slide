@@ -60,7 +60,13 @@ public:
     std::optional<std::shared_ptr<const Slide>> find(const std::string& name) const;
     std::optional<std::shared_ptr<const Slide>> find(size_t idx) const;
 
+    bool remove(const std::string& name);
+    bool remove(size_t idx);
+
     void append(std::shared_ptr<Slide> slide);
+
+private:
+    void recalc_addrs_and_size();
 
 private:
     std::string _name;

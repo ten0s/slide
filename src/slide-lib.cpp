@@ -90,6 +90,28 @@ import_slide_from_file(SlideLibrary& lib, const std::string& libfile, const std:
     }
 }
 
+static int
+delete_slide(SlideLibrary& lib, const std::string& libfile, const std::string& name)
+{
+    bool removed = false;
+    if (removed = lib.remove(name); !removed) {
+        try {
+            size_t idx = std::stol(name);
+            removed = lib.remove(idx);
+        } catch (...) { }
+    }
+
+    if (removed) {
+        make_backup(libfile);
+        std::ofstream ofs {libfile, std::ios::binary};
+        write_slide_library_binary(ofs, lib);
+        return 0;
+    } else {
+        std::cerr << "Error: Library slide not found: " << name << "\n";
+        return 1;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     auto prog = basename(argv[0]);
@@ -108,6 +130,9 @@ int main(int argc, char* argv[])
         ("import,i",
          po::value<std::string>(),
          "import slide from file")
+        ("delete,d",
+         po::value<std::string>(),
+         "delete slide")
         ;
 
     po::options_description hidden("Hidden options");
@@ -169,6 +194,11 @@ int main(int argc, char* argv[])
                     if (vm.count("import")) {
                         auto sldfile = vm["import"].as<std::string>();
                         return import_slide_from_file(lib, libfile, sldfile);
+                    }
+
+                    if (vm.count("delete")) {
+                        auto name = vm["delete"].as<std::string>();
+                        return delete_slide(lib, libfile, name);
                     }
 
                 } catch (const std::exception& e) {
