@@ -62,28 +62,27 @@ SlideLibrary
 SlideLibrary::from_buf(const std::string& name,
                        const uint8_t* buf, size_t size)
 {
-    auto [header, dirs, slides, offset] = parse_slide_library_binary(buf, size);
+    auto [header, dirs, slides, _offset] = parse_slide_library_binary(buf, size);
 
     return SlideLibrary{
         name,
         header,
         dirs,
-        slides,
-        offset,
+        slides
     };
 }
 
 SlideLibrary::SlideLibrary(const std::string& name,
                            const SlideLibraryHeader& header,
                            const std::vector<std::shared_ptr<SlideLibraryDirectory>>& dirs,
-                           const std::vector<std::shared_ptr<Slide>>& slides,
-                           size_t size)
+                           const std::vector<std::shared_ptr<Slide>>& slides)
         : _name{name},
           _header{header},
           _dirs{dirs},
-          _slides{slides},
-          _size{size}
-       {}
+          _slides{slides}
+{
+    recalc_addrs_and_size();
+}
 
 SlideLibrary::SlideLibrary(SlideLibrary&& old)
     : _name{old._name},

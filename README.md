@@ -6,18 +6,18 @@ Features:
   and [version 1.0](https://web.archive.org/web/20191223211321/https://www.autodesk.com/techpubs/autocad/acadr14/dxf/old_slide_header_al_u05_b.htm)
 * Parse slide library file format (.slb) [version 1.0](https://web.archive.org/web/20191229052120/http://www.autodesk.com/techpubs/autocad/acadr14/dxf/slide_library_file_format_al_u05_b.htm)
 * Print various info about slide and slide library
+* Create empty slide library
+* Import slide to slide library
+* Export slide from slide library
+* Delete slide from slide library
+* Convert slide to PNG and SVG
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
-* Convert slide to PNG and SVG
-* Export slide from slide library
-* Import slide to slide library
-* Delete slide from slide library
 * Linux, Windows and MacOS support
 
-Todo:
+TODO:
 
-* Make slide library from slides (what SLIDELIB does)
 * Make slide from text records
 
 ## Build

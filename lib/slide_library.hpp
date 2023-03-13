@@ -42,8 +42,7 @@ public:
     SlideLibrary(const std::string& name,
                  const SlideLibraryHeader& header,
                  const std::vector<std::shared_ptr<SlideLibraryDirectory>>& dirs,
-                 const std::vector<std::shared_ptr<Slide>>& slides,
-                 size_t size);
+                 const std::vector<std::shared_ptr<Slide>>& slides);
     SlideLibrary(SlideLibrary&&);
     ~SlideLibrary();
 

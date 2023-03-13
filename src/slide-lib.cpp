@@ -44,6 +44,21 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 }
 
 static int
+create_slide_lib(const std::string& libfile)
+{
+    SlideLibrary lib {
+        basename(libfile),
+        SlideLibraryHeader{},
+        {}, {}
+    };
+
+    make_backup(libfile);
+    std::ofstream ofs {libfile, std::ios::binary};
+    write_slide_library_binary(ofs, lib);
+    return 0;
+}
+
+static int
 export_slide_to_file(const SlideLibrary& lib, const std::string& name)
 {
     auto slide = lib.find(name);
@@ -124,6 +139,8 @@ int main(int argc, char* argv[])
 
     po::options_description config("Configuration");
     config.add_options()
+        ("create,c",
+         "create empty lib")
         ("export,e",
          po::value<std::string>(),
          "export slide to file")
@@ -184,19 +201,24 @@ int main(int argc, char* argv[])
             if (ext == ".SLB") {
 
                 try {
-                    auto lib = SlideLibrary::from_file(libfile);
+                    if (vm.count("create")) {
+                        return create_slide_lib(libfile);
+                    }
 
                     if (vm.count("export")) {
+                        auto lib = SlideLibrary::from_file(libfile);
                         auto name = vm["export"].as<std::string>();
                         return export_slide_to_file(lib, name);
                     }
 
                     if (vm.count("import")) {
+                        auto lib = SlideLibrary::from_file(libfile);
                         auto sldfile = vm["import"].as<std::string>();
                         return import_slide_from_file(lib, libfile, sldfile);
                     }
 
                     if (vm.count("delete")) {
+                        auto lib = SlideLibrary::from_file(libfile);
                         auto name = vm["delete"].as<std::string>();
                         return delete_slide(lib, libfile, name);
                     }
