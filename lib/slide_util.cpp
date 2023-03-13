@@ -27,22 +27,26 @@ namespace fs = std::filesystem;
 
 namespace libslide {
 
-std::string basename(const std::string& filename)
+std::string
+basename(const std::string& filename)
 {
     return fs::path(filename).filename().u8string();
 }
 
-std::string get_ext(const std::string& filename)
+std::string
+get_ext(const std::string& filename)
 {
     return fs::path(filename).extension().u8string();
 }
 
-std::string strip_ext(const std::string& filename)
+std::string
+strip_ext(const std::string& filename)
 {
     return fs::path(filename).stem().u8string();
 }
 
-std::string to_lower(const std::string& in)
+std::string
+to_lower(const std::string& in)
 {
     std::string out{in};
     std::transform(
@@ -53,7 +57,8 @@ std::string to_lower(const std::string& in)
     return out;
 }
 
-std::string to_upper(const std::string& in)
+std::string
+to_upper(const std::string& in)
 {
     std::string out{in};
     std::transform(
