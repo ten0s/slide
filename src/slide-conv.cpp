@@ -209,7 +209,7 @@ int main (int argc, char* argv[])
             return 1;
         }
     } else {
-        std::cerr << "Error: Expected 'type'\n";
+        print_usage(std::cerr, prog, visible_options);
         return 1;
     }
 
