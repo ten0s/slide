@@ -19,30 +19,19 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#include <cstddef> // offsetof
 #include <cstring> // strncpy
+#include "slide_library_directory.h"
 #include "slide_library_directory.hpp"
 #include "slide_library_directory_binary_parser.hpp"
 #include "slide_binary_util.hpp"
-
-namespace {
-
-struct Directory {
-    // Slide name (NUL terminated) (32 bytes)
-    uint8_t name[32];
-    // Address of slide within library file (4 bytes)
-    uint32_t addr;
-};
-
-} // namespace
 
 namespace libslide {
 
 std::tuple<std::shared_ptr<SlideLibraryDirectory>, size_t>
 parse_slide_library_directory_binary(const uint8_t* buf, size_t /*size*/)
 {
-    constexpr size_t offset = sizeof(Directory);
-    constexpr size_t length = offsetof(Directory, addr);
+    constexpr auto offset = sizeof(Directory);
+    constexpr auto length = sizeof(Directory::name);
 
     char name[length];
     strncpy(name, (char*)buf, length);

@@ -11,11 +11,11 @@ Features:
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
 * Convert slide to PNG and SVG
 * Export slide from slide library
+* Import slide to slide library
 * Linux, Windows and MacOS support
 
 Todo:
 
-* Import slide to slide library
 * Delete slide from slide library
 * Make slide library from slides (what SLIDELIB does)
 * Make slide from text records

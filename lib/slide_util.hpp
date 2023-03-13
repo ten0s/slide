@@ -31,6 +31,7 @@ std::string get_ext(const std::string& filename);
 std::string strip_ext(const std::string& filename);
 std::string to_lower(const std::string& str);
 std::string to_upper(const std::string& str);
+void make_backup(const std::string& filename);
 
 } // namespace libslide
 

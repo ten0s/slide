@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include <string>
 #include <boost/program_options.hpp>
 
@@ -54,9 +55,9 @@ export_slide_to_file(const SlideLibrary& lib, const std::string& name)
     }
 
     if (slide) {
-        auto filename = slide.value()->name() + ".sld";
-        // TODO: make backup?
-        std::ofstream ofs {filename, std::ios::binary};
+        auto slidefile = slide.value()->name() + ".sld";
+        make_backup(slidefile);
+        std::ofstream ofs {slidefile, std::ios::binary};
         write_slide_binary(ofs, *slide.value());
         return 0;
     } else {
@@ -71,10 +72,12 @@ import_slide_from_file(SlideLibrary& lib, const std::string& libfile, const std:
     auto ext = to_upper(get_ext(sldfile));
     if (ext == ".SLD") {
         try {
-            //Slide slide = Slide::from_file(sldfile);
-            //lib.append(slide);
-            // TODO: make backup?
-            std::ofstream ofs {"new-" + libfile, std::ios::binary};
+            Slide slide = Slide::from_file(sldfile);
+            auto shared = std::make_shared<Slide>(std::move(slide));
+            lib.append(shared);
+
+            make_backup(libfile);
+            std::ofstream ofs {libfile, std::ios::binary};
             write_slide_library_binary(ofs, lib);
             return 0;
         } catch (const std::exception& e) {

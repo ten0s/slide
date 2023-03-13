@@ -27,6 +27,7 @@
 #include "slide_binary_parser.hpp"
 #include "slide_library.hpp"
 #include "slide_library_binary_parser.hpp"
+#include "slide_library_directory.h"
 #include "slide_library_directory.hpp"
 #include "slide_util.hpp"
 
@@ -128,11 +129,29 @@ SlideLibrary::find(size_t idx) const
 }
 
 void
-SlideLibrary::append(Slide&& slide)
+SlideLibrary::append(std::shared_ptr<Slide> slide)
 {
-    //_dirs.push_back(
-    //_slides.push_back(slide);
-    //_size += slide.size() + ;
+    constexpr auto offset = sizeof(Directory);
+
+    // TODO: assumes there are previous slides
+
+    // Shift forward all addrs to one Directory size
+    for (auto& dir : _dirs) {
+        dir->shift_addr(offset);
+    }
+
+    // Last dir addr and slide size
+    auto last_addr = _dirs.back()->addr();
+    auto last_size = _slides.back()->size();
+
+    // New last dir
+    auto name = slide->name();
+    auto addr = last_addr + last_size;
+    auto dir = std::make_shared<SlideLibraryDirectory>(name, addr);
+
+    _dirs.push_back(dir);
+    _slides.push_back(slide);
+    _size += offset + slide->size();
 }
 
 } // namespace libslide

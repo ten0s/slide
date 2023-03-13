@@ -127,7 +127,7 @@ cache_slide_lib(const std::string& file)
     auto normal_file = normalize_slide_file(file);
     for (auto it = begin; it != end; ++it) {
         // Move slide.
-        size_t idx = std::distance(begin, it);
+        auto idx = std::distance(begin, it);
         auto shared = std::make_shared<Slide>(std::move(*slides.at(idx)));
 
         // Store named slide to cache.

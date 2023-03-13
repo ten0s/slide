@@ -38,6 +38,8 @@ public:
     const std::string& name() const { return _name; }
     uint32_t addr() const { return _addr; }
 
+    void shift_addr(uint32_t offset) { _addr += offset; }
+
 private:
     std::string _name;
     uint32_t _addr;

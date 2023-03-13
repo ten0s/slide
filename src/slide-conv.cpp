@@ -292,6 +292,7 @@ int main (int argc, char* argv[])
         if (!filename.size()) {
             filename = slide->name() + "." + to_lower(type);
         }
+        make_backup(filename);
         writer(slide, background, width, height, filename.c_str());
         return 0;
     }

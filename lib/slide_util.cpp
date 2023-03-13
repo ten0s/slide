@@ -64,4 +64,18 @@ std::string to_upper(const std::string& in)
     return out;
 }
 
+void
+make_backup(const std::string& filename)
+{
+    if (fs::exists(filename)) {
+        auto bakname = filename + ".bak";
+        auto i = 1;
+        while (fs::exists(bakname)) {
+            bakname = filename + ".bak." + std::to_string(i);
+            ++i;
+        }
+        fs::copy_file(filename, bakname);
+    }
+}
+
 } // namespace libslide
