@@ -6,10 +6,10 @@ Features:
   and [version 1.0](https://web.archive.org/web/20191223211321/https://www.autodesk.com/techpubs/autocad/acadr14/dxf/old_slide_header_al_u05_b.htm)
 * Parse slide library file format (.slb) [version 1.0](https://web.archive.org/web/20191229052120/http://www.autodesk.com/techpubs/autocad/acadr14/dxf/slide_library_file_format_al_u05_b.htm)
 * Print various info about slide and slide library
-* Create empty slide library
-* Import slide to slide library
-* Export slide from slide library
-* Delete slide from slide library
+* Create slide library from slides
+* Import slides to slide library
+* Export slides from slide library
+* Delete slides from slide library
 * Convert slide to PNG and SVG
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
@@ -36,10 +36,13 @@ $ make install [PREFIX=$PWD/install]
 
 ```
 $ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
+$ src/slide-convert ...
 $ src/slide-info ...
-$ src/slide-lib  ...
-$ src/slide-conv ...
 $ src/slide-view ...
+$ src/slidelib-create ...
+$ src/slidelib-delete ...
+$ src/slidelib-export ...
+$ src/slidelib-import ...
 ```
 
 ## License
