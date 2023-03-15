@@ -33,6 +33,12 @@ std::string to_lower(const std::string& str);
 std::string to_upper(const std::string& str);
 void make_backup(const std::string& filename);
 
+template<typename Cont>
+Cont tail(const Cont& c)
+{
+    return Cont{++c.begin(), c.end()};
+}
+
 } // namespace libslide
 
 #endif // __SLIDE_UTIL_HPP__

@@ -1,8 +1,8 @@
+slide-convert
 slide-info
-slide-info.exe
-slide-lib
-slide-lib.exe
 slide-view
-slide-view.exe
-slide-conv
-slide-conv.exe
+slidelib-create
+slidelib-delete
+slidelib-export
+slidelib-import
+*.exe

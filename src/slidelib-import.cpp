@@ -44,87 +44,26 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 }
 
 static int
-create_slide_lib(const std::string& libfile)
+import_slides(SlideLibrary& lib,
+              const std::string& libfile,
+              const std::vector<std::string>& sldfiles)
 {
-    SlideLibrary lib {
-        basename(libfile),
-        SlideLibraryHeader{},
-        {}, {}
-    };
+    for (const auto& sldfile : sldfiles) {
+        auto ext = to_upper(get_ext(sldfile));
+        if (ext == ".SLD") {
+            Slide slide = Slide::from_file(sldfile);
+            auto shared = std::make_shared<Slide>(std::move(slide));
+            lib.append(shared);
+        } else {
+            std::cerr << "Error: Invalid slide extension: " << ext << "\n";
+            return 1;
+        }
+    }
 
     make_backup(libfile);
     std::ofstream ofs {libfile, std::ios::binary};
     write_slide_library_binary(ofs, lib);
     return 0;
-}
-
-static int
-export_slide_to_file(const SlideLibrary& lib, const std::string& name)
-{
-    auto slide = lib.find(name);
-    if (!slide) {
-        try {
-            size_t idx = std::stol(name);
-            slide = lib.find(idx);
-        } catch (...) { }
-    }
-
-    if (slide) {
-        auto slidefile = slide.value()->name() + ".sld";
-        make_backup(slidefile);
-        std::ofstream ofs {slidefile, std::ios::binary};
-        write_slide_binary(ofs, *slide.value());
-        return 0;
-    } else {
-        std::cerr << "Error: Library slide not found: " << name << "\n";
-        return 1;
-    }
-}
-
-static int
-import_slide_from_file(SlideLibrary& lib, const std::string& libfile, const std::string& sldfile)
-{
-    auto ext = to_upper(get_ext(sldfile));
-    if (ext == ".SLD") {
-        try {
-            Slide slide = Slide::from_file(sldfile);
-            auto shared = std::make_shared<Slide>(std::move(slide));
-            lib.append(shared);
-
-            make_backup(libfile);
-            std::ofstream ofs {libfile, std::ios::binary};
-            write_slide_library_binary(ofs, lib);
-            return 0;
-        } catch (const std::exception& e) {
-            std::cerr << "Error: " << e.what() << "\n";
-            return 1;
-        }
-    } else {
-        std::cerr << "Error: Invalid slide extension: " << ext << "\n";
-        return 1;
-    }
-}
-
-static int
-delete_slide(SlideLibrary& lib, const std::string& libfile, const std::string& name)
-{
-    bool removed = false;
-    if (removed = lib.remove(name); !removed) {
-        try {
-            size_t idx = std::stol(name);
-            removed = lib.remove(idx);
-        } catch (...) { }
-    }
-
-    if (removed) {
-        make_backup(libfile);
-        std::ofstream ofs {libfile, std::ios::binary};
-        write_slide_library_binary(ofs, lib);
-        return 0;
-    } else {
-        std::cerr << "Error: Library slide not found: " << name << "\n";
-        return 1;
-    }
 }
 
 int main(int argc, char* argv[])
@@ -137,33 +76,18 @@ int main(int argc, char* argv[])
         ("version", "print version")
         ;
 
-    po::options_description config("Configuration");
-    config.add_options()
-        ("create,c",
-         "create empty lib")
-        ("export,e",
-         po::value<std::string>(),
-         "export slide to file")
-        ("import,i",
-         po::value<std::string>(),
-         "import slide from file")
-        ("delete,d",
-         po::value<std::string>(),
-         "delete slide")
-        ;
-
     po::options_description hidden("Hidden options");
     hidden.add_options()
        ("names",
          po::value<std::vector<std::string>>(),
-         "FILE.slb")
+         "FILE.slb [FILE.sld ...]")
         ;
 
     po::options_description all_options;
-    all_options.add(generic).add(config).add(hidden);
+    all_options.add(generic).add(hidden);
 
     po::options_description visible_options("Allowed options");
-    visible_options.add(generic).add(config);
+    visible_options.add(generic);
 
     po::positional_options_description p;
     p.add("names", -1);
@@ -199,35 +123,13 @@ int main(int argc, char* argv[])
             auto libfile = names[0];
             auto ext = to_upper(get_ext(libfile));
             if (ext == ".SLB") {
-
                 try {
-                    if (vm.count("create")) {
-                        return create_slide_lib(libfile);
-                    }
-
-                    if (vm.count("export")) {
-                        auto lib = SlideLibrary::from_file(libfile);
-                        auto name = vm["export"].as<std::string>();
-                        return export_slide_to_file(lib, name);
-                    }
-
-                    if (vm.count("import")) {
-                        auto lib = SlideLibrary::from_file(libfile);
-                        auto sldfile = vm["import"].as<std::string>();
-                        return import_slide_from_file(lib, libfile, sldfile);
-                    }
-
-                    if (vm.count("delete")) {
-                        auto lib = SlideLibrary::from_file(libfile);
-                        auto name = vm["delete"].as<std::string>();
-                        return delete_slide(lib, libfile, name);
-                    }
-
+                    auto lib = SlideLibrary::from_file(libfile);
+                    return import_slides(lib, libfile, tail(names));
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;
                 }
-
             } else {
                 std::cerr << "Error: Invalid library extension: " << ext << "\n";
                 return 1;
