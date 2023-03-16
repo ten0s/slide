@@ -66,7 +66,7 @@ create_slide_lib(const std::string& libfile,
     }
 
     make_backup(libfile);
-    std::ofstream ofs {libfile, std::ios::binary};
+    std::ofstream ofs{libfile, std::ios::binary};
     write_slide_library_binary(ofs, lib);
     return 0;
 }

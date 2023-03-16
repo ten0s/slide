@@ -60,7 +60,7 @@ export_slides(const SlideLibrary& lib,
         if (slide) {
             auto slidefile = slide.value()->name() + ".sld";
             make_backup(slidefile);
-            std::ofstream ofs {slidefile, std::ios::binary};
+            std::ofstream ofs{slidefile, std::ios::binary};
             write_slide_binary(ofs, *slide.value());
         } else {
             std::cerr << "Error: Library slide not found: " << name << "\n";
