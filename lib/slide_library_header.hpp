@@ -28,18 +28,12 @@ namespace libslide {
 
 class SlideLibraryHeader {
 public:
-    explicit SlideLibraryHeader()
-        : SlideLibraryHeader("AutoCAD Slide Library 1.0")
-        {}
+    static constexpr const char* ID_STRING = "AutoCAD Slide Library 1.0";
 
-    explicit SlideLibraryHeader(const std::string& id_string)
-        : _id_string{id_string}
-        {}
+public:
+    explicit SlideLibraryHeader() {}
 
-    std::string id_string() const { return _id_string; }
-
-private:
-    std::string _id_string;
+    std::string id_string() const { return ID_STRING; }
 };
 
 } // namespace libslide

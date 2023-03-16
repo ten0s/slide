@@ -70,7 +70,7 @@ parse_slide_header_binary(const uint8_t* buf, size_t size)
     double aspect_ratio;
     uint16_t hardware_fill;
 
-    std::string id_str{"AutoCAD Slide"};
+    std::string id_str{SlideHeader::ID_STRING};
     size_t id_str_sz = id_str.size();
     if (strncmp((char*)buf, id_str.c_str(), id_str_sz) != 0 ||
         buf[id_str_sz+0] != 0x0d || buf[id_str_sz+1] != 0x0a ||
@@ -128,7 +128,6 @@ parse_slide_header_binary(const uint8_t* buf, size_t size)
     }
 
     SlideHeader header{
-        id_str,
         type_indicator,
         level_indicator,
         high_x_dot,

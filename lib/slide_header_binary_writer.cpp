@@ -29,7 +29,10 @@ std::ostream&
 write_slide_header_binary(std::ostream& os, const SlideHeader& header, Endian endian)
 {
     // Generic Part
-    os << "AutoCAD Slide" << '\x0d' << '\x0a' << '\x1a' << '\x00';
+    os << header.id_string();
+    os << '\x0d' << '\x0a';
+    os << '\x1a' << '\x00';
+
     os << header.type_indicator();
     os << header.level_indicator();
 

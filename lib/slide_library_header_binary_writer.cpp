@@ -25,9 +25,9 @@
 namespace libslide {
 
 std::ostream&
-write_slide_library_header_binary(std::ostream& os, const SlideLibraryHeader& /*header*/)
+write_slide_library_header_binary(std::ostream& os, const SlideLibraryHeader& header)
 {
-    os << "AutoCAD Slide Library 1.0"
+    os << header.id_string()
        << '\x0d' << '\x0a' << '\x1a'
        << '\x00' << '\x00' << '\x00'
        << '\x00';

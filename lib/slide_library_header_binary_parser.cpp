@@ -38,7 +38,7 @@ namespace libslide {
 std::tuple<SlideLibraryHeader, size_t>
 parse_slide_library_header_binary(const uint8_t* buf, size_t size)
 {
-    std::string id_str{"AutoCAD Slide Library 1.0"};
+    std::string id_str{SlideLibraryHeader::ID_STRING};
     size_t id_str_sz = id_str.size();
     if (strncmp((char*)buf, id_str.c_str(), id_str_sz) != 0 ||
         buf[id_str_sz+0] != 0x0d || buf[id_str_sz+1] != 0x0a ||
@@ -49,9 +49,7 @@ parse_slide_library_header_binary(const uint8_t* buf, size_t size)
         throw std::runtime_error{"Invalid slide library header"};
     }
 
-    SlideLibraryHeader header{
-        id_str
-    };
+    SlideLibraryHeader header{};
 
     size_t offset = sizeof(Header);
 

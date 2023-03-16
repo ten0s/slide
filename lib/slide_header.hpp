@@ -29,16 +29,17 @@ namespace libslide {
 
 class SlideHeader {
 public:
-    explicit SlideHeader(const std::string& id_string,
-                         uint8_t type_indicator,
+    static constexpr const char* ID_STRING = "AutoCAD Slide";
+
+public:
+    explicit SlideHeader(uint8_t type_indicator,
                          uint8_t level_indicator,
                          uint16_t high_x_dot,
                          uint16_t high_y_dot,
                          double aspect_ration,
                          uint16_t hardware_fill,
                          Endian endian)
-        : _id_string{id_string},
-          _type_indicator{type_indicator},
+        : _type_indicator{type_indicator},
           _level_indicator{level_indicator},
           _high_x_dot{high_x_dot},
           _high_y_dot{high_y_dot},
@@ -47,7 +48,7 @@ public:
           _endian{endian}
         {}
 
-    std::string id_string() const { return _id_string; }
+    std::string id_string() const { return ID_STRING; }
     uint8_t type_indicator() const { return _type_indicator; }
     uint8_t level_indicator() const { return _level_indicator; }
     uint16_t high_x_dot() const { return _high_x_dot; }
@@ -57,7 +58,6 @@ public:
     Endian endian() const { return _endian; }
 
 private:
-    std::string _id_string;
     uint8_t _type_indicator;
     uint8_t _level_indicator;
     uint16_t _high_x_dot;
