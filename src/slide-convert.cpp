@@ -256,7 +256,7 @@ int main (int argc, char* argv[])
             if (ext == ".SLD") {
                 slide_uri = file;
             } else if (ext == ".SLB") {
-                std::cerr << "Error: Expected slide name\n";
+                std::cerr << "Error: Expected slide file\n";
                 return 1;
             } else {
                 std::cerr << "Error: Invalid slide extension: " << file << "\n";
