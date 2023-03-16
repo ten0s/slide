@@ -28,6 +28,7 @@
 #include "../lib/slide.hpp"
 #include "../lib/slide_binary_writer.hpp"
 #include "../lib/slide_library.hpp"
+#include "../lib/slide_library_directory.hpp"
 #include "../lib/slide_library_binary_writer.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
@@ -129,7 +130,16 @@ int main(int argc, char* argv[])
             if (ext == ".SLB") {
                 try {
                     auto lib = SlideLibrary::from_file(file);
-                    return export_slides(lib, tail(names));
+                    auto slides = tail(names);
+                    if (slides.size() == 0) {
+                        auto& dirs = lib.dirs();
+                        std::transform(
+                            dirs.cbegin(), dirs.cend(),
+                            std::back_inserter(slides),
+                            [](const auto& dir) { return dir->name(); }
+                        );
+                    }
+                    return export_slides(lib, slides);
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;
