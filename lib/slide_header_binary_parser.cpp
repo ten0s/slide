@@ -53,7 +53,7 @@ struct HeaderV2 {
     uint8_t high_y_dot[2];    // LE | BE
     // Specific Part
     uint8_t aspect_ratio[4];  // LE always
-    uint8_t hardware_fill[2]; // 0x0002 Unused
+    uint8_t hardware_fill[2]; // 0x00 | 0x02 Unused
     uint8_t test_number[2];   // 0x1234 - LE | BE
 };
 
