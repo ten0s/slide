@@ -45,6 +45,7 @@ void SlideRecordsVisitorTextWriter::accept(SlideRecordOffsetVector& r)
     _os << _pad;
     _os << "(OFFSET_VECTOR"
         << " " << (int)r.dx0()
+        << " " << (int)r.dy0()
         << " " << (int)r.dx1()
         << " " << (int)r.dy1()
         << ")\n";

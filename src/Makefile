@@ -2,6 +2,7 @@ include ../Makefile.inc
 
 UTILS = \
 	slide-convert   \
+	slide-create    \
 	slide-info      \
 	slide-view      \
 	slidelib-create \
@@ -16,6 +17,9 @@ all: $(UTILS)
 
 slide-convert: slide-convert.cpp ../lib/libslide.$(LIB_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) $(DLL_CAIRO) -o $@
+
+slide-create: slide-create.cpp ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
 
 slide-info: slide-info.cpp ../lib/libslide.$(LIB_EXT)
 	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
