@@ -227,7 +227,7 @@ int main(int argc, char* argv[])
                     return 1;
                 }
             } else {
-                std::cerr << "Error: Invalid slide extension: " << ext << "\n";
+                std::cerr << "Error: Invalid slide extension: " << file << "\n";
                 return 1;
             }
         }
@@ -269,7 +269,7 @@ int main(int argc, char* argv[])
                 }
 
             } else {
-                std::cerr << "Error: Invalid library extension: " << ext << "\n";
+                std::cerr << "Error: Invalid library extension: " << file << "\n";
                 return 1;
             }
         }

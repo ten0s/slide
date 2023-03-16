@@ -125,17 +125,17 @@ int main(int argc, char* argv[])
     if (vm.count("names")) {
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() >= 1) {
-            auto libfile = names[0];
-            auto ext = to_upper(get_ext(libfile));
+            auto file = names[0];
+            auto ext = to_upper(get_ext(file));
             if (ext == ".SLB") {
                 try {
-                    return create_slide_lib(libfile, tail(names));
+                    return create_slide_lib(file, tail(names));
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;
                 }
             } else {
-                std::cerr << "Error: Invalid library extension: " << ext << "\n";
+                std::cerr << "Error: Invalid library extension: " << file << "\n";
                 return 1;
             }
         }

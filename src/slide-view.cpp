@@ -142,7 +142,7 @@ int main (int argc, char* argv[])
                 std::cerr << "Error: Expected slide name\n";
                 return 1;
             } else {
-                std::cerr << "Error: Invalid slide extension: " << ext << "\n";
+                std::cerr << "Error: Invalid slide extension: " << file << "\n";
                 return 1;
             }
         }
@@ -155,7 +155,7 @@ int main (int argc, char* argv[])
                 title = strip_ext(basename(file)) + "(" + name + ")";
                 slide_uri = file + "(" + name + ")";
             } else {
-                std::cerr << "Error: Invalid library extension: " << ext << "\n";
+                std::cerr << "Error: Invalid library extension: " << file << "\n";
                 return 1;
             }
         }
