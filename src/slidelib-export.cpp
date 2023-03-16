@@ -81,6 +81,10 @@ int main(int argc, char* argv[])
         ("version", "print version")
         ;
 
+    po::options_description config("Configuration");
+    config.add_options()
+        ("all", "export all");
+
     po::options_description hidden("Hidden options");
     hidden.add_options()
        ("names",
@@ -89,10 +93,10 @@ int main(int argc, char* argv[])
         ;
 
     po::options_description all_options;
-    all_options.add(generic).add(hidden);
+    all_options.add(generic).add(config).add(hidden);
 
     po::options_description visible_options("Allowed options");
-    visible_options.add(generic);
+    visible_options.add(generic).add(config);
 
     po::positional_options_description p;
     p.add("names", -1);
@@ -131,7 +135,7 @@ int main(int argc, char* argv[])
                 try {
                     auto lib = SlideLibrary::from_file(file);
                     auto slides = tail(names);
-                    if (slides.size() == 0) {
+                    if (vm.count("all")) {
                         auto& dirs = lib.dirs();
                         std::transform(
                             dirs.cbegin(), dirs.cend(),
