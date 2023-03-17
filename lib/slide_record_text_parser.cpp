@@ -90,55 +90,45 @@ parse_slide_record_text(const std::string& str)
             "\\s+(\\d+)\\s+(\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex offset_vector{
+    static std::regex offset_vector {
         "\\s*\\(\\s*OFFSET_VECTOR"
             "\\s+(-?\\d+)\\s+(-?\\d+)"
             "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex common_endpoint{
+    static std::regex common_endpoint {
         "\\s*\\(\\s*COMMON_ENDPOINT"
             "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_1{
+    static std::regex polygon_1 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_2{
+    static std::regex polygon_2 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_3{
+    static std::regex polygon_3 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
-        "\\s*\\).*", icase};
-
-    static std::regex polygon_4{
-        "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_5{
+    static std::regex polygon_4 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_6{
+    static std::regex polygon_5 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
@@ -146,9 +136,8 @@ parse_slide_record_text(const std::string& str)
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_7{
+    static std::regex polygon_6 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
@@ -157,9 +146,8 @@ parse_slide_record_text(const std::string& str)
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex polygon_8{
+    static std::regex polygon_7 {
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
@@ -169,12 +157,24 @@ parse_slide_record_text(const std::string& str)
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex color{
+    static std::regex polygon_8 {
+        "\\s*\\(\\s*SOLID_FILL_POLYGON"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+        "\\s*\\).*", icase};
+
+    static std::regex color {
         "\\s*\\(\\s*COLOR"
             "\\s+(\\d+)"
         "\\s*\\).*", icase};
 
-    static std::regex end_of_file{"\\s*\\(\\s*END_OF_FILE\\s*\\).*", icase};
+    static std::regex end_of_file {"\\s*\\(\\s*END_OF_FILE\\s*\\).*", icase};
 
     using parsers_t =
         std::vector<
