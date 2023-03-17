@@ -19,19 +19,24 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_ENDIAN_HPP__
-#define __SLIDE_ENDIAN_HPP__
+#include <cstdint>
+#include <stdexcept>
+#include "slide_endian.hpp"
 
-namespace libslide {
+using namespace libslide;
 
-enum class Endian {
-    native,
-    little,
-    big
-};
+Endian native_endian()
+{
+    union { uint16_t in; uint8_t out[2]; } x;
+    x.in = 0x1234;
 
-Endian native_endian();
+    if (x.out[0] == 0x12) {
+        return Endian::big;
+    }
 
-} // namespace libslide
+    if (x.out[0] == 0x34) {
+        return Endian::little;
+    }
 
-#endif // __SLIDE_ENDIAN_HPP__
+    throw new std::runtime_error{"Unknown endianness"};
+}

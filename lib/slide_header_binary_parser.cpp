@@ -36,10 +36,10 @@ struct HeaderV1 {
     uint8_t id_string[17];    // AutoCAD Slide CR LF ^Z NUL
     uint8_t type_indicator;   // 56
     uint8_t level_indicator;  // 01
-    uint8_t high_x_dot[2];    // LE | BE
-    uint8_t high_y_dot[2];    // LE | BE
+    uint8_t high_x_dot[2];    // Little | Big endian
+    uint8_t high_y_dot[2];    // Little | Big endian
     // Specific
-    uint8_t aspect_ratio[8];  // Double LE | BE
+    uint8_t aspect_ratio[8];  // Double Little | Big endian
     uint8_t hardware_fill[2]; // 0x00 | 0x02 Unused
     uint8_t filler_byte;      // Unused
 };
@@ -49,12 +49,12 @@ struct HeaderV2 {
     uint8_t id_string[17];    // AutoCAD Slide CR LF ^Z NUL
     uint8_t type_indicator;   // 56
     uint8_t level_indicator;  // 02
-    uint8_t high_x_dot[2];    // LE | BE
-    uint8_t high_y_dot[2];    // LE | BE
+    uint8_t high_x_dot[2];    // Little | Big endian
+    uint8_t high_y_dot[2];    // Little | Big endian
     // Specific Part
-    uint8_t aspect_ratio[4];  // LE always
+    uint8_t aspect_ratio[4];  // Little endian always
     uint8_t hardware_fill[2]; // 0x00 | 0x02 Unused
-    uint8_t test_number[2];   // 0x1234 - LE | BE
+    uint8_t test_number[2];   // 0x1234 - Little | Big endian
 };
 
 } // namespace
@@ -64,7 +64,7 @@ namespace libslide {
 std::tuple<SlideHeader, size_t>
 parse_slide_header_binary(const uint8_t* buf, size_t size)
 {
-    Endian endian = Endian::UNK;
+    Endian endian;
     uint16_t high_x_dot;
     uint16_t high_y_dot;
     double aspect_ratio;
@@ -85,12 +85,12 @@ parse_slide_header_binary(const uint8_t* buf, size_t size)
     case 1: { // Old version
         // Determine endianess by looking at the end of
         // the buffer inspecting the End of File marker.
-        switch (read<uint16_t>(buf+size-2, Endian::LE)) {
+        switch (read<uint16_t>(buf+size-2, Endian::little)) {
         case 0xfc00:
-            endian = Endian::LE;
+            endian = Endian::little;
             break;
         case 0x00fc:
-            endian = Endian::BE;
+            endian = Endian::big;
             break;
         default:
             throw std::runtime_error{"End of File is not found"};
@@ -105,8 +105,8 @@ parse_slide_header_binary(const uint8_t* buf, size_t size)
     case 2: { // New version
         {
             // Determine endianess
-            uint16_t tmp = read<uint16_t>(buf+offsetof(HeaderV2, test_number), Endian::LE);
-            endian = (tmp == 0x1234 ? Endian::LE : Endian::BE);
+            uint16_t tmp = read<uint16_t>(buf+offsetof(HeaderV2, test_number), Endian::little);
+            endian = (tmp == 0x1234 ? Endian::little : Endian::big);
         }
 
         high_x_dot = read<uint16_t>(buf+offsetof(HeaderV2, high_x_dot), endian);
@@ -114,7 +114,7 @@ parse_slide_header_binary(const uint8_t* buf, size_t size)
 
         {
             // Always written with the least significant byte first.
-            uint32_t tmp = read<uint32_t>(buf+offsetof(HeaderV2, aspect_ratio), Endian::LE);
+            uint32_t tmp = read<uint32_t>(buf+offsetof(HeaderV2, aspect_ratio), Endian::little);
             aspect_ratio = tmp / 10'000'000.0;
         }
 

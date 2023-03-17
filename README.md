@@ -11,14 +11,11 @@ Features:
 * Export slides from slide library
 * Delete slides from slide library
 * Convert slide to PNG and SVG
+* Create slide from text records
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
 * Linux, Windows and MacOS support
-
-TODO:
-
-* Make slide from text records
 
 ## Build
 
@@ -37,6 +34,7 @@ $ make install [PREFIX=$PWD/install]
 ```
 $ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
 $ src/slide-convert ...
+$ src/slide-create  ...
 $ src/slide-info ...
 $ src/slide-view ...
 $ src/slidelib-create ...

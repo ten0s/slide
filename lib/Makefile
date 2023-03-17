@@ -4,6 +4,7 @@ SLIDE_OBJS=\
 	slide.o \
 	slide_binary_parser.o \
 	slide_binary_writer.o \
+	slide_endian.o \
 	slide_header_binary_parser.o \
 	slide_header_binary_writer.o \
 	slide_library.o \

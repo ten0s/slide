@@ -35,7 +35,7 @@ write_slide_library_directory_binary(std::ostream& os, const SlideLibraryDirecto
     strncpy((char*)name, dir.name().c_str(), sizeof(name));
     os.write((char*)name, sizeof(name));
 
-    write(os, dir.addr(), Endian::LE);
+    write(os, dir.addr(), Endian::little);
 
     return os;
 }

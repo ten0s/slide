@@ -42,7 +42,7 @@ write_slide_info_text(std::ostream& os,
         os << pad << "Width  : " << header.high_x_dot() << "\n";
         os << pad << "Height : " << header.high_y_dot() << "\n";
         os << pad << "Ratio  : " << header.aspect_ratio() << "\n";
-        os << pad << "Endian : " << (header.endian() == Endian::LE ?
+        os << pad << "Endian : " << (header.endian() == Endian::little ?
                                      "Little" : "Big") << "\n";
     }
 

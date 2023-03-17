@@ -46,7 +46,7 @@ write_slide_header_binary(std::ostream& os, const SlideHeader& header, Endian en
         os << '\x00'; // Filler byte
     } else if (header.level_indicator() == 2) {
         // V2 Specific
-        write(os, static_cast<uint32_t>(header.aspect_ratio() * 10'000'000), Endian::LE);
+        write(os, static_cast<uint32_t>(header.aspect_ratio() * 10'000'000), Endian::little);
         write(os, header.hardware_fill(), endian);
         write(os, make<uint16_t>({0x12, 0x34}), endian); // Test number
     } else {

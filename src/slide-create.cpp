@@ -75,14 +75,19 @@ parse_records(const std::vector<std::string>& lines)
 
 static int
 create_slide(const std::string& file,
+             uint8_t version,
+             uint16_t width,
+             uint16_t height,
+             double ratio,
+             Endian endian,
              const std::vector<std::shared_ptr<SlideRecord>>& records)
 {
     SlideHeader header{
-        2/*version*/,
-        800/*width*/,
-        600/*height*/,
-        1.0*800/600/*ratio*/,
-        Endian::LE/*endian*/
+        version,
+        width,
+        height,
+        ratio,
+        endian
     };
 
     Slide slide{
@@ -110,8 +115,8 @@ int main(int argc, char* argv[])
 
     po::options_description config("Configuration");
     config.add_options()
-        ("v1,1", "version 1.0")
-        ("v2,2", "version 2.0, default")
+        ("v1", "version 1.0")
+        ("v2", "version 2.0, default")
         ("width,w",
          po::value<unsigned>(),
          "width, automatic by default")
@@ -185,7 +190,26 @@ int main(int argc, char* argv[])
                             lines = read_lines(std::cin);
                         }
                     }
-                    return create_slide(file, parse_records(lines));
+
+                    uint8_t version = 2;
+                    if (vm.count("v1")) {
+                        version = 1;
+                    }
+
+                    uint16_t width = 800;
+                    uint16_t height = 600;
+                    double ratio = 1.0 * width / height;
+                    Endian endian = Endian::little;
+
+                    return create_slide(
+                        file,
+                        version,
+                        width,
+                        height,
+                        ratio,
+                        endian,
+                        parse_records(lines)
+                    );
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;
