@@ -29,6 +29,7 @@
 #include "../lib/slide_binary_writer.hpp"
 #include "../lib/slide_records.hpp"
 #include "../lib/slide_record_text_parser.hpp"
+#include "../lib/slide_records_visitor_stat.hpp"
 #include "../lib/slide_endian.hpp"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
@@ -129,7 +130,7 @@ int main(int argc, char* argv[])
          "width/height by default")
         ("endian,e",
          po::value<std::string>(),
-         "endian (little, big, native),\n"
+         "endian (native, little, big),\n"
          "native by default")
         ;
 
@@ -174,6 +175,52 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    uint8_t version = 2;
+    if (vm.count("v1")) {
+        version = 1;
+    }
+
+    uint16_t width = 0;
+    if (vm.count("width")) {
+        width = vm["width"].as<uint16_t>();
+        if (width == 0) {
+            std::cerr << "Error: Invalid width: " << width << "\n";
+        }
+    }
+
+    uint16_t height = 0;
+    if (vm.count("height")) {
+        height = vm["height"].as<uint16_t>();
+        if (height == 0) {
+            std::cerr << "Error: Invalid height: " << height << "\n";
+        }
+    }
+
+    double ratio = 0.0;
+    if (vm.count("ratio")) {
+        ratio = vm["ratio"].as<double>();
+        if (ratio <= 0.0) {
+            std::cerr << "Error: Invalid aspect ratio: " << ratio << "\n";
+        }
+    }
+
+    Endian endian = Endian::native;
+    if (vm.count("endian")) {
+        auto opt = vm["endian"].as<std::string>();
+        if (auto val = to_upper(opt); val == "NATIVE") {
+            endian = Endian::native;
+        } else if (val == "LITTLE") {
+            endian = Endian::little;
+        } else if (val == "BIG") {
+            endian = Endian::big;
+        } else {
+            std::cerr << "Error: Invalid endian: " << opt << "\n";
+        }
+    }
+    if (endian == Endian::native) {
+        endian = native_endian();
+    }
+
     if (vm.count("names")) {
         auto names = vm["names"].as<std::vector<std::string>>();
         if (names.size() >= 1) {
@@ -191,15 +238,23 @@ int main(int argc, char* argv[])
                         }
                     }
 
-                    uint8_t version = 2;
-                    if (vm.count("v1")) {
-                        version = 1;
-                    }
+                    auto records = parse_records(lines);
 
-                    uint16_t width = 800;
-                    uint16_t height = 600;
-                    double ratio = 1.0 * width / height;
-                    Endian endian = Endian::little;
+                    if (width == 0 || height == 0 || ratio == 0.0) {
+                        SlideRecordsVisitorStat visitor;
+                        for (auto& record : records) {
+                            record->visit(visitor);
+                        }
+                        if (width == 0) {
+                            width = visitor.max_x();
+                        }
+                        if (height == 0) {
+                            height = visitor.max_y();
+                        }
+                        if (ratio == 0.0) {
+                            ratio = 1.0 * width / height;
+                        }
+                    }
 
                     return create_slide(
                         file,
@@ -208,7 +263,7 @@ int main(int argc, char* argv[])
                         height,
                         ratio,
                         endian,
-                        parse_records(lines)
+                        records
                     );
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";

@@ -19,24 +19,16 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_RECORDS_VISITOR_CAIRO_DRAWER_HPP__
-#define __SLIDE_RECORDS_VISITOR_CAIRO_DRAWER_HPP__
+#ifndef __SLIDE_RECORDS_VISITOR_STAT_HPP__
+#define __SLIDE_RECORDS_VISITOR_STAT_HPP__
 
-#include <cairo.h>
 #include "slide_records_visitor.hpp"
 
 namespace libslide {
 
-class SlideRecordsVisitorCairoDrawer : public SlideRecordsVisitor {
+class SlideRecordsVisitorStat : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordsVisitorCairoDrawer(cairo_t* cr,
-                                            unsigned src_width,   // slide width
-                                            unsigned src_height,  // slide height
-                                            double   src_ratio,   // slide aspect ratio
-                                            unsigned dst_x,       // draw offset x
-                                            unsigned dst_y,       // draw offset y
-                                            unsigned dst_width,   // draw width
-                                            unsigned dst_height); // draw height
+    explicit SlideRecordsVisitorStat() {}
 
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
@@ -45,21 +37,21 @@ public:
     void accept(SlideRecordColor& r) override;
     void accept(SlideRecordEndOfFile&) override;
 
-private:
-    double adjust_x(unsigned x) const;
-    double adjust_y(unsigned y) const;
+public:
+    int16_t min_x() const { return _min_x; }
+    int16_t min_y() const { return _min_y; }
+    int16_t max_x() const { return _max_x; }
+    int16_t max_y() const { return _max_y; }
 
 private:
-    cairo_t* _cr;
-    unsigned _dst_x;
-    unsigned _dst_y;
-    unsigned _dst_height;
-    int16_t _last_x;
-    int16_t _last_y;
-    double _scale_x;
-    double _scale_y;
+    int16_t _last_x = 0;
+    int16_t _last_y = 0;
+    int16_t _min_x = 0;
+    int16_t _min_y = 0;
+    int16_t _max_x = 0;
+    int16_t _max_y = 0;
 };
 
 } // namespace libslide
 
-#endif // __SLIDE_RECORDS_VISITOR_CAIRO_DRAWER_HPP__
+#endif // __SLIDE_RECORDS_VISITOR_STAT_HPP__

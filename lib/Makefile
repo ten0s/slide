@@ -21,6 +21,7 @@ SLIDE_OBJS=\
 	slide_records_visitor_binary_writer.o \
 	slide_records_visitor_text_writer.o \
 	slide_records_visitor_cairo_drawer.o \
+	slide_records_visitor_stat.o \
 	slide_cache.o \
 	slide_loader.o \
 	slide_colors.o \

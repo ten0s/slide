@@ -136,8 +136,8 @@ void SlideRecordsVisitorCairoDrawer::accept(SlideRecordSolidFillPolygon& r)
         ++it;
 
         for (; it != end; ++it) {
-            auto [x, y] = *it;
-            cairo_line_to(_cr, adjust_x(x), adjust_y(y));
+            auto [x1, y1] = *it;
+            cairo_line_to(_cr, adjust_x(x1), adjust_y(y1));
         }
 
         cairo_close_path(_cr);
