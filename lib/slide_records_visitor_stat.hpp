@@ -22,6 +22,7 @@
 #ifndef __SLIDE_RECORDS_VISITOR_STAT_HPP__
 #define __SLIDE_RECORDS_VISITOR_STAT_HPP__
 
+#include <cstdint>
 #include "slide_records_visitor.hpp"
 
 namespace libslide {
@@ -46,10 +47,10 @@ public:
 private:
     int16_t _last_x = 0;
     int16_t _last_y = 0;
-    int16_t _min_x = 0;
-    int16_t _min_y = 0;
-    int16_t _max_x = 0;
-    int16_t _max_y = 0;
+    int16_t _min_x = INT16_MAX;
+    int16_t _min_y = INT16_MAX;
+    int16_t _max_x = INT16_MIN;
+    int16_t _max_y = INT16_MIN;
 };
 
 } // namespace libslide

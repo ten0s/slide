@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
 
     uint16_t width = 0;
     if (vm.count("width")) {
-        width = vm["width"].as<uint16_t>();
+        width = vm["width"].as<unsigned>();
         if (width == 0) {
             std::cerr << "Error: Invalid width: " << width << "\n";
         }
@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
 
     uint16_t height = 0;
     if (vm.count("height")) {
-        height = vm["height"].as<uint16_t>();
+        height = vm["height"].as<unsigned>();
         if (height == 0) {
             std::cerr << "Error: Invalid height: " << height << "\n";
         }
@@ -246,10 +246,10 @@ int main(int argc, char* argv[])
                             record->visit(visitor);
                         }
                         if (width == 0) {
-                            width = visitor.max_x();
+                            width = visitor.max_x() + visitor.min_x() /* right pad */;
                         }
                         if (height == 0) {
-                            height = visitor.max_y();
+                            height = visitor.max_y() + visitor.min_y() /* bottom pad */;
                         }
                         if (ratio == 0.0) {
                             ratio = 1.0 * width / height;
