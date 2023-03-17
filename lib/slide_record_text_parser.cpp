@@ -23,20 +23,17 @@
 #include "slide_records.hpp"
 #include "slide_record_text_parser.hpp"
 
-using std::regex;
 using std::regex_constants::icase;
-using std::regex_match;
-using std::smatch;
 
 namespace libslide {
 
 static std::shared_ptr<SlideRecord>
-parse_comment(smatch&) {
+parse_comment(std::smatch&) {
     return {};
 }
 
 static std::shared_ptr<SlideRecord>
-parse_vector(smatch& matches) {
+parse_vector(std::smatch& matches) {
     int16_t x0 = std::stoi(matches[1]);
     int16_t y0 = std::stoi(matches[2]);
     int16_t x1 = std::stoi(matches[3]);
@@ -45,7 +42,7 @@ parse_vector(smatch& matches) {
 }
 
 static std::shared_ptr<SlideRecord>
-parse_offset_vector(smatch& matches) {
+parse_offset_vector(std::smatch& matches) {
     int8_t dx0 = std::stoi(matches[1]);
     int8_t dy0 = std::stoi(matches[2]);
     int8_t dx1 = std::stoi(matches[3]);
@@ -54,14 +51,14 @@ parse_offset_vector(smatch& matches) {
 }
 
 static std::shared_ptr<SlideRecord>
-parse_common_endpoint(smatch& matches) {
+parse_common_endpoint(std::smatch& matches) {
     int8_t dx0 = std::stoi(matches[1]);
     int8_t dy0 = std::stoi(matches[2]);
     return std::make_shared<SlideRecordCommonEndpoint>(dx0, dy0);
 }
 
 static std::shared_ptr<SlideRecord>
-parse_solid_fill_polygon(smatch& matches) {
+parse_solid_fill_polygon(std::smatch& matches) {
     SlideRecordSolidFillPolygon::vertices_t vertices;
     for (size_t i = 1; i < matches.size(); i += 2) {
         int16_t x = std::stoi(matches[i]);
@@ -72,76 +69,66 @@ parse_solid_fill_polygon(smatch& matches) {
 }
 
 static std::shared_ptr<SlideRecord>
-parse_color(smatch& matches) {
+parse_color(std::smatch& matches) {
     uint8_t color = std::stoi(matches[1]);
     return std::make_shared<SlideRecordColor>(color);
 }
 
 static std::shared_ptr<SlideRecord>
-parse_end_of_file(smatch&) {
+parse_end_of_file(std::smatch&) {
     return std::make_shared<SlideRecordEndOfFile>();
 }
 
 std::shared_ptr<SlideRecord>
 parse_slide_record_text(const std::string& str)
 {
-    static regex comment {"^#.*"};
+    static std::regex comment {"^#.*"};
 
-    static regex vector {
+    static std::regex vector {
         "\\s*\\(\\s*VECTOR"
             "\\s+(\\d+)\\s+(\\d+)"
             "\\s+(\\d+)\\s+(\\d+)"
         "\\s*\\).*", icase};
 
-    static regex offset_vector{
+    static std::regex offset_vector{
         "\\s*\\(\\s*OFFSET_VECTOR"
             "\\s+(-?\\d+)\\s+(-?\\d+)"
             "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex common_endpoint{
+    static std::regex common_endpoint{
         "\\s*\\(\\s*COMMON_ENDPOINT"
             "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_1{
+    static std::regex polygon_1{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_2{
+    static std::regex polygon_2{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_3{
+    static std::regex polygon_3{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
-        "\\s*\\).*", icase};
-
-    static regex polygon_4{
-        "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_5{
+    static std::regex polygon_4{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_6{
+    static std::regex polygon_5{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
@@ -149,9 +136,8 @@ parse_slide_record_text(const std::string& str)
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_7{
+    static std::regex polygon_6{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
@@ -160,9 +146,8 @@ parse_slide_record_text(const std::string& str)
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex polygon_8{
+    static std::regex polygon_7{
         "\\s*\\(\\s*SOLID_FILL_POLYGON"
-             "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
              "\\s+(-?\\d+)\\s+(-?\\d+)"
@@ -172,17 +157,32 @@ parse_slide_record_text(const std::string& str)
              "\\s+(-?\\d+)\\s+(-?\\d+)"
         "\\s*\\).*", icase};
 
-    static regex color{"\\s*\\(\\s*COLOR\\s+(\\d+)\\s*\\).*", icase};
+    static std::regex polygon_8{
+        "\\s*\\(\\s*SOLID_FILL_POLYGON"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+             "\\s+(-?\\d+)\\s+(-?\\d+)"
+        "\\s*\\).*", icase};
 
-    static regex end_of_file{"\\s*\\(\\s*END_OF_FILE\\s*\\).*", icase};
+    static std::regex color{
+        "\\s*\\(\\s*COLOR"
+            "\\s+(\\d+)"
+        "\\s*\\).*", icase};
+
+    static std::regex end_of_file{"\\s*\\(\\s*END_OF_FILE\\s*\\).*", icase};
 
     using parsers_t =
         std::vector<
             std::pair<
                 std::regex,
-                std::function<std::shared_ptr<SlideRecord>(smatch&)>>>;
+                std::function<std::shared_ptr<SlideRecord>(std::smatch&)>>>;
 
-    parsers_t parsers {
+    static parsers_t parsers {
         {comment, parse_comment},
         {color, parse_color},
         {vector, parse_vector},
@@ -200,7 +200,7 @@ parse_slide_record_text(const std::string& str)
     };
 
     for (auto& [pattern, parser] : parsers) {
-        if (smatch matches; regex_match(str, matches, pattern)) {
+        if (std::smatch matches; std::regex_match(str, matches, pattern)) {
             return parser(matches);
         }
     }
