@@ -41,6 +41,8 @@ using namespace libslide;
 // invalid-value-typically-too-big-for-the-size-of-the-input-surface-pattern-etc
 static constexpr int16_t MAX_IMAGE_SIZE = 32767;
 
+static bool MAKE_BACKUP = true;
+
 template<typename T>
 static void
 print_usage(std::ostream& os, const std::string& prog, const T& options)
@@ -102,7 +104,7 @@ create_slide(const std::string& file,
         0
     };
 
-    make_backup(file);
+    if (MAKE_BACKUP) { make_backup(file); }
     std::ofstream ofs{file, std::ios::binary};
     write_slide_binary(ofs, slide);
     return 0;
@@ -138,6 +140,8 @@ int main(int argc, char* argv[])
          po::value<std::string>(),
          "endian (native, little, big),\n"
          "native by default")
+        ("no-bak",
+         "don't create backup files")
         ;
 
     po::options_description hidden("Hidden options");
@@ -179,6 +183,10 @@ int main(int argc, char* argv[])
     if (vm.count("version")) {
         std::cout << VERSION << "\n";
         return 0;
+    }
+
+    if (vm.count("no-bak")) {
+        MAKE_BACKUP = false;
     }
 
     uint8_t version = 2;

@@ -39,6 +39,8 @@ using namespace libslide;
 // invalid-value-typically-too-big-for-the-size-of-the-input-surface-pattern-etc
 static constexpr int16_t MAX_IMAGE_SIZE = 32767;
 
+static bool MAKE_BACKUP = true;
+
 template<typename T>
 static void
 print_usage(std::ostream& os, const std::string& prog, const T& options)
@@ -179,6 +181,8 @@ int main (int argc, char* argv[])
          po::value<std::string>(),
          "output filename,\n"
          "slide's name and type as extension by default")
+        ("no-bak",
+         "don't create backup files")
         ;
 
     po::options_description hidden("Hidden options");
@@ -220,6 +224,10 @@ int main (int argc, char* argv[])
     if (vm.count("version")) {
         std::cout << VERSION << "\n";
         return 0;
+    }
+
+    if (vm.count("no-bak")) {
+        MAKE_BACKUP = false;
     }
 
     writer_t writer;
@@ -317,7 +325,7 @@ int main (int argc, char* argv[])
             if (!filename.size()) {
                 filename = slide->name() + "." + to_lower(type);
             }
-            make_backup(filename);
+            if (MAKE_BACKUP) { make_backup(filename); }
             writer(slide, background, width, height, filename.c_str());
             return 0;
         } catch (const std::exception& e) {

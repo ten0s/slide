@@ -36,6 +36,8 @@
 namespace po = boost::program_options;
 using namespace libslide;
 
+static bool MAKE_BACKUP = true;
+
 template<typename T>
 static void
 print_usage(std::ostream& os, const std::string& prog, const T& options)
@@ -59,7 +61,7 @@ export_slides(const SlideLibrary& lib,
 
         if (slide) {
             auto slidefile = slide.value()->name() + ".sld";
-            make_backup(slidefile);
+            if (MAKE_BACKUP) { make_backup(slidefile); }
             std::ofstream ofs{slidefile, std::ios::binary};
             write_slide_binary(ofs, *slide.value());
         } else {
@@ -83,7 +85,11 @@ int main(int argc, char* argv[])
 
     po::options_description config("Configuration");
     config.add_options()
-        ("all", "export all");
+        ("all",
+         "export all")
+        ("no-bak",
+         "don't create backup files")
+        ;
 
     po::options_description hidden("Hidden options");
     hidden.add_options()
@@ -124,6 +130,10 @@ int main(int argc, char* argv[])
     if (vm.count("version")) {
         std::cout << VERSION << "\n";
         return 0;
+    }
+
+    if (vm.count("no-bak")) {
+        MAKE_BACKUP = false;
     }
 
     if (vm.count("names")) {

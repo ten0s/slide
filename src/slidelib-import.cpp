@@ -35,6 +35,8 @@
 namespace po = boost::program_options;
 using namespace libslide;
 
+static bool MAKE_BACKUP = true;
+
 template<typename T>
 static void
 print_usage(std::ostream& os, const std::string& prog, const T& options)
@@ -60,7 +62,7 @@ import_slides(SlideLibrary& lib,
         }
     }
 
-    make_backup(libfile);
+    if (MAKE_BACKUP) { make_backup(libfile); }
     std::ofstream ofs{libfile, std::ios::binary};
     write_slide_library_binary(ofs, lib);
     return 0;
@@ -76,6 +78,12 @@ int main(int argc, char* argv[])
         ("version", "print version")
         ;
 
+    po::options_description config("Configuration");
+    config.add_options()
+        ("no-bak",
+         "don't create backup files")
+        ;
+
     po::options_description hidden("Hidden options");
     hidden.add_options()
        ("names",
@@ -84,10 +92,10 @@ int main(int argc, char* argv[])
         ;
 
     po::options_description all_options;
-    all_options.add(generic).add(hidden);
+    all_options.add(generic).add(config).add(hidden);
 
     po::options_description visible_options("Allowed options");
-    visible_options.add(generic);
+    visible_options.add(generic).add(config);
 
     po::positional_options_description p;
     p.add("names", -1);
@@ -115,6 +123,10 @@ int main(int argc, char* argv[])
     if (vm.count("version")) {
         std::cout << VERSION << "\n";
         return 0;
+    }
+
+    if (vm.count("no-bak")) {
+        MAKE_BACKUP = false;
     }
 
     if (vm.count("names")) {
