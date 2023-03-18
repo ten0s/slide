@@ -28,6 +28,7 @@ TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 # LIB_ is for static linking (.a, .lib)
 
 # Dynamic libs
+INC_CAIRO=`pkg-config --cflags cairo`
 DLL_CAIRO=`pkg-config --cflags --libs cairo`
 DLL_GLIB2=`pkg-config --cflags --libs glib-2.0`
 DLL_GTK3=`pkg-config --cflags --libs gtk+-3.0`

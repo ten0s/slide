@@ -34,10 +34,10 @@ all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
 slide_draw.o: slide_draw.cpp slide_draw.h
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(DLL_CAIRO) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -o $@
 
 slide_records_visitor_cairo_drawer.o: slide_records_visitor_cairo_drawer.cpp slide_records_visitor_cairo_drawer.hpp
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(DLL_CAIRO) -o $@
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -o $@
 
 libslide.so: $(SLIDE_OBJS)
 	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -o $@
