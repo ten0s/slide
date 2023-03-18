@@ -25,9 +25,6 @@
 
 namespace libslide {
 
-static const unsigned PADDING_X = 1;
-static const unsigned PADDING_Y = 1;
-
 SlideRecordsVisitorCairoDrawer::SlideRecordsVisitorCairoDrawer(cairo_t* cr,
                                                                unsigned src_width,
                                                                unsigned src_height,
@@ -71,14 +68,14 @@ SlideRecordsVisitorCairoDrawer::SlideRecordsVisitorCairoDrawer(cairo_t* cr,
 inline
 double SlideRecordsVisitorCairoDrawer::adjust_x(unsigned x) const {
     // Scale & Move
-    return x * _scale_x + _dst_x + PADDING_X;
+    return x * _scale_x + _dst_x;
 }
 
 inline
 double SlideRecordsVisitorCairoDrawer::adjust_y(unsigned y) const {
     // Point (0,0) is located at the lower-left corner.
     // Scale & Move
-    return _dst_height - y * _scale_y + _dst_y - PADDING_Y;
+    return _dst_height - y * _scale_y + _dst_y;
 }
 
 void SlideRecordsVisitorCairoDrawer::accept(SlideRecordVector& r)
