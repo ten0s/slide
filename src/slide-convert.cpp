@@ -157,7 +157,7 @@ int main (int argc, char* argv[])
 
     po::options_description config("Configuration");
     config.add_options()
-        ("type,t",
+        ("to,t",
          po::value<std::string>(),
          "convert to (png, svg)")
         ("width,w",
@@ -228,12 +228,12 @@ int main (int argc, char* argv[])
 
     writer_t writer;
     std::string type;
-    if (vm.count("type")) {
-        type = vm["type"].as<std::string>();
+    if (vm.count("to")) {
+        type = vm["to"].as<std::string>();
         if (auto it = map.find(to_upper(type)); it != map.end()) {
             writer = (*it).second;
         } else {
-            std::cerr << "Error: Unknown 'type': " << type << "\n";
+            std::cerr << "Error: Unknown type 'to': " << type << "\n";
             return 1;
         }
     } else {
