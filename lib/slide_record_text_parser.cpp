@@ -217,7 +217,7 @@ parse_slide_record_text(const std::string& str)
             std::pair<
                 std::regex,
                 std::function<std::shared_ptr<SlideRecord>(const std::smatch&,
-                                                           const std::string)>>>;
+                                                           const std::string&)>>>;
 
     static parsers_t parsers {
         {comment, ignore},
