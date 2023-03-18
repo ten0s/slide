@@ -117,7 +117,7 @@ parse_end_of_file(const std::smatch&, const std::string&) {
 std::shared_ptr<SlideRecord>
 parse_slide_record_text(const std::string& str)
 {
-    static std::regex comment {"^#.*"};
+    static std::regex comment {"^[;#].*"};
     static std::regex empty   {"^\\s*"};
 
     static std::regex vector {
