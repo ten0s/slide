@@ -98,4 +98,24 @@ void SlideRecordsVisitorStat::accept(SlideRecordEndOfFile&)
 
 }
 
+int16_t SlideRecordsVisitorStat::min_x() const
+{
+    return std::min(static_cast<decltype(_min_x)>(0), _min_x);
+}
+
+int16_t SlideRecordsVisitorStat::min_y() const
+{
+    return std::min(static_cast<decltype(_min_y)>(0), _min_y);
+}
+
+int16_t SlideRecordsVisitorStat::max_x() const
+{
+    return std::max(static_cast<decltype(_max_x)>(0), _max_x);
+}
+
+int16_t SlideRecordsVisitorStat::max_y() const
+{
+    return std::max(static_cast<decltype(_max_y)>(0), _max_y);
+}
+
 } // namespace libslide

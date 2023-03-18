@@ -39,10 +39,10 @@ public:
     void accept(SlideRecordEndOfFile&) override;
 
 public:
-    int16_t min_x() const { return _min_x; }
-    int16_t min_y() const { return _min_y; }
-    int16_t max_x() const { return _max_x; }
-    int16_t max_y() const { return _max_y; }
+    int16_t min_x() const;
+    int16_t min_y() const;
+    int16_t max_x() const;
+    int16_t max_y() const;
 
 private:
     int16_t _last_x = 0;

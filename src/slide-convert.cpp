@@ -35,6 +35,10 @@
 namespace po = boost::program_options;
 using namespace libslide;
 
+// https://cairo.cairographics.narkive.com/H3TgPxCc/
+// invalid-value-typically-too-big-for-the-size-of-the-input-surface-pattern-etc
+static constexpr int16_t MAX_IMAGE_SIZE = 32767;
+
 template<typename T>
 static void
 print_usage(std::ostream& os, const std::string& prog, const T& options)
@@ -52,6 +56,10 @@ draw_background(cairo_t* cr,
         return;
     }
 
+    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+        throw std::runtime_error{"Invalid image size"};
+    }
+
     RGB rgb = AutoCAD::colors[color];
     cairo_set_source_rgb(cr,
                          rgb.red   / 255.0,
@@ -66,9 +74,17 @@ draw_slide(cairo_t* cr,
            const Slide* slide,
            unsigned width, unsigned height)
 {
+    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+        throw std::runtime_error{"Invalid image size"};
+    }
+
     unsigned sld_width  = slide->header().high_x_dot();
     unsigned sld_height = slide->header().high_y_dot();
     double   sld_ratio  = slide->header().aspect_ratio();
+
+    if (sld_width > MAX_IMAGE_SIZE || sld_height > MAX_IMAGE_SIZE) {
+        throw std::runtime_error{"Invalid slide size"};
+    }
 
     SlideRecordsVisitorCairoDrawer visitor{
         cr,
@@ -86,6 +102,10 @@ write_to_png(const Slide* slide,
              unsigned width, unsigned height,
              const char* filename)
 {
+    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+        throw std::runtime_error{"Invalid image size"};
+    }
+
     cairo_surface_t* cs = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
     cairo_t* cr = cairo_create(cs);
 
@@ -103,7 +123,11 @@ write_to_svg(const Slide* slide,
              unsigned width, unsigned height,
              const char* filename)
 {
-    cairo_surface_t *cs = cairo_svg_surface_create(filename, width, height);
+    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+        throw std::runtime_error{"Invalid image size"};
+    }
+
+    cairo_surface_t* cs = cairo_svg_surface_create(filename, width, height);
     cairo_t* cr = cairo_create(cs);
 
     draw_background(cr, background, width, height);
@@ -140,12 +164,12 @@ int main (int argc, char* argv[])
          "convert to (png, svg)")
         ("width,w",
          po::value<unsigned>(),
-         "output width,\n"
-         "slide's width by default")
+         ("output width [1, " + std::to_string(MAX_IMAGE_SIZE) + "],\n"
+          "slide's width by default").c_str())
         ("height,h",
          po::value<unsigned>(),
-         "output height,\n"
-         "slide's height by default")
+         ("output height [1, " + std::to_string(MAX_IMAGE_SIZE) + "],\n"
+          "slide's height by default").c_str())
         ("background,b",
          po::value<int>(),
          "output background AutoCAD color [-1, 255]\n"
@@ -221,7 +245,7 @@ int main (int argc, char* argv[])
     int width = -1;
     if (vm.count("width")) {
         width = vm["width"].as<unsigned>();
-        if (width < 0) {
+        if (width < 0 || width > MAX_IMAGE_SIZE) {
             std::cerr << "Error: Invalid 'width': " << width << "\n";
             return 1;
         }
@@ -230,7 +254,7 @@ int main (int argc, char* argv[])
     int height = -1;
     if (vm.count("height")) {
         height = vm["height"].as<unsigned>();
-        if (height < 0) {
+        if (height < 0 || height > MAX_IMAGE_SIZE) {
             std::cerr << "Error: Invalid 'height': " << height << "\n";
         }
     }
@@ -276,25 +300,30 @@ int main (int argc, char* argv[])
             }
         }
 
-        auto maybeSlide = slide_from_uri(slide_uri);
-        if (!maybeSlide) {
-            std::cerr << "Error: Slide " << slide_uri << " not found\n";
+        try {
+            auto maybeSlide = slide_from_uri(slide_uri);
+            if (!maybeSlide) {
+                std::cerr << "Error: Slide " << slide_uri << " not found\n";
+                return 1;
+            }
+
+            const Slide* slide = maybeSlide.value().get();
+            if (width < 0) {
+                width = slide->header().high_x_dot();
+            }
+            if (height < 0) {
+                height = slide->header().high_y_dot();
+            }
+            if (!filename.size()) {
+                filename = slide->name() + "." + to_lower(type);
+            }
+            make_backup(filename);
+            writer(slide, background, width, height, filename.c_str());
+            return 0;
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << "\n";
             return 1;
         }
-
-        const Slide* slide = maybeSlide.value().get();
-        if (width < 0) {
-            width = slide->header().high_x_dot();
-        }
-        if (height < 0) {
-            height = slide->header().high_y_dot();
-        }
-        if (!filename.size()) {
-            filename = slide->name() + "." + to_lower(type);
-        }
-        make_backup(filename);
-        writer(slide, background, width, height, filename.c_str());
-        return 0;
     }
 
     print_usage(std::cerr, prog, visible_options);
