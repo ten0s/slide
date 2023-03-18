@@ -23,7 +23,7 @@
 #include <stdexcept>
 #include "slide_endian.hpp"
 
-using namespace libslide;
+namespace libslide{
 
 Endian native_endian()
 {
@@ -40,3 +40,5 @@ Endian native_endian()
 
     throw new std::runtime_error{"Unknown endianness"};
 }
+
+} // namespace libslide
