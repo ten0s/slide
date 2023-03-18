@@ -26,6 +26,8 @@
 
 namespace libslide {
 
+static constexpr int MAX_COLOR = 255;
+
 struct RGB {
     uint8_t red;
     uint8_t green;
@@ -36,7 +38,7 @@ namespace AutoCAD {
 
 // AutoCAD Color Index (ACI)
 // Source: https://gohtx.com/acadcolors.php
-extern RGB colors[];
+extern RGB colors[MAX_COLOR+1];
 
 } // namespace AutoCAD
 

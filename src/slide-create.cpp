@@ -37,10 +37,6 @@
 namespace po = boost::program_options;
 using namespace libslide;
 
-// https://cairo.cairographics.narkive.com/H3TgPxCc/
-// invalid-value-typically-too-big-for-the-size-of-the-input-surface-pattern-etc
-static constexpr int16_t MAX_IMAGE_SIZE = 32767;
-
 static bool MAKE_BACKUP = true;
 
 template<typename T>
@@ -126,11 +122,11 @@ int main(int argc, char* argv[])
         ("v2", "version 2.0, default")
         ("width,w",
          po::value<unsigned>(),
-         ("width [1, " + std::to_string(MAX_IMAGE_SIZE) + "],\n"
+         ("width [1, " + std::to_string(MAX_SLIDE_SIZE) + "],\n"
           "automatic by default").c_str())
         ("height,h",
          po::value<unsigned>(),
-         ("height [1, " + std::to_string(MAX_IMAGE_SIZE) + "],\n"
+         ("height [1, " + std::to_string(MAX_SLIDE_SIZE) + "],\n"
           "automatic by default").c_str())
         ("ratio,r",
          po::value<double>(),

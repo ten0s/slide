@@ -29,6 +29,11 @@
 
 namespace libslide {
 
+// Both Slide format and Cairo agree on it.
+// https://cairo.cairographics.narkive.com/H3TgPxCc/
+// invalid-value-typically-too-big-for-the-size-of-the-input-surface-pattern-etc
+static constexpr int MAX_SLIDE_SIZE = 32767;
+
 class SlideRecord;
 class SlideRecordsVisitor;
 

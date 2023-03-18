@@ -28,7 +28,7 @@ namespace AutoCAD {
 // AutoCAD Color Index (ACI)
 // Source: https://gohtx.com/acadcolors.php
 
-RGB colors[] = {
+RGB colors[MAX_COLOR+1] = {
     {0, 0, 0},
     {255, 0, 0},
     {255, 255, 0},

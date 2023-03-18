@@ -35,10 +35,6 @@
 namespace po = boost::program_options;
 using namespace libslide;
 
-// https://cairo.cairographics.narkive.com/H3TgPxCc/
-// invalid-value-typically-too-big-for-the-size-of-the-input-surface-pattern-etc
-static constexpr int16_t MAX_IMAGE_SIZE = 32767;
-
 static bool MAKE_BACKUP = true;
 
 template<typename T>
@@ -58,15 +54,15 @@ draw_background(cairo_t* cr,
         return;
     }
 
-    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+    if (width > MAX_SLIDE_SIZE || height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid image size"};
     }
 
     RGB rgb = AutoCAD::colors[color];
     cairo_set_source_rgb(cr,
-                         rgb.red   / 255.0,
-                         rgb.green / 255.0,
-                         rgb.blue  / 255.0);
+                         1.0 * rgb.red   / MAX_COLOR,
+                         1.0 * rgb.green / MAX_COLOR,
+                         1.0 * rgb.blue  / MAX_COLOR);
     cairo_rectangle(cr, 0, 0, width, height);
     cairo_fill(cr);
 }
@@ -76,7 +72,7 @@ draw_slide(cairo_t* cr,
            const Slide* slide,
            unsigned width, unsigned height)
 {
-    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+    if (width > MAX_SLIDE_SIZE || height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid image size"};
     }
 
@@ -84,7 +80,7 @@ draw_slide(cairo_t* cr,
     unsigned sld_height = slide->header().high_y_dot();
     double   sld_ratio  = slide->header().aspect_ratio();
 
-    if (sld_width > MAX_IMAGE_SIZE || sld_height > MAX_IMAGE_SIZE) {
+    if (sld_width > MAX_SLIDE_SIZE || sld_height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid slide size"};
     }
 
@@ -104,7 +100,7 @@ write_to_png(const Slide* slide,
              unsigned width, unsigned height,
              const char* filename)
 {
-    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+    if (width > MAX_SLIDE_SIZE || height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid image size"};
     }
 
@@ -125,7 +121,7 @@ write_to_svg(const Slide* slide,
              unsigned width, unsigned height,
              const char* filename)
 {
-    if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+    if (width > MAX_SLIDE_SIZE || height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid image size"};
     }
 
@@ -166,17 +162,17 @@ int main (int argc, char* argv[])
          "convert to (png, svg)")
         ("width,w",
          po::value<unsigned>(),
-         ("output width [1, " + std::to_string(MAX_IMAGE_SIZE) + "],\n"
+         ("output width [1, " + std::to_string(MAX_SLIDE_SIZE) + "],\n"
           "slide's width by default").c_str())
         ("height,h",
          po::value<unsigned>(),
-         ("output height [1, " + std::to_string(MAX_IMAGE_SIZE) + "],\n"
+         ("output height [1, " + std::to_string(MAX_SLIDE_SIZE) + "],\n"
           "slide's height by default").c_str())
         ("background,b",
          po::value<int>(),
-         "output background AutoCAD color [-1, 255]\n"
-         "(https://gohtx.com/acadcolors.php),\n"
-         "-1 for transparent, 0 (black) by default")
+         ("output background AutoCAD color [-1, " + std::to_string(MAX_COLOR) + "]\n"
+          "(https://gohtx.com/acadcolors.php),\n"
+          "-1 for transparent, 0 (black) by default").c_str())
         ("output,o",
          po::value<std::string>(),
          "output filename,\n"
@@ -253,7 +249,7 @@ int main (int argc, char* argv[])
     int width = -1;
     if (vm.count("width")) {
         width = vm["width"].as<unsigned>();
-        if (width < 0 || width > MAX_IMAGE_SIZE) {
+        if (width < 0 || width > MAX_SLIDE_SIZE) {
             std::cerr << "Error: Invalid 'width': " << width << "\n";
             return 1;
         }
@@ -262,7 +258,7 @@ int main (int argc, char* argv[])
     int height = -1;
     if (vm.count("height")) {
         height = vm["height"].as<unsigned>();
-        if (height < 0 || height > MAX_IMAGE_SIZE) {
+        if (height < 0 || height > MAX_SLIDE_SIZE) {
             std::cerr << "Error: Invalid 'height': " << height << "\n";
         }
     }
@@ -273,7 +269,7 @@ int main (int argc, char* argv[])
         if (background < -1) {
             background = -1;
         }
-        if (background > 255) {
+        if (background > MAX_COLOR) {
             std::cerr << "Error: Invalid 'background'\n";
             return 1;
         }
