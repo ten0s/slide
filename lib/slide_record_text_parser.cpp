@@ -54,7 +54,7 @@ check_size(int size, const std::string& str)
 static int8_t
 check_delta(int delta, const std::string& str)
 {
-    if (delta < -128 || delta > +127) {
+    if (delta < -128 || delta > 127) {
         throw std::runtime_error{
             "Invalid delta: " + std::to_string(delta) +
                 " in slide record: " + str};
@@ -96,8 +96,8 @@ static std::shared_ptr<SlideRecord>
 parse_solid_fill_polygon(const std::smatch& matches, const std::string& str) {
     SlideRecordSolidFillPolygon::vertices_t vertices;
     for (size_t i = 1; i < matches.size(); i += 2) {
-        int x = check_size(std::stoi(matches[i]), str);
-        int y = check_size(std::stoi(matches[i+1]), str);
+        int16_t x = check_size(std::stoi(matches[i]), str);
+        int16_t y = check_size(std::stoi(matches[i+1]), str);
         vertices.push_back({x, y});
     }
     return std::make_shared<SlideRecordSolidFillPolygon>(vertices);
