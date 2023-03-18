@@ -28,7 +28,7 @@ using std::regex_constants::icase;
 namespace libslide {
 
 static std::shared_ptr<SlideRecord>
-parse_comment(std::smatch&) {
+ignore(std::smatch&) {
     return {};
 }
 
@@ -83,6 +83,7 @@ std::shared_ptr<SlideRecord>
 parse_slide_record_text(const std::string& str)
 {
     static std::regex comment {"^#.*"};
+    static std::regex empty   {"^\\s*"};
 
     static std::regex vector {
         "\\s*\\(\\s*VECTOR"
@@ -183,7 +184,8 @@ parse_slide_record_text(const std::string& str)
                 std::function<std::shared_ptr<SlideRecord>(std::smatch&)>>>;
 
     static parsers_t parsers {
-        {comment, parse_comment},
+        {comment, ignore},
+        {empty, ignore},
         {color, parse_color},
         {vector, parse_vector},
         {offset_vector, parse_offset_vector},
