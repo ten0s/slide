@@ -192,12 +192,12 @@ int main(int argc, char* argv[])
             auto ext = to_upper(get_ext(file));
             if (ext == ".SLD") {
                 try {
-                    Slide slide = Slide::from_file(file);
+                    auto slide = Slide::from_file(file);
 
                     if (vm.count("what")) {
                         auto raw = vm["what"].as<std::string>();
                         if (auto info = parse_slide_info(raw)) {
-                            print_slide_info(std::cout, slide, info.value());
+                            print_slide_info(std::cout, *slide, info.value());
                             return 0;
                         } else {
                             std::cerr << "Error: Invalid slide info: " << raw << "\n";
@@ -210,12 +210,12 @@ int main(int argc, char* argv[])
                 }
             } else if (ext == ".SLB") {
                 try {
-                    SlideLibrary library = SlideLibrary::from_file(file);
+                    auto library = SlideLibrary::from_file(file);
 
                     if (vm.count("what")) {
                         auto raw = vm["what"].as<std::string>();
                         if (auto info = parse_library_info(raw)) {
-                            print_library_info(std::cout, library, info.value());
+                            print_library_info(std::cout, *library, info.value());
                             return 0;
                         } else {
                             std::cerr << "Error: Invalid slide library info: " << raw << "\n";
@@ -240,11 +240,11 @@ int main(int argc, char* argv[])
 
                 try {
                     auto lib = SlideLibrary::from_file(file);
-                    auto slide = lib.find(name);
+                    auto slide = lib->find(name);
                     if (!slide) {
                         try {
                             size_t idx = std::stol(name);
-                            slide = lib.find(idx);
+                            slide = lib->find(idx);
                         } catch (...) { }
                     }
 

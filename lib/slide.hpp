@@ -39,8 +39,8 @@ class SlideRecordsVisitor;
 
 class Slide {
 public:
-    static Slide from_file(const std::string& filename);
-    static Slide from_buf(const std::string& name, const uint8_t* buf, size_t size);
+    static std::shared_ptr<Slide> from_file(const std::string& filename);
+    static std::shared_ptr<Slide> from_buf(const std::string& name, const uint8_t* buf, size_t size);
 
     Slide(const std::string& name,
           const SlideHeader& header,

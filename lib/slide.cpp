@@ -30,7 +30,8 @@
 
 namespace libslide {
 
-Slide Slide::from_file(const std::string& filename)
+std::shared_ptr<Slide>
+Slide::from_file(const std::string& filename)
 {
     std::ifstream is{filename, std::ios::binary | std::ios::ate};
     if (is.is_open()) {
@@ -54,11 +55,12 @@ Slide Slide::from_file(const std::string& filename)
     }
 }
 
-Slide Slide::from_buf(const std::string& name,
-                      const uint8_t* buf, size_t size)
+std::shared_ptr<Slide>
+Slide::from_buf(const std::string& name,
+                const uint8_t* buf, size_t size)
 {
     auto [header, records, offset] = parse_slide_binary(buf, size);
-    return Slide{name, header, records, offset};
+    return std::make_shared<Slide>(name, header, records, offset);
 }
 
 Slide::Slide(const std::string& name,
@@ -85,7 +87,8 @@ Slide::~Slide()
     _records = {};
 }
 
-void Slide::visit_records(SlideRecordsVisitor& visitor) const
+void
+Slide::visit_records(SlideRecordsVisitor& visitor) const
 {
     for (auto& record : _records) {
         record->visit(visitor);

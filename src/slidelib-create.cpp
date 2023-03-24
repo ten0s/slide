@@ -58,9 +58,8 @@ create_slide_lib(const std::string& libfile,
     for (const auto& sldfile : sldfiles) {
         auto ext = to_upper(get_ext(sldfile));
         if (ext == ".SLD") {
-            Slide slide = Slide::from_file(sldfile);
-            auto shared = std::make_shared<Slide>(std::move(slide));
-            lib.append(shared);
+            auto slide = Slide::from_file(sldfile);
+            lib.append(slide);
         } else {
             std::cerr << "Error: Invalid slide extension: " << ext << "\n";
             return 1;

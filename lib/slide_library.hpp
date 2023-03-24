@@ -36,8 +36,8 @@ class SlideLibraryDirectory;
 
 class SlideLibrary {
 public:
-    static SlideLibrary from_file(const std::string& filename);
-    static SlideLibrary from_buf(const std::string& name, const uint8_t* buf, size_t size);
+    static std::shared_ptr<SlideLibrary> from_file(const std::string& filename);
+    static std::shared_ptr<SlideLibrary> from_buf(const std::string& name, const uint8_t* buf, size_t size);
 
     SlideLibrary(const std::string& name,
                  const SlideLibraryHeader& header,

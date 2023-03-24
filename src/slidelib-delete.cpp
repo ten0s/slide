@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
             if (ext == ".SLB") {
                 try {
                     auto lib = SlideLibrary::from_file(file);
-                    return delete_slides(lib, file, tail(names));
+                    return delete_slides(*lib, file, tail(names));
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;

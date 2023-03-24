@@ -53,9 +53,8 @@ import_slides(SlideLibrary& lib,
     for (const auto& sldfile : sldfiles) {
         auto ext = to_upper(get_ext(sldfile));
         if (ext == ".SLD") {
-            Slide slide = Slide::from_file(sldfile);
-            auto shared = std::make_shared<Slide>(std::move(slide));
-            lib.append(shared);
+            auto slide = Slide::from_file(sldfile);
+            lib.append(slide);
         } else {
             std::cerr << "Error: Invalid slide extension: " << ext << "\n";
             return 1;
@@ -137,7 +136,7 @@ int main(int argc, char* argv[])
             if (ext == ".SLB") {
                 try {
                     auto lib = SlideLibrary::from_file(file);
-                    return import_slides(lib, file, tail(names));
+                    return import_slides(*lib, file, tail(names));
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;

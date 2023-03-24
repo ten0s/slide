@@ -146,14 +146,14 @@ int main(int argc, char* argv[])
                     auto lib = SlideLibrary::from_file(file);
                     auto slides = tail(names);
                     if (vm.count("all")) {
-                        auto& dirs = lib.dirs();
+                        auto& dirs = lib->dirs();
                         std::transform(
                             dirs.cbegin(), dirs.cend(),
                             std::back_inserter(slides),
                             [](const auto& dir) { return dir->name(); }
                         );
                     }
-                    return export_slides(lib, slides);
+                    return export_slides(*lib, slides);
                 } catch (const std::exception& e) {
                     std::cerr << "Error: " << e.what() << "\n";
                     return 1;

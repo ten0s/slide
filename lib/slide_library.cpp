@@ -33,7 +33,7 @@
 
 namespace libslide {
 
-SlideLibrary
+std::shared_ptr<SlideLibrary>
 SlideLibrary::from_file(const std::string& filename)
 {
     std::ifstream is{filename, std::ios::binary | std::ios::ate};
@@ -58,18 +58,18 @@ SlideLibrary::from_file(const std::string& filename)
     }
 }
 
-SlideLibrary
+std::shared_ptr<SlideLibrary>
 SlideLibrary::from_buf(const std::string& name,
                        const uint8_t* buf, size_t size)
 {
     auto [header, dirs, slides, _offset] = parse_slide_library_binary(buf, size);
 
-    return SlideLibrary{
+    return std::make_shared<SlideLibrary>(
         name,
         header,
         dirs,
         slides
-    };
+    );
 }
 
 SlideLibrary::SlideLibrary(const std::string& name,
