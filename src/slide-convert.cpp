@@ -69,16 +69,16 @@ draw_background(cairo_t* cr,
 
 static void
 draw_slide(cairo_t* cr,
-           const Slide* slide,
+           const Slide& slide,
            unsigned width, unsigned height)
 {
     if (width > MAX_SLIDE_SIZE || height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid image size"};
     }
 
-    unsigned sld_width  = slide->header().high_x_dot();
-    unsigned sld_height = slide->header().high_y_dot();
-    double   sld_ratio  = slide->header().aspect_ratio();
+    unsigned sld_width  = slide.header().high_x_dot();
+    unsigned sld_height = slide.header().high_y_dot();
+    double   sld_ratio  = slide.header().aspect_ratio();
 
     if (sld_width > MAX_SLIDE_SIZE || sld_height > MAX_SLIDE_SIZE) {
         throw std::runtime_error{"Invalid slide size"};
@@ -91,11 +91,11 @@ draw_slide(cairo_t* cr,
         0, 0,
         width, height
     };
-    slide->visit_records(visitor);
+    slide.visit_records(visitor);
 }
 
 static void
-write_to_png(const Slide* slide,
+write_to_png(const Slide& slide,
              int background,
              unsigned width, unsigned height,
              const char* filename)
@@ -116,7 +116,7 @@ write_to_png(const Slide* slide,
 }
 
 static void
-write_to_svg(const Slide* slide,
+write_to_svg(const Slide& slide,
              int background,
              unsigned width, unsigned height,
              const char* filename)
@@ -136,7 +136,7 @@ write_to_svg(const Slide* slide,
     cairo_surface_destroy(cs);
 }
 
-using writer_t = std::function<void(const Slide*,         // slide
+using writer_t = std::function<void(const Slide&,         // slide
                                     int,                  // background
                                     unsigned, unsigned,   // width & height
                                     const char*)>;        // filename
@@ -311,15 +311,15 @@ int main (int argc, char* argv[])
                 return 1;
             }
 
-            const Slide* slide = maybeSlide.value().get();
+            const Slide& slide = *maybeSlide.value();
             if (width < 0) {
-                width = slide->header().high_x_dot();
+                width = slide.header().high_x_dot();
             }
             if (height < 0) {
-                height = slide->header().high_y_dot();
+                height = slide.header().high_y_dot();
             }
             if (!filename.size()) {
-                filename = slide->name() + "." + to_lower(type);
+                filename = slide.name() + "." + to_lower(type);
             }
             if (MAKE_BACKUP) { make_backup(filename); }
             writer(slide, background, width, height, filename.c_str());
