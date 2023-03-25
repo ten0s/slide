@@ -38,7 +38,7 @@ Endian native_endian()
         return Endian::little;
     }
 
-    throw new std::runtime_error{"Unknown endianness"};
+    throw std::runtime_error{"Unknown endianness"};
 }
 
 } // namespace libslide
