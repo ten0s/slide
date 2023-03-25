@@ -24,12 +24,16 @@
 #include <cairo.h>
 #include <boost/program_options.hpp>
 
+#include "../lib/slide_colors.hpp"
 #include "../lib/slide_draw.h"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
 
 namespace po = boost::program_options;
 using namespace libslide;
+
+static constexpr int WINDOW_WIDTH  = 800;
+static constexpr int WINDOW_HEIGHT = 600;
 
 template<typename T>
 static void
@@ -41,15 +45,22 @@ print_usage(std::ostream& os, const std::string& prog, const T& options)
 
 gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 {
-    const char* slide_uri = static_cast<const char*>(data);
+    auto tuple = *static_cast<std::tuple<int, const char*>*>(data);
+    auto [background, slide_uri] = tuple;
 
     guint width = gtk_widget_get_allocated_width(widget);
     guint height = gtk_widget_get_allocated_height(widget);
 
-    // Draw black background
-    cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_rectangle(cr, 0, 0, width, height);
-    cairo_fill(cr);
+    // Draw background
+    if (background >= 0) {
+        RGB rgb = AutoCAD::colors[background];
+        cairo_set_source_rgb(cr,
+                             1.0 * rgb.red   / MAX_COLOR,
+                             1.0 * rgb.green / MAX_COLOR,
+                             1.0 * rgb.blue  / MAX_COLOR);
+        cairo_rectangle(cr, 0, 0, width, height);
+        cairo_fill(cr);
+    }
 
     // Draw slide
     if (slide_draw(cr, 0, 0, width, height, slide_uri) != 0) {
@@ -59,17 +70,19 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     return FALSE;
 }
 
-void show_window(const char* title, const char* slide_uri)
+void show_window(const char* title, int width, int height, int background, const char* slide_uri)
 {
     GtkWindow* window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size(window, 800, 600);
+    gtk_window_set_default_size(window, width, height);
     gtk_window_set_position    (window, GTK_WIN_POS_CENTER);
     gtk_window_set_title       (window, title);
     g_signal_connect(window, "destroy", gtk_main_quit, NULL);
 
     GtkDrawingArea* drawingArea = (GtkDrawingArea*)gtk_drawing_area_new();
     gtk_container_add(GTK_CONTAINER(window), (GtkWidget*)drawingArea);
-    g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), (void*)slide_uri);
+
+    auto tuple = std::make_tuple(background, slide_uri);
+    g_signal_connect((GtkWidget*)drawingArea, "draw", G_CALLBACK(on_draw), (void*)&tuple);
 
     gtk_widget_show_all((GtkWidget*)window);
     gtk_main();
@@ -87,6 +100,21 @@ int main (int argc, char* argv[])
         ("version", "print version")
         ;
 
+    po::options_description config("Configuration");
+    config.add_options()
+        ("width,w",
+         po::value<unsigned>(),
+         ("window width, " + std::to_string(WINDOW_WIDTH) + " by default").c_str())
+        ("height,h",
+         po::value<unsigned>(),
+         ("window height, " + std::to_string(WINDOW_HEIGHT) + " by default").c_str())
+        ("background,b",
+         po::value<int>(),
+         ("background AutoCAD color [-1, " + std::to_string(MAX_COLOR) + "]\n"
+          "(https://gohtx.com/acadcolors.php),\n"
+          "-1 for transparent, 0 (black) by default").c_str())
+        ;
+
     po::options_description hidden("Hidden options");
     hidden.add_options()
        ("names",
@@ -95,10 +123,10 @@ int main (int argc, char* argv[])
         ;
 
     po::options_description all_options;
-    all_options.add(generic).add(hidden);
+    all_options.add(generic).add(config).add(hidden);
 
     po::options_description visible_options("Allowed options");
-    visible_options.add(generic);
+    visible_options.add(generic).add(config);
 
     po::positional_options_description p;
     p.add("names", -1);
@@ -126,6 +154,35 @@ int main (int argc, char* argv[])
     if (vm.count("version")) {
         std::cout << VERSION << "\n";
         return 0;
+    }
+
+    int width = WINDOW_WIDTH;
+    if (vm.count("width")) {
+        width = vm["width"].as<unsigned>();
+        if (width < 0) {
+            std::cerr << "Error: Invalid 'width': " << width << "\n";
+            return 1;
+        }
+    }
+
+    int height = WINDOW_HEIGHT;
+    if (vm.count("height")) {
+        height = vm["height"].as<unsigned>();
+        if (height < 0) {
+            std::cerr << "Error: Invalid 'height': " << height << "\n";
+        }
+    }
+
+    int background = 0;
+    if (vm.count("background")) {
+        background = vm["background"].as<int>();
+        if (background < -1) {
+            background = -1;
+        }
+        if (background > MAX_COLOR) {
+            std::cerr << "Error: Invalid 'background'\n";
+            return 1;
+        }
     }
 
     if (vm.count("names")) {
@@ -160,7 +217,7 @@ int main (int argc, char* argv[])
             }
         }
 
-        show_window(title.c_str(), slide_uri.c_str());
+        show_window(title.c_str(), width, height, background, slide_uri.c_str());
         return 0;
     }
 
