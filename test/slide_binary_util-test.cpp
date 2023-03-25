@@ -6,20 +6,20 @@ using namespace libslide;
 
 TEST(SlideBinaryUtilSuite, read_little) {
     uint8_t buf[] = { 0x12, 0x34 };
-    auto out = read<uint16_t>(buf, Endian::LE);
+    auto out = read<uint16_t>(buf, Endian::little);
     EXPECT_EQ(out, 0x3412);
 }
 
 TEST(SlideBinaryUtilSuite, read_big) {
     uint8_t buf[] = { 0x12, 0x34 };
-    auto out = read<uint16_t>(buf, Endian::BE);
+    auto out = read<uint16_t>(buf, Endian::big);
     EXPECT_EQ(out, 0x1234);
 }
 
 TEST(SlideBinaryUtilSuite, write_little) {
     uint8_t buf[2];
     uint16_t in = 0x1234;
-    write(buf, in, Endian::LE);
+    write(buf, in, Endian::little);
     EXPECT_EQ(0x34, buf[0]);
     EXPECT_EQ(0x12, buf[1]);
 }
@@ -27,7 +27,7 @@ TEST(SlideBinaryUtilSuite, write_little) {
 TEST(SlideBinaryUtilSuite, write_big) {
     uint8_t buf[2];
     uint16_t in = 0x1234;
-    write(buf, in, Endian::BE);
+    write(buf, in, Endian::big);
     EXPECT_EQ(0x12, buf[0]);
     EXPECT_EQ(0x34, buf[1]);
 }
@@ -35,16 +35,16 @@ TEST(SlideBinaryUtilSuite, write_big) {
 TEST(SlideBinaryUtilSuite, read_write_little) {
     uint8_t buf[4];
     uint32_t in = 0x1234;
-    write(buf, in, Endian::LE);
-    auto out = read<uint32_t>(buf, Endian::LE);
+    write(buf, in, Endian::little);
+    auto out = read<uint32_t>(buf, Endian::little);
     EXPECT_EQ(out, in);
 }
 
 TEST(SlideBinaryUtilSuite, read_write_big) {
     uint8_t buf[4];
     uint32_t in = 0x1234;
-    write(buf, in, Endian::BE);
-    auto out = read<uint32_t>(buf, Endian::BE);
+    write(buf, in, Endian::big);
+    auto out = read<uint32_t>(buf, Endian::big);
     EXPECT_EQ(out, in);
 }
 
