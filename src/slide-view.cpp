@@ -62,7 +62,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
 void show_window(const char* title, const char* slide_uri)
 {
     GtkWindow* window = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_default_size(window, 300, 200);
+    gtk_window_set_default_size(window, 800, 600);
     gtk_window_set_position    (window, GTK_WIN_POS_CENTER);
     gtk_window_set_title       (window, title);
     g_signal_connect(window, "destroy", gtk_main_quit, NULL);
