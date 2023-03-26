@@ -8,7 +8,7 @@ Features:
 * Create slide library from slides | [Example](#create-slide-library-from-slides)
 * Import slides to slide library | [Example](#import-slides-to-slide-library)
 * Export slides from slide library | [Example](#export-slides-from-slide-library)
-* Delete slides from slide library | [Example(#delete-slides-from-slide-library)
+* Delete slides from slide library | [Example](#delete-slides-from-slide-library)
 * Convert slide to PNG and SVG | [Example](#convert-slide-to-png-and-svg)
 * Create slide from text records | [Example](#create-slide-from-text-records)
 * Print various info about slide | [Example](#print-various-info-about-slide)
