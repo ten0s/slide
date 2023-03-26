@@ -36,7 +36,6 @@ int slide_draw_cairo(cairo_t *cr,
                      const char *slide_uri)
 {
     try {
-
         // Load slide.
         auto maybeSlide = slide_from_uri(slide_uri);
 
