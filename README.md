@@ -13,7 +13,7 @@ Features:
 * Convert slide to PNG and SVG (slide-convert)
 * Create slide from text records (slide-create)
 * Draw slide on [Cairo](https://www.cairographics.org/) surface (slide-view)
-* Draw slide on [Cairo](https://www.cairographics.org/) surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
+* Draw slide on [Cairo](https://www.cairographics.org/) surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/) [example](#draw-slide-on-cairo-surface-via-gobject-introspection)
 * Linux, Windows and MacOS support
 
 ## Build
