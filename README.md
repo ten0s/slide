@@ -32,7 +32,6 @@ $ make install [PREFIX=$PWD/install]
 ## Test
 
 ```
-$ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
 $ src/slide-create  ...
 $ src/slide-info    ...
 $ src/slide-view    ...
@@ -41,6 +40,19 @@ $ src/slidelib-create ...
 $ src/slidelib-delete ...
 $ src/slidelib-export ...
 $ src/slidelib-import ...
+```
+
+### Draw slide on [Cairo](https://www.cairographics.org/) surface
+    via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
+
+```
+$ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
+
+$ python3 -m venv env
+$ source env/bin/activate
+$ pip3 install -r test/requirements.txt
+
+$ python3 test/gtk-cairo-test.py
 ```
 
 ## License
