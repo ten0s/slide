@@ -5,14 +5,14 @@ Features:
 * Parse slide file format (.sld) [version 2.0](https://web.archive.org/web/20191223211310/http://www.autodesk.com/techpubs/autocad/acadr14/dxf/slide_file_format_al_u05_b.htm)
   and [version 1.0](https://web.archive.org/web/20191223211321/https://www.autodesk.com/techpubs/autocad/acadr14/dxf/old_slide_header_al_u05_b.htm)
 * Parse slide library file format (.slb) [version 1.0](https://web.archive.org/web/20191229052120/http://www.autodesk.com/techpubs/autocad/acadr14/dxf/slide_library_file_format_al_u05_b.htm)
-* Print various info about slide and slide library
-* Create slide library from slides
-* Import slides to slide library
-* Export slides from slide library
-* Delete slides from slide library
-* Convert slide to PNG and SVG
-* Create slide from text records
-* Draw slide on [Cairo](https://www.cairographics.org/) surface
+* Print various info about slide and slide library (slide-info)
+* Create slide library from slides (slidelib-create)
+* Import slides to slide library (slidelib-import)
+* Export slides from slide library (slidelib-export)
+* Delete slides from slide library (slidelib-delete)
+* Convert slide to PNG and SVG (slide-convert)
+* Create slide from text records (slide-create)
+* Draw slide on [Cairo](https://www.cairographics.org/) surface (slide-view)
 * Draw slide on [Cairo](https://www.cairographics.org/) surface
   via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
 * Linux, Windows and MacOS support
