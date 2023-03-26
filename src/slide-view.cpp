@@ -25,7 +25,7 @@
 #include <boost/program_options.hpp>
 
 #include "../lib/slide_colors.hpp"
-#include "../lib/slide_draw.h"
+#include "../lib/slide_draw_cairo.h"
 #include "../lib/slide_util.hpp"
 #include "../lib/slide_version.hpp"
 
@@ -63,7 +63,7 @@ gboolean on_draw(GtkWidget* widget, cairo_t* cr, gpointer data)
     }
 
     // Draw slide
-    if (slide_draw(cr, 0, 0, width, height, slide_uri) != 0) {
+    if (slide_draw_cairo(cr, 0, 0, width, height, slide_uri) != 0) {
         gtk_main_quit();
     }
 

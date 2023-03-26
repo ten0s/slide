@@ -25,7 +25,7 @@ SLIDE_OBJS=\
 	slide_cache.o \
 	slide_loader.o \
 	slide_colors.o \
-	slide_draw.o \
+	slide_draw_cairo.o \
 	slide_util.o
 
 all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
@@ -33,7 +33,7 @@ all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 %.o: %.cpp %.hpp
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
 
-slide_draw.o: slide_draw.cpp slide_draw.h
+slide_draw_cairo.o: slide_draw_cairo.cpp slide_draw_cairo.h
 	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -o $@
 
 slide_records_visitor_cairo_drawer.o: slide_records_visitor_cairo_drawer.cpp slide_records_visitor_cairo_drawer.hpp

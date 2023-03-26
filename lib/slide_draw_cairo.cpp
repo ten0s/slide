@@ -22,24 +22,19 @@
 #include <iostream>
 #include <sstream>
 #include "slide.hpp"
-#include "slide_draw.h"
+#include "slide_draw_cairo.h"
 #include "slide_loader.hpp"
 #include "slide_records_visitor_cairo_drawer.hpp"
 
 using namespace libslide;
 
-int slide_draw(cairo_t *cr,
-               unsigned x,
-               unsigned y,
-               unsigned width,
-               unsigned height,
-               const char *slide_uri)
+int slide_draw_cairo(cairo_t *cr,
+                     unsigned x,
+                     unsigned y,
+                     unsigned width,
+                     unsigned height,
+                     const char *slide_uri)
 {
-    //std::cout << "+slide_draw "
-    //          << x << " " << y << " "
-    //          << width << " " << height << " "
-    //          << slide_uri << "\n";
-
     try {
 
         // Load slide.
@@ -48,7 +43,7 @@ int slide_draw(cairo_t *cr,
         if (!maybeSlide) {
             std::ostringstream ss;
             ss << "Slide " << slide_uri << " not found";
-            throw std::runtime_error(ss.str());
+            throw std::runtime_error{ss.str()};
         }
 
         auto slide = maybeSlide.value();
@@ -71,6 +66,5 @@ int slide_draw(cairo_t *cr,
         return -1;
     }
 
-    //std::cout << "-slide_draw\n";
     return 0;
 }

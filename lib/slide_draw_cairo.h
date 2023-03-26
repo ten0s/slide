@@ -19,8 +19,8 @@
 
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-#ifndef __SLIDE_DRAW_H__
-#define __SLIDE_DRAW_H__
+#ifndef __SLIDE_DRAW_CAIRO_H__
+#define __SLIDE_DRAW_CAIRO_H__
 
 #include <cairo.h>
 
@@ -28,15 +28,15 @@
 extern "C" {
 #endif
 
-int slide_draw(cairo_t *cr,
-               unsigned x,
-               unsigned y,
-               unsigned width,
-               unsigned height,
-               const char *slide_uri);
+int slide_draw_cairo(cairo_t *cr,
+                     unsigned x,
+                     unsigned y,
+                     unsigned width,
+                     unsigned height,
+                     const char *slide_uri);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // __SLIDE_DRAW_H__
+#endif // __SLIDE_DRAW_CAIRO_H__

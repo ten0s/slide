@@ -1,7 +1,7 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
 #include "gi_slide.h"
-#include "../lib/slide_draw.h"
+#include "../lib/slide_draw_cairo.h"
 
 /**
  * gi_slide_draw:
@@ -22,5 +22,5 @@ gi_slide_draw(gpointer cr,
               unsigned height,
               const gchar *slide_uri)
 {
-    return slide_draw((cairo_t *)cr, x, y, width, height, slide_uri);
+    return slide_draw_cairo((cairo_t *)cr, x, y, width, height, slide_uri);
 }
