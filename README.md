@@ -42,8 +42,7 @@ $ src/slidelib-export ...
 $ src/slidelib-import ...
 ```
 
-### Draw slide on [Cairo](https://www.cairographics.org/) surface
-    via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
+### Draw slide on [Cairo](https://www.cairographics.org/) surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/)
 
 ```
 $ export LD_LIBRARY_PATH=$PWD/install/lib GI_TYPELIB_PATH=$PWD/install/lib/girepository-1.0
