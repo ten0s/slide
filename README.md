@@ -190,6 +190,8 @@ Names:
 
 ### Import slides to slide library
 
+#### Import one slide file to library
+
 ```
 $ slidelib-import mylib.slb triangle.sld
 ```
@@ -204,6 +206,12 @@ Info:
 Names:
   SQUARE
   TRIANGLE
+```
+
+#### Import multiple slide files to library
+
+```
+$ slidelib-import mylib.slb *.sld
 ```
 
 ### Export slides from slide library

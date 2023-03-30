@@ -41,7 +41,7 @@ template<typename T>
 static void
 print_usage(std::ostream& os, const std::string& prog, const T& options)
 {
-    os << "Usage: " << prog << " [options] <FILE.slb>\n"
+    os << "Usage: " << prog << " [options] <FILE.slb> [FILE.sld ...]\n"
        << options << "\n";
 }
 
