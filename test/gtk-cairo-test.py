@@ -10,7 +10,7 @@ from gi.repository import SlideLib
 
 # https://cairocffi.readthedocs.io/en/stable/cffi_api.html#converting-pycairo-wrappers-to-cairocffi
 # https://cairocffi.readthedocs.io/en/stable/cffi_api.html#converting-cairocffi-wrappers-to-pycairo
-def get_unsafe_cairo_ptr(ctx):
+def unsafe_cairo_ptr(ctx):
     if not isinstance(ctx, cairo.Context):
         raise TypeError(f'Expected a cairo.Context, got {ctx}')
 
@@ -30,8 +30,10 @@ def on_draw(da, ctx):
     ctx.fill()
 
     # Draw slide
-    cr_ptr = get_unsafe_cairo_ptr(ctx)
-    SlideLib.draw(cr_ptr, offset, offset, width-2*offset, heigth-2*offset, 'xyz.sld')
+    SlideLib.draw(unsafe_cairo_ptr(ctx),
+                  offset, offset,
+                  width-2*offset, heigth-2*offset,
+                  'xyz.sld')
 
     return False
 
