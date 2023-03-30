@@ -25,6 +25,7 @@
 #include "slide_library_directory.hpp"
 #include "slide_library_directory_binary_writer.hpp"
 #include "slide_binary_util.hpp"
+#include "slide_util.hpp"
 
 namespace libslide {
 
@@ -32,7 +33,7 @@ std::ostream&
 write_slide_library_directory_binary(std::ostream& os, const SlideLibraryDirectory& dir)
 {
     uint8_t name[sizeof(Directory::name)] = {0};
-    strncpy((char*)name, dir.name().c_str(), sizeof(name));
+    strncpy((char*)name, to_upper(dir.name()).c_str(), sizeof(name));
     os.write((char*)name, sizeof(name));
 
     write(os, dir.addr(), Endian::little);

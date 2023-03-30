@@ -196,7 +196,7 @@ int main (int argc, char* argv[])
                 title = strip_ext(basename(file));
                 slide_uri = file;
             } else if (ext == ".SLB") {
-                std::cerr << "Error: Expected slide file\n";
+                std::cerr << "Error: Expected slide name\n";
                 return 1;
             } else {
                 std::cerr << "Error: Invalid slide extension: " << file << "\n";

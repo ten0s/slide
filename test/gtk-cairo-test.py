@@ -33,7 +33,7 @@ def on_draw(da, ctx):
     SlideLib.draw(unsafe_cairo_ptr(ctx),
                   offset, offset,
                   width-2*offset, heigth-2*offset,
-                  'xyz.sld')
+                  'square.sld')
 
     return False
 
