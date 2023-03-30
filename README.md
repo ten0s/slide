@@ -86,8 +86,22 @@ $ slide-create --width 200 --height 200 triangle.sld test/triangle.txt
 
 ### Create slide library from slides
 
+#### Create empty slide library
+
+```
+$ slidelib-create mylib.slb
+```
+
+#### Create slide library from slide file
+
 ```
 $ slidelib-create mylib.slb square.sld
+```
+
+#### Create slide library from multiple slide files
+
+```
+$ slidelib-create mylib.slb *.sld
 ```
 
 ### Print various slide info
