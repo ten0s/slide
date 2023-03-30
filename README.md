@@ -197,7 +197,7 @@ $ slidelib-import mylib.slb triangle.sld
 ```
 
 ```
-slide-info --what=all mylib.slb
+$ slide-info --what=all mylib.slb
 Info:
   Type   : AutoCAD Slide Library 1.0
   Name   : mylib
@@ -216,9 +216,13 @@ $ slidelib-import mylib.slb *.sld
 
 ### Export slides from slide library
 
+#### Export one slide from library
+
 ```
 $ slidelib-export mylib.slb square
 ```
+
+#### Export all slides from library
 
 ```
 $ slidelib-export --all mylib.slb
