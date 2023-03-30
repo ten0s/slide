@@ -1,54 +1,32 @@
 include ../Makefile.inc
 
-SLIDE_OBJS=\
-	slide.o \
-	slide_binary_parser.o \
-	slide_binary_writer.o \
-	slide_endian.o \
-	slide_header_binary_parser.o \
-	slide_header_binary_writer.o \
-	slide_library.o \
-	slide_library_binary_parser.o \
-	slide_library_binary_writer.o \
-	slide_library_header_binary_parser.o \
-	slide_library_header_binary_writer.o \
-	slide_library_directory_binary_parser.o \
-	slide_library_directory_binary_writer.o \
-	slide_info_text_writer.o \
-	slide_library_info_text_writer.o \
-	slide_record_binary_parser.o \
-	slide_record_text_parser.o \
-	slide_records_visitor_binary_writer.o \
-	slide_records_visitor_text_writer.o \
-	slide_records_visitor_cairo_drawer.o \
-	slide_records_visitor_stat.o \
-	slide_cache.o \
-	slide_loader.o \
-	slide_colors.o \
-	slide_draw_cairo.o \
-	slide_util.o
+SOURCES := $(wildcard *.cpp)
+OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
+DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
 
 all: libslide.$(DLL_EXT) libslide.$(LIB_EXT)
 
-%.o: %.cpp %.hpp
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
+-include $(DEPENDS)
 
-slide_draw_cairo.o: slide_draw_cairo.cpp slide_draw_cairo.h
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -o $@
+%.o: %.cpp
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -o $@
 
-slide_records_visitor_cairo_drawer.o: slide_records_visitor_cairo_drawer.cpp slide_records_visitor_cairo_drawer.hpp
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -o $@
+slide_draw_cairo.o: slide_draw_cairo.cpp
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -MMD -MP -o $@
 
-libslide.so: $(SLIDE_OBJS)
-	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -o $@
+slide_records_visitor_cairo_drawer.o: slide_records_visitor_cairo_drawer.cpp
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -MMD -MP -o $@
 
-libslide.dll: $(SLIDE_OBJS)
-	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -Wl,--out-implib,$@.a -o $@
+libslide.so: $(OBJECTS)
+	$(CXX) -shared $^ $(LDFLAGS) $(DLL_CAIRO) -o $@
 
-libslide.dylib: $(SLIDE_OBJS)
-	$(CXX) -shared $^ -fPIC $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(DLL_CAIRO) -o $@
+libslide.dll: $(OBJECTS)
+	$(CXX) -shared $^ $(LDFLAGS) $(DLL_CAIRO) -Wl,--out-implib,$@.a -o $@
 
-libslide.a: $(SLIDE_OBJS)
+libslide.dylib: $(OBJECTS)
+	$(CXX) -shared $^ $(LDFLAGS) $(DLL_CAIRO) -o $@
+
+libslide.a: $(OBJECTS)
 	ar rcv $@ $^
 
 .PHONY: install
@@ -58,8 +36,8 @@ install:
 
 .PHONY: clean
 clean:
-	rm -f *.o *.so
+	rm -f *.a *.d *.o
+	rm -f *.so
 	rm -f *.dll
 	rm -f *.dylib
-	rm -r *.a
 	rm -rf *.dSYM

@@ -29,9 +29,11 @@ TYPELIB_DIR=$(LIB_DIR)/girepository-1.0
 
 # Dynamic libs
 INC_CAIRO=`pkg-config --cflags cairo`
-DLL_CAIRO=`pkg-config --cflags --libs cairo`
-DLL_GLIB2=`pkg-config --cflags --libs glib-2.0`
-DLL_GTK3=`pkg-config --cflags --libs gtk+-3.0`
+DLL_CAIRO=`pkg-config --libs cairo`
+INC_GLIB2=`pkg-config --cflags glib-2.0`
+DLL_GLIB2=`pkg-config --libs glib-2.0`
+INC_GTK3=`pkg-config --cflags gtk+-3.0`
+DLL_GTK3=`pkg-config --libs gtk+-3.0`
 DLL_SLIDE=-L../lib -lslide
 
 # Static libs

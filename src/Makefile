@@ -1,5 +1,9 @@
 include ../Makefile.inc
 
+SOURCES := $(wildcard *.cpp)
+OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
+DEPENDS := $(patsubst %.cpp,%.d,$(SOURCES))
+
 UTILS = \
 	slide-convert   \
 	slide-create    \
@@ -12,32 +16,40 @@ UTILS = \
 
 all: $(UTILS)
 
-%.o: %.cpp %.hpp
-	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -o $@
+-include $(DEPENDS)
 
-slide-convert: slide-convert.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) $(DLL_CAIRO) -o $@
+%.o: %.cpp
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -o $@
 
-slide-create: slide-create.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+slide-convert.o: slide-convert.cpp
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) -MMD -MP -o $@
 
-slide-info: slide-info.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+slide-view.o: slide-view.cpp
+	$(CXX) -c $< -fPIC $(CPPFLAGS) $(CXXFLAGS) $(INC_CAIRO) $(INC_GTK3) -MMD -MP -o $@
 
-slide-view: slide-view.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) $(DLL_CAIRO) $(DLL_GTK3) -o $@
+slide-convert: slide-convert.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) $(DLL_CAIRO) -o $@
 
-slidelib-create: slidelib-create.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+slide-create: slide-create.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
 
-slidelib-delete: slidelib-delete.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+slide-info: slide-info.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
 
-slidelib-export: slidelib-export.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+slide-view: slide-view.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) $(DLL_CAIRO) $(DLL_GTK3) -o $@
 
-slidelib-import: slidelib-import.cpp ../lib/libslide.$(LIB_EXT)
-	$(CXX) $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+slidelib-create: slidelib-create.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+
+slidelib-delete: slidelib-delete.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+
+slidelib-export: slidelib-export.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
+
+slidelib-import: slidelib-import.o ../lib/libslide.$(LIB_EXT)
+	$(CXX) $< $(LDFLAGS) $(LIB_SLIDE) $(LIB_BOOST_PROGRAM_OPTIONS) -o $@
 
 .PHONY: install
 install:
@@ -46,6 +58,6 @@ install:
 
 .PHONY: clean
 clean:
-	rm -f *.o $(UTILS)
+	rm -f *.d *.o $(UTILS)
 	rm -f *.exe
 	rm -rf *.dSYM

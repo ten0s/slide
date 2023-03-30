@@ -6,16 +6,25 @@ NSVERSION=1.0
 GIR_FILE=$(NAMESPACE)-$(NSVERSION).gir
 TYPELIB_FILE=$(NAMESPACE)-$(NSVERSION).typelib
 
+SOURCES := $(wildcard *.c)
+OBJECTS := $(patsubst %.c,%.o,$(SOURCES))
+DEPENDS := $(patsubst %.c,%.d,$(SOURCES))
+
 all: $(TYPELIB_FILE)
 
-libgislide.so: gi_slide.c ../lib/libslide.so
-	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -o $@
+-include $(DEPENDS)
 
-libgislide.dll: gi_slide.c ../lib/libslide.dll
-	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -Wl,--out-implib,$@.a -o $@
+%.o: %.c
+	$(CC) -c $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(INC_GLIB2) $(INC_CAIRO) -MMD -MP -o $@
 
-libgislide.dylib: gi_slide.c ../lib/libslide.dylib
-	$(CC) -shared $< -fPIC $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -o $@
+libgislide.so: $(OBJECTS) ../lib/libslide.so
+	$(CC) -shared $< $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -o $@
+
+libgislide.dll: $(OBJECTS) ../lib/libslide.dll
+	$(CC) -shared $< $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -Wl,--out-implib,$@.a -o $@
+
+libgislide.dylib: $(OBJECTS) ../lib/libslide.dylib
+	$(CC) -shared $< $(LDFLAGS) $(DLL_SLIDE) $(DLL_GLIB2) $(DLL_CAIRO) -o $@
 
 $(GIR_FILE): libgislide.$(DLL_EXT)
 	g-ir-scanner gi_slide.[ch]           \
@@ -44,7 +53,7 @@ install:
 
 .PHONY: clean
 clean:
-	rm -f *.o *.so
+	rm -f *.d *.o *.so
 	rm -f *.dll *.dll.a
 	rm -f *.dylib
 	rm -rf *.dSYM
