@@ -1,4 +1,6 @@
-AutoCAD slide library and command line utilities
+[Русская версия](README-ru.md)
+
+# AutoCAD slide library and command line utilities
 
 Features:
 
