@@ -13,9 +13,9 @@ Features:
 * Create slide from text records | [Example](#create-slide-from-text-records)
 * Print various info about slide | [Example](#print-various-info-about-slide)
 * Print various info about slide library | [Example](#print-various-info-about-slide-library)
-* Draw slide on [Cairo](https://www.cairographics.org/) surface| [Example](#draw-slide-on-cairo-surface)
+* Draw slide on [Cairo](https://www.cairographics.org/) surface | [Example](#draw-slide-on-cairo-surface)
 * Draw slide on [Cairo](https://www.cairographics.org/) surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/) | [Example](#draw-slide-on-cairo-surface-via-gobject-introspection)
-* Linux, Windows and MacOS support
+* Windows, MacOS and Linux support
 
 ## Build
 
@@ -24,6 +24,23 @@ $ make
 ```
 
 ## Install
+
+### Windows
+
+Windows installer is coming soon...
+
+### MacOS
+
+#### Homebrew
+
+You should have [Homebrew](https://brew.sh/) installed.
+
+```
+% brew tap ten0s/velisp
+% brew install slide
+```
+
+### Linux
 
 ```
 $ make install [PREFIX=$PWD/install]
