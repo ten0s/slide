@@ -22,6 +22,7 @@
 #ifndef __SLIDE_HEADER_HPP__
 #define __SLIDE_HEADER_HPP__
 
+#include <cstdint>
 #include <string>
 #include "slide_endian.hpp"
 
