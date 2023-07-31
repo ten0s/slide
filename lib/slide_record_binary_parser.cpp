@@ -30,7 +30,7 @@ namespace libslide {
 
 static
 std::vector<std::pair<int16_t, int16_t>>
-parse_polygon_binary(size_t n, const uint8_t* buf, Endian endian);
+parse_polygon_binary(const uint8_t* buf, Endian endian);
 
 std::tuple<std::shared_ptr<SlideRecord>, size_t, bool>
 parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
@@ -65,17 +65,21 @@ parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
         offset = 2;
         stop = true;
     } else if (hob == 0xfd) {
-        // Solid fill polygon start record.
-        // Bytes: 6 * (Vertices number to follow + 2 (start & end records))
+        // Solid fill polygon Start record.
+        // Bytes: 6 * (Vertices number + 2 /* start & end records*/)
         // The low-order byte is always zero.
         assert(lob == 0);
-        auto num = read<int16_t>(buf+1*sizeof(int16_t), endian);
+        // `num' sometimes includes the Stop record and
+        // sometimes it doesn't :( We better ignore it
+        // and parse until the Stop record.
+        //auto num = read<int16_t>(buf+1*sizeof(int16_t), endian);
         // y is negative for start record
         auto y = read<int16_t>(buf+2*sizeof(int16_t), endian);
         assert(y < 0);
-        auto vertices = parse_polygon_binary(num+1, buf+3*sizeof(int16_t), endian);
+        // Parses until the Stop record.
+        auto vertices = parse_polygon_binary(buf+3*sizeof(int16_t), endian);
         record = std::make_shared<SlideRecordSolidFillPolygon>(vertices);
-        offset = 6 * (num + 2);
+        offset = 6 * (vertices.size() + 2);
     } else if (hob == 0xfe) {
         // Common endpoint vector. Bytes: 3
         auto dx0 = static_cast<int8_t>(lob);
@@ -99,12 +103,13 @@ parse_slide_record_binary(const uint8_t* buf, size_t /*size*/, Endian endian)
 
 static
 std::vector<std::pair<int16_t, int16_t>>
-parse_polygon_binary(size_t n, const uint8_t* buf, Endian endian)
+parse_polygon_binary(const uint8_t* buf, Endian endian)
 {
     std::vector<std::pair<int16_t, int16_t>> vertices;
     size_t offset = 0;
+    bool is_end = false;
 
-    for (size_t i = 0; i < n; ++i) {
+    while (!is_end) {
         auto head = read<int16_t>(buf+offset, endian);
         auto hob = high_order_byte<int16_t>(head);
         auto lob = low_order_byte<int16_t>(head);
@@ -119,7 +124,7 @@ parse_polygon_binary(size_t n, const uint8_t* buf, Endian endian)
                 vertices.push_back({x, y});
             } else {
                 // y is negative for end record
-                assert(i == n-1);
+                is_end = true;
             }
             offset += 6;
         } else {
