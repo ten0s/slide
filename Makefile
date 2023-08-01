@@ -52,7 +52,12 @@ readme:
 	sed -E -e "s/\{\{version\}\}/${VERSION}/g" README.template    > README.md
 	sed -E -e "s/\{\{version\}\}/${VERSION}/g" README-ru.template > README-ru.md
 
-prepare-windows:
+windows-package:
+	$(MAKE) windows-prepare
+	$(MAKE) windows-zip
+	$(MAKE) windows-installer
+
+windows-prepare:
 	rm -rf                  slide-${VERSION}-win-x64/
 	mkdir -p                slide-${VERSION}-win-x64/bin/
 	cp install/bin/*.exe    slide-${VERSION}-win-x64/bin/
@@ -62,10 +67,10 @@ prepare-windows:
 	windows/copy-mingw64-deps.sh slide-${VERSION}-win-x64/
 	node util/notice-mingw64.js  slide-${VERSION}-win-x64/bin/ > slide-${VERSION}-win-x64/NOTICE
 
-zip-windows:
+windows-zip:
 	zip -r slide-${VERSION}-win-x64.zip slide-${VERSION}-win-x64/
 
-installer-windows:
+windows-installer:
 	sed -E -e "s/\{\{version\}\}/${VERSION}/g" windows/installer.iss | ${ISCC} //O"." //F"slide-${VERSION}-win-x64-setup" -
 	# Zip to upload to GH Releases
 	zip slide-${VERSION}-win-x64-setup.zip slide-${VERSION}-win-x64-setup.exe
