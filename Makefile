@@ -41,6 +41,8 @@ roll-major:
 roll:
 	@echo "New version: $(VERSION)"
 	git add lib/slide_version.hpp
+	$(MAKE) readme
+	git add README.md README-ru.md
 	@echo 'Now run: $$ make commit-push'
 
 commit-push:
