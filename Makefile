@@ -48,6 +48,10 @@ commit-push:
 	git tag "${VERSION}"
 	git push origin `git branch --show-current 2>/dev/null` --tags
 
+readme:
+	sed -E -e "s/\{\{version\}\}/${VERSION}/g" README.template    > README.md
+	sed -E -e "s/\{\{version\}\}/${VERSION}/g" README-ru.template > README-ru.md
+
 prepare-windows:
 	rm -rf                  slide-${VERSION}-win-x64/
 	mkdir -p                slide-${VERSION}-win-x64/bin/
