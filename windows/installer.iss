@@ -24,7 +24,7 @@ WizardStyle=modern
 ChangesEnvironment=true
 
 [Files]
-;Source: "slide-{#Version}-win-x64\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
+Source: "slide-{#Version}-win-x64\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
 
 [Icons]
 Name: "{group}\Slide Website"; Filename: "https://github.com/ten0s/slide"
