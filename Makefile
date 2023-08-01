@@ -55,6 +55,7 @@ prepare-windows:
 	cp LICENSE              slide-${VERSION}-win-x64/
 	cp README.md            slide-${VERSION}-win-x64/
 	cp README-ru.md         slide-${VERSION}-win-x64/
+	windows/copy-mingw64-deps.sh slide-${VERSION}-win-x64/
 	#node util/notice-mingw64.js slide-${VERSION}-win-x64/mingw64/bin/ >> slide-${VERSION}-win-x64/NOTICE
 
 zip-windows:
