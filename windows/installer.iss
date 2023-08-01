@@ -38,11 +38,11 @@ Name: envPath; Description: "Add to PATH variable"
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
     if (CurStep = ssPostInstall) and WizardIsTaskSelected('envPath')
-    then EnvAddPath(ExpandConstant('{app}'));
+    then EnvAddPath(ExpandConstant('{app}\bin'));
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
     if CurUninstallStep = usPostUninstall
-    then EnvRemovePath(ExpandConstant('{app}'));
+    then EnvRemovePath(ExpandConstant('{app}\bin'));
 end;
