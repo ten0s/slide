@@ -19,15 +19,9 @@
 * Рисование слайда на [Cairo](https://www.cairographics.org/) поверхности через [GObject Introspection](https://gi.readthedocs.io/en/latest/) | [Пример](#рисование-слайда-на-cairo-поверхности-через-gobject-introspection)
 * Windows, MacOS и Linux
 
-## Сборка
-
-```
-$ make
-```
-
 ## Установка
 
-### Установка
+### Windows
 
 Последнюю версию можно найти [здесь](https://github.com/ten0s/slide/releases).
 
