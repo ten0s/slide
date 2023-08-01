@@ -50,8 +50,8 @@ commit-push:
 
 prepare-windows:
 	rm -rf                  slide-${VERSION}-win-x64/
-	mkdir -p                slide-${VERSION}-win-x64/
-	cp -r install/bin/      slide-${VERSION}-win-x64/
+	mkdir -p                slide-${VERSION}-win-x64/bin/
+	cp install/bin/*.exe    slide-${VERSION}-win-x64/bin/
 	cp LICENSE              slide-${VERSION}-win-x64/
 	cp README.md            slide-${VERSION}-win-x64/
 	cp README-ru.md         slide-${VERSION}-win-x64/

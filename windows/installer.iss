@@ -11,7 +11,7 @@ AppUpdatesURL=https://github.com/ten0s/slide
 VersionInfoVersion={#Version}
 VersionInfoCompany=Dmitry Klionsky
 VersionInfoCopyright=GNU General Public License v3
-VersionInfoDescription=AutoCAD slide library and command line utilities
+VersionInfoDescription=AutoCAD slide command line utilities
 LicenseFile=LICENSE
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
@@ -25,9 +25,6 @@ ChangesEnvironment=true
 
 [Files]
 ;Source: "slide-{#Version}-win-x64\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversion
-
-[Dirs]
-Name: "{app}\shortcuts"
 
 [Icons]
 Name: "{group}\Slide Website"; Filename: "https://github.com/ten0s/slide"
