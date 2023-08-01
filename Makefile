@@ -54,6 +54,9 @@ readme:
 	sed -E -e "s/\{\{version\}\}/${VERSION}/g" README.template    > README.md
 	sed -E -e "s/\{\{version\}\}/${VERSION}/g" README-ru.template > README-ru.md
 
+sha256sum:
+	sha256sum slide-${VERSION}-win-x64.zip slide-${VERSION}-win-x64-setup.zip | tee slide-${VERSION}-sha256sum.txt
+
 windows-package:
 	$(MAKE) windows-prepare
 	$(MAKE) windows-zip
