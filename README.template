@@ -19,12 +19,6 @@ Features:
 * Draw slide on [Cairo](https://www.cairographics.org/) surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/) | [Example](#draw-slide-on-cairo-surface-via-gobject-introspection)
 * Windows, MacOS and Linux support
 
-## Build
-
-```
-$ make
-```
-
 ## Install
 
 ### Windows
@@ -77,14 +71,11 @@ You should have [Homebrew](https://brew.sh/) installed.
 ### Linux
 
 ```
+$ make
 $ make install [PREFIX=$PWD/install]
 ```
 
 ## Examples
-
-```
-$ export PATH=$PATH:install/bin
-```
 
 ### Create slide from text records
 

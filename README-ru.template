@@ -78,14 +78,11 @@ $ make
 ### Linux
 
 ```
+$ make
 $ make install [PREFIX=$PWD/install]
 ```
 
 ## Примеры
-
-```
-$ export PATH=$PATH:install/bin
-```
 
 ### Создание слайда из текстового описания
 
