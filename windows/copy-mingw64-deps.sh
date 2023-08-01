@@ -15,7 +15,7 @@ BASE_DIR=$(dirname $0)
 DEST_DIR=$1
 
 for file in $(cat $BASE_DIR/mingw64-dlls.txt); do
-    cp -v /mingw64/bin/$file $DEST_DIR || exit 1
+    cp -v /mingw64/bin/$file $DEST_DIR/bin/ || exit 1
 done
 
 exit 0
