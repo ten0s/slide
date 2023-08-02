@@ -25,6 +25,7 @@ clean:
 		$(MAKE) clean          && \
 		cd ..                   ; \
 	done
+	rm -rf $(PREFIX)
 
 roll-patch:
 	@util/set-version `util/roll-version patch $(VERSION)`
