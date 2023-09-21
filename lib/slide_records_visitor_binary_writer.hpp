@@ -31,7 +31,7 @@ namespace libslide {
 
 class SlideRecordsVisitorBinaryWriter : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordsVisitorBinaryWriter(std::ostream& os, Endian endian);
+    SlideRecordsVisitorBinaryWriter(std::ostream& os, Endian endian);
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;

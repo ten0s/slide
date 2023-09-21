@@ -29,8 +29,7 @@ namespace libslide {
 
 class SlideLibraryDirectory {
 public:
-    explicit SlideLibraryDirectory(const std::string& name,
-                                   uint32_t addr)
+    SlideLibraryDirectory(const std::string& name, uint32_t addr)
         : _name{name},
           _addr{addr}
         {}

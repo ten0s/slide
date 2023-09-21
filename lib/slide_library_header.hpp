@@ -31,7 +31,7 @@ public:
     static constexpr const char* ID_STRING = "AutoCAD Slide Library 1.0";
 
 public:
-    explicit SlideLibraryHeader() {}
+    SlideLibraryHeader() {}
 
     std::string id_string() const { return ID_STRING; }
 };

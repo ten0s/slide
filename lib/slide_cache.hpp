@@ -33,7 +33,7 @@ class Slide;
 
 class SlideCache {
 public:
-    explicit SlideCache();
+    SlideCache();
     ~SlideCache();
 
     SlideCache(const SlideCache&) = delete;

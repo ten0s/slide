@@ -29,14 +29,14 @@ namespace libslide {
 
 class SlideRecordsVisitorCairoDrawer : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordsVisitorCairoDrawer(cairo_t* cr,
-                                            unsigned src_width,   // slide width
-                                            unsigned src_height,  // slide height
-                                            double   src_ratio,   // slide aspect ratio
-                                            unsigned dst_x,       // draw offset x
-                                            unsigned dst_y,       // draw offset y
-                                            unsigned dst_width,   // draw width
-                                            unsigned dst_height); // draw height
+    SlideRecordsVisitorCairoDrawer(cairo_t* cr,
+                                   unsigned src_width,   // slide width
+                                   unsigned src_height,  // slide height
+                                   double   src_ratio,   // slide aspect ratio
+                                   unsigned dst_x,       // draw offset x
+                                   unsigned dst_y,       // draw offset y
+                                   unsigned dst_width,   // draw width
+                                   unsigned dst_height); // draw height
 
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;

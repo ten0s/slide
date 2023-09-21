@@ -36,8 +36,8 @@ public:
 
 class SlideRecordVector : public SlideRecord {
 public:
-    explicit SlideRecordVector(int16_t x0, int16_t y0,
-                               int16_t x1, int16_t y1)
+    SlideRecordVector(int16_t x0, int16_t y0,
+                      int16_t x1, int16_t y1)
         : _x0{x0}, _y0{y0},
           _x1{x1}, _y1{y1}
         {}
@@ -60,8 +60,8 @@ private:
 
 class SlideRecordOffsetVector : public SlideRecord {
 public:
-    explicit SlideRecordOffsetVector(int8_t dx0, int8_t dy0,
-                                     int8_t dx1, int8_t dy1)
+    SlideRecordOffsetVector(int8_t dx0, int8_t dy0,
+                            int8_t dx1, int8_t dy1)
         : _dx0{dx0}, _dy0{dy0},
           _dx1{dx1}, _dy1{dy1}
         {}
@@ -84,7 +84,7 @@ private:
 
 class SlideRecordCommonEndpoint : public SlideRecord {
 public:
-    explicit SlideRecordCommonEndpoint(int8_t dx0, int8_t dy0)
+    SlideRecordCommonEndpoint(int8_t dx0, int8_t dy0)
         : _dx0{dx0}, _dy0{dy0}
         {}
 
@@ -137,7 +137,7 @@ private:
 
 class SlideRecordEndOfFile : public SlideRecord {
 public:
-    explicit SlideRecordEndOfFile() {}
+    SlideRecordEndOfFile() {}
 
     void visit(SlideRecordsVisitor& visitor) override {
         visitor.accept(*this);

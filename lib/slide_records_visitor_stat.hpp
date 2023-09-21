@@ -29,7 +29,7 @@ namespace libslide {
 
 class SlideRecordsVisitorStat : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordsVisitorStat() {}
+    SlideRecordsVisitorStat() {}
 
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;

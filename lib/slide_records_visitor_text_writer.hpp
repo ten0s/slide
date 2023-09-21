@@ -30,7 +30,7 @@ namespace libslide {
 
 class SlideRecordsVisitorTextWriter : public SlideRecordsVisitor {
 public:
-    explicit SlideRecordsVisitorTextWriter(std::ostream& os, const std::string& pad);
+    SlideRecordsVisitorTextWriter(std::ostream& os, const std::string& pad);
     void accept(SlideRecordVector& r) override;
     void accept(SlideRecordOffsetVector& r) override;
     void accept(SlideRecordCommonEndpoint& r) override;
