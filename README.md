@@ -17,6 +17,7 @@ Features:
 * Print various info about slide library | [Example](#print-various-info-about-slide-library)
 * Draw slide on [Cairo](https://www.cairographics.org/) surface | [Example](#draw-slide-on-cairo-surface)
 * Draw slide on [Cairo](https://www.cairographics.org/) surface via [GObject Introspection](https://gi.readthedocs.io/en/latest/) | [Example](#draw-slide-on-cairo-surface-via-gobject-introspection)
+* Backend for the `slide_image` function in [VeLisp](https://github.com/ten0s/velisp)
 * Windows, MacOS and Linux support
 
 ## Install

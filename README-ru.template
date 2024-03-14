@@ -17,6 +17,7 @@
 * Печать различной информации о библиотеке слайдов | [Пример](#печать-различной-информации-о-библиотеке-слайдов)
 * Рисование слайда на [Cairo](https://www.cairographics.org/) поверхности | [Пример](#рисование-слайда-на-cairo-поверхности)
 * Рисование слайда на [Cairo](https://www.cairographics.org/) поверхности через [GObject Introspection](https://gi.readthedocs.io/en/latest/) | [Пример](#рисование-слайда-на-cairo-поверхности-через-gobject-introspection)
+* Используется для реализации функции `slide_image` в [VeLisp](https://github.com/ten0s/velisp)
 * Windows, MacOS и Linux
 
 ## Установка
