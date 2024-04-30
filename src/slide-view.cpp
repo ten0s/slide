@@ -1,5 +1,5 @@
 /**
- *   AutoCAD slide command line utility
+ *   AutoCAD slide viewer
  *
  *   Copyright (C) 2023-2024 Dmitry Klionsky aka ten0s <dm.klionsky@gmail.com>
  *
