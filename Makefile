@@ -80,3 +80,10 @@ windows-installer:
 	sed -E -e "s/\{\{version\}\}/${VERSION}/g" windows/installer.iss | ${ISCC} //O"." //F"slide-${VERSION}-win-x64-setup" -
 	# Zip to upload to GH Releases
 	zip slide-${VERSION}-win-x64-setup.zip slide-${VERSION}-win-x64-setup.exe
+
+update-copyright:
+	find . -name 'LICENSE' \
+       -or -name '*.cpp'   \
+       -or -name '*.hpp'   \
+       -or -name '*.h'     \
+       | xargs -I{} sed -i 's/2023 Dmitry Klionsky/2023-2024 Dmitry Klionsky/' {}
