@@ -86,4 +86,4 @@ update-copyright:
        -or -name '*.cpp'   \
        -or -name '*.hpp'   \
        -or -name '*.h'     \
-       | xargs -I{} sed -i 's/2023 Dmitry Klionsky/2023-2024 Dmitry Klionsky/' {}
+       | xargs -I{} sed -i 's/2023-2024 Dmitry Klionsky/2023-2025 Dmitry Klionsky/' {}
