@@ -28,19 +28,19 @@
 
 #### Автоматическая установка
 
-1. Скачайте https://github.com/ten0s/slide/releases/download/0.10.1/slide-0.10.1-win-x64-setup.zip
+1. Скачайте https://github.com/ten0s/slide/releases/download/0.10.2/slide-0.10.2-win-x64-setup.zip
 2. Откройте папку Загрузки
-3. Распакуйте slide-0.10.1-win-x64-setup.zip
-4. Запустите slide-0.10.1-win-x64-setup.exe
+3. Распакуйте slide-0.10.2-win-x64-setup.zip
+4. Запустите slide-0.10.2-win-x64-setup.exe
 5. Следуйте указаниям установщика. Настройки по умолчанию подходят большинству пользователей
 
 #### Установка из архива
 
 ##### Скачайте и распакуйте
 
-1. Скачайте https://github.com/ten0s/slide/releases/download/0.10.1/slide-0.10.1-win-x64.zip
+1. Скачайте https://github.com/ten0s/slide/releases/download/0.10.2/slide-0.10.2-win-x64.zip
 2. Откройте папку Загрузки
-3. Выделите slide-0.10.1-win-x64.zip
+3. Выделите slide-0.10.2-win-x64.zip
 4. Нажмите правую кнопку мышки
 5. Выберите 'Распаковать все содержимое...'
 6. Введите 'C:\'
@@ -54,7 +54,7 @@
 4. Выберите 'Path' inside the User variables block
 5. Выберите 'Edit...'
 6. Выберите 'New...'
-7. Введите 'C:\slide-0.10.1-win-x64\bin'
+7. Введите 'C:\slide-0.10.2-win-x64\bin'
 8. Выберите 'OK'
 9. Выберите 'OK'
 

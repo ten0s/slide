@@ -28,19 +28,19 @@ You can find the latest release [here](https://github.com/ten0s/slide/releases).
 
 #### Install via automatic setup
 
-1. Download https://github.com/ten0s/slide/releases/download/0.10.1/slide-0.10.1-win-x64-setup.zip
+1. Download https://github.com/ten0s/slide/releases/download/0.10.2/slide-0.10.2-win-x64-setup.zip
 2. Open Downloads folder
-3. Double-click on slide-0.10.1-win-x64-setup.zip to open the archive
-4. Run slide-0.10.1-win-x64-setup.exe
+3. Double-click on slide-0.10.2-win-x64-setup.zip to open the archive
+4. Run slide-0.10.2-win-x64-setup.exe
 5. Follow the installation wizard. Default options are ok for most users
 
 #### Install via binary archive
 
 ##### Download and unarchive
 
-1. Download https://github.com/ten0s/slide/releases/download/0.10.1/slide-0.10.1-win-x64.zip
+1. Download https://github.com/ten0s/slide/releases/download/0.10.2/slide-0.10.2-win-x64.zip
 2. Open Downloads folder
-3. Select slide-0.10.1-win-x64.zip
+3. Select slide-0.10.2-win-x64.zip
 4. Press the right mouse button
 5. Click 'Extract All...'
 6. Enter 'C:\'
@@ -54,7 +54,7 @@ You can find the latest release [here](https://github.com/ten0s/slide/releases).
 4. Select 'Path' inside the User variables block
 5. Click 'Edit...'
 6. Click 'New...'
-7. Enter 'C:\slide-0.10.1-win-x64\bin'
+7. Enter 'C:\slide-0.10.2-win-x64\bin'
 8. Click 'OK'
 9. Click 'OK'
 

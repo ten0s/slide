@@ -24,7 +24,7 @@
 
 namespace libslide {
 
-const auto VERSION = "0.10.1";
+const auto VERSION = "0.10.2";
 
 } // namespace libslide
 
