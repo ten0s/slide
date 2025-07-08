@@ -22,6 +22,7 @@
 #ifndef __SLIDE_LIBRARY_HPP__
 #define __SLIDE_LIBRARY_HPP__
 
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
